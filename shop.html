@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>irie.ike</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Font link -->
+
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', 'Garamond', serif; /* Apply Press Start 2P font */
+      background-color: #1a1a1a; /* Dark background */
+      color: #f1f1f1; /* Light text for contrast */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      background-image: url('openart-image_TLGvJEt6_1731963902592_raw.jpg'); /* Optional gothic background image */
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh; /* Ensures body takes full height of the screen */
+    }
+
+    h1 {
+      font-size: 3em;
+      color: #d9d9d9; /* Lighter grey color for the header */
+      margin-bottom: 20px;
+      font-family: 'Press Start 2P', cursive; /* Gothic-style font for the header */
+      animation: fadeIn 2s ease-in-out; /* Adding animation for the header */
+    }
+
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      font-size: 1.5em;
+      padding: 10px 20px;
+      border-radius: 20px;
+      color: #fff;
+      font-weight: bold;
+      background: linear-gradient(45deg, red 40%, gold 50%, green 60%);
+      background-size: 200% 200%;
+      background-position: right center;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link:hover {
+      background-position: left center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Clothing Items Grid */
+    .items-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      margin-top: 40px;
+      width: 80%;
+      max-width: 1200px;
+      flex-grow: 1; /* Allow the content to grow and push footer down */
+    }
+
+    .item-card {
+      background-color: #333;
+      padding: 15px;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease;
+    }
+
+    .item-card:hover {
+      transform: scale(1.05);
+    }
+
+    .item-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    .item-title {
+      font-size: 1.5em;
+      color: #f1f1f1;
+      margin-bottom: 10px;
+    }
+
+    .item-price {
+      font-size: 1.2em;
+      color: #b22222; /* Dark red for price */
+      margin-bottom: 10px;
+    }
+
+    .item-description {
+      font-size: 1em;
+      color: #d9d9d9;
+    }
+
+    /* Footer Styles */
+    footer {
+      width: 100%;
+      text-align: center;
+      padding: 20px;
+      background-color: #333;
+      color: #fff;
+      font-size: 1em;
+      font-family: 'Press Start 2P', cursive; /* Gothic font for footer */
+      margin-top: auto; /* Push the footer to the bottom */
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+      0% {
+        opacity: 0;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+
+    /* Mobile Responsiveness */
+    @media (max-width: 768px) {
+      body {
+        padding: 20px;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      .items-container {
+        width: 100%;
+      }
+
+      .item-card {
+        padding: 10px;
+      }
+
+      footer {
+        font-size: 0.8em;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Vintage Clothing Shop</h1>
+
+  <div id='collection-component-1731977904963'></div>
+<script type="text/javascript">
+/*<![CDATA[*/
+(function () {
+  var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+  if (window.ShopifyBuy) {
+    if (window.ShopifyBuy.UI) {
+      ShopifyBuyInit();
+    } else {
+      loadScript();
+    }
+  } else {
+    loadScript();
+  }
+  function loadScript() {
+    var script = document.createElement('script');
+    script.async = true;
+    script.src = scriptURL;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+    script.onload = ShopifyBuyInit;
+  }
+  function ShopifyBuyInit() {
+    var client = ShopifyBuy.buildClient({
+      domain: '1jfh83-3e.myshopify.com',
+      storefrontAccessToken: '79844f07c8917c8602e08325b460d7b0',
+    });
+    ShopifyBuy.UI.onReady(client).then(function (ui) {
+      ui.createComponent('collection', {
+        id: '633184747813',
+        node: document.getElementById('collection-component-1731977904963'),
+        moneyFormat: '%24%7B%7Bamount%7D%7D',
+        options: {
+  "product": {
+    "styles": {
+      "product": {
+        "@media (min-width: 601px)": {
+          "max-width": "calc(25% - 20px)",
+          "margin-left": "20px",
+          "margin-bottom": "50px",
+          "width": "calc(25% - 20px)"
+        },
+        "img": {
+          "height": "calc(100% - 15px)",
+          "position": "absolute",
+          "left": "0",
+          "right": "0",
+          "top": "0"
+        },
+        "imgWrapper": {
+          "padding-top": "calc(75% + 15px)",
+          "position": "relative",
+          "height": "0"
+        }
+      }
+    },
+    "text": {
+      "button": "Add to cart"
+    }
+  },
+  "productSet": {
+    "styles": {
+      "products": {
+        "@media (min-width: 601px)": {
+          "margin-left": "-20px"
+        }
+      }
+    }
+  },
+  "modalProduct": {
+    "contents": {
+      "img": false,
+      "imgWithCarousel": true,
+      "button": false,
+      "buttonWithQuantity": true
+    },
+    "styles": {
+      "product": {
+        "@media (min-width: 601px)": {
+          "max-width": "100%",
+          "margin-left": "0px",
+          "margin-bottom": "0px"
+        }
+      }
+    },
+    "text": {
+      "button": "Add to cart"
+    }
+  },
+  "option": {},
+  "cart": {
+    "text": {
+      "total": "Subtotal",
+      "button": "Checkout"
+    },
+    "popup": false
+  },
+  "toggle": {}
+},
+      });
+    });
+  }
+})();
+/*]]>*/
+</script>
+
+  <!-- Navigation Bar -->
+  <div class="navigation">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="shop.html" class="nav-link">Shop</a>
+    <a href="contact.html" class="nav-link">Contact</a>
+  </div>
+
+  <!-- Clothing Items Display -->
+  <div class="items-container">
+    <!-- Example Item 1 -->
+    <div class="item-card">
+      <img src="https://via.placeholder.com/250" alt="Vintage Jacket" class="item-img">
+      <h3 class="item-title">Vintage Leather Jacket</h3>
+      <p class="item-price">$120</p>
+      <p class="item-description">A timeless vintage leather jacket, perfect for any gothic enthusiast.</p>
+    </div>
+
+    <!-- Example Item 2 -->
+    <div class="item-card">
+      <img src="https://via.placeholder.com/250" alt="Vintage T-shirt" class="item-img">
+      <h3 class="item-title">Good Charlotte 2008 Tour 
+        T-shirt</h3>
+      <p class="item-price">$35</p>
+      <p class="item-description">No flaws</p>
+    </div>
+
+    <!-- Example Item 3 -->
+    <div class="item-card">
+      <img src="https://via.placeholder.com/250" alt="Vintage Skirt" class="item-img">
+      <h3 class="item-title">Gothic Skirt</h3>
+      <p class="item-price">$75</p>
+      <p class="item-description">A high-waisted gothic skirt, combining elegance with dark beauty.</p>
+    </div>
+
+    <!-- Example Item 4 -->
+    <div class="item-card">
+      <img src="https://via.placeholder.com/250" alt="Vintage Boots" class="item-img">
+      <h3 class="item-title">Vintage Boots</h3>
+      <p class="item-price">$90</p>
+      <p class="item-description">Sturdy and stylish vintage boots for the true goth fashionista.</p>
+    </div>
+
+    <!-- Example Item 5 -->
+    <div class="item-card">
+      <img src="https://via.placeholder.com/250" alt="Vintage Black Dress" class="item-img">
+      <h3 class="item-title">Vintage Black Dress</h3>
+      <p class="item-price">$150</p>
+      <p class="item-description">A stunning black dress with a vintage gothic flair. Perfect for an evening out.</p>
+    </div>
+
+    <!-- Example Item 6 -->
+    <div class="item-card">
+      <img src="https://via.placeholder.com/250" alt="Gothic Boots" class="item-img">
+      <h3 class="item-title">Gothic Lace-Up Boots</h3>
+      <p class="item-price">$130</p>
+      <p class="item-description">Dark, edgy lace-up boots to complement any gothic outfit.</p>
+    </div>
+
+    <!-- Example Item 7 -->
+    <div class="item-card">
+      <img src="https://via.placeholder.com/250" alt="Gothic Belt" class="item-img">
+      <h3 class="item-title">Gothic Studded Belt</h3>
+      <p class="item-price">$40</p>
+      <p class="item-description">A black leather belt with silver studs to add an edge to any outfit.</p>
+    </div>
+
+    <!-- Example Item 8 -->
+    <div class="item-card">
+      <img src="https://via.placeholder.com/250" alt="Vintage
