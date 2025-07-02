@@ -25,8 +25,9 @@
       justify-content: flex-start;
       min-height: 100vh;
       text-align: center;
-      overflow: hidden;
-      padding-top: 60px;
+      padding: 60px 20px 20px;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
 
     .stars {
@@ -46,7 +47,7 @@
     }
 
     @keyframes sparkle {
-      0%,100% { opacity: 0.2; transform: scale(1); }
+      0%, 100% { opacity: 0.2; transform: scale(1); }
       50% { opacity: 1; transform: scale(2.5); }
     }
 
@@ -84,7 +85,7 @@
       border-radius: 8px;
       font-size: 0.8em;
       cursor: pointer;
-      z-index: 2;
+      z-index: 1002;
       font-family: 'Press Start 2P', serif;
     }
 
@@ -100,7 +101,7 @@
     }
 
     h1 {
-      font-size: 2.2em;
+      font-size: 2em;
       color: #d9d9d9;
       margin: 0;
     }
@@ -130,7 +131,7 @@
 
     .nav-link {
       text-decoration: none;
-      font-size: 1.2em;
+      font-size: 1em;
       padding: 12px 24px;
       border-radius: 10px;
       color: #fff;
@@ -144,7 +145,7 @@
     }
 
     footer {
-      margin-top: 30px;
+      margin-top: 40px;
       padding: 16px;
       font-size: 0.7em;
       width: 100%;
@@ -154,8 +155,8 @@
 
     #frog {
       position: fixed;
-      width: 50px;
-      height: 50px;
+      width: 40px;
+      height: 40px;
       background: url('https://upload.wikimedia.org/wikipedia/commons/7/71/Frog_icon_48x48.png') no-repeat center/contain;
       z-index: 999;
       border-radius: 50%;
@@ -164,37 +165,25 @@
     }
 
     @media(max-width: 600px) {
-      h1 { font-size: 1.8em; }
-      .nav-link {
-        font-size: 1em;
-        padding: 10px 20px;
-      }
-      .spray-can {
-        width: 24px;
-        height: 24px;
-      }
-      .doodle-toggle, .clear-toggle {
-        font-size: 0.7em;
-        padding: 8px;
-      }
-      #frog {
-        width: 40px;
-        height: 40px;
-      }
-      .spray-cans {
-        bottom: 60px;
-      }
+      h1 { font-size: 1.6em; }
+      .nav-link { font-size: 0.9em; padding: 10px 20px; }
+      .spray-can { width: 24px; height: 24px; }
+      .doodle-toggle, .clear-toggle { font-size: 0.7em; padding: 8px; }
+      #frog { width: 35px; height: 35px; }
     }
   </style>
 </head>
 <body>
   <div class="stars"></div>
   <canvas id="doodle-canvas"></canvas>
+
   <button class="doodle-toggle" onclick="toggleDoodleMode()">Doodle Mode</button>
   <button class="clear-toggle" onclick="clearDoodleCanvas()">Clear Doodle</button>
 
   <div class="header-container">
-    <h1><span class="letter">R</span><span class="letter">U</span><span class="letter">D</span><span class="letter">E</span><span class="letter">B</span><span class="letter">O</span><span class="letter">Y</span></h1>
+    <h1>
+      <span class="letter">R</span><span class="letter">U</span><span class="letter">D</span><span class="letter">E</span><span class="letter">B</span><span class="letter">O</span><span class="letter">Y</span>
+    </h1>
   </div>
 
   <div class="navigation">
@@ -206,90 +195,85 @@
 
   <div class="spray-cans"></div>
   <div id="frog"></div>
-
   <footer>© 2024 @irie.ike</footer>
 
   <script>
-    // Starfield
     const starField = document.querySelector('.stars');
-    for(let i=0;i<80;i++){
+    for (let i = 0; i < 80; i++) {
       const s = document.createElement('span');
-      s.style.left = Math.random()*100+'vw';
-      s.style.top = Math.random()*100+'vh';
-      s.style.animationDelay = Math.random()*2+'s';
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDelay = Math.random() * 2 + 's';
       starField.appendChild(s);
     }
 
-    // Spray cans
-    const sprayColors = ['#fff','#f44','#4f4','#4af','#ff4'];
+    const sprayColors = ['#fff', '#f44', '#4f4', '#4af', '#ff4'];
     let currentColor = sprayColors[0];
     const sprayContainer = document.querySelector('.spray-cans');
-    sprayColors.forEach(c=>{
+    sprayColors.forEach(c => {
       const can = document.createElement('div');
-      can.className='spray-can';
-      can.style.backgroundColor=c;
-      can.addEventListener('click',()=>currentColor=c);
+      can.className = 'spray-can';
+      can.style.backgroundColor = c;
+      can.addEventListener('click', () => currentColor = c);
       sprayContainer.appendChild(can);
     });
 
-    // Doodle canvas
     const canvas = document.getElementById('doodle-canvas');
     const ctx = canvas.getContext('2d');
-    let isDoodle=false, isDrawing=false;
-    function resizeCanvas(){ canvas.width=innerWidth; canvas.height=innerHeight; }
-    window.addEventListener('resize',resizeCanvas);
+    let isDoodle = false, isDrawing = false;
+    function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    canvas.addEventListener('mousedown',()=>isDrawing=true);
-    canvas.addEventListener('mouseup',()=>isDrawing=false);
-    canvas.addEventListener('mousemove',e=>draw(e));
-    canvas.addEventListener('touchstart',()=>isDrawing=true);
-    canvas.addEventListener('touchend',()=>isDrawing=false);
-    canvas.addEventListener('touchmove',e=>draw(e.touches[0]));
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mousemove', e => draw(e));
+    canvas.addEventListener('touchstart', () => isDrawing = true);
+    canvas.addEventListener('touchend', () => isDrawing = false);
+    canvas.addEventListener('touchmove', e => draw(e.touches[0]));
 
-    function draw(e){
-      if(isDoodle && isDrawing){
+    function draw(e) {
+      if (isDoodle && isDrawing) {
         ctx.beginPath();
-        ctx.arc(e.clientX,e.clientY,4,0,2*Math.PI);
+        ctx.arc(e.clientX, e.clientY, 4, 0, 2 * Math.PI);
         ctx.fillStyle = currentColor;
         ctx.fill();
       }
     }
 
-    function toggleDoodleMode(){
+    function toggleDoodleMode() {
       isDoodle = !isDoodle;
       canvas.style.pointerEvents = isDoodle ? 'auto' : 'none';
     }
 
-    function clearDoodleCanvas(){
-      ctx.clearRect(0,0,canvas.width,canvas.height);
+    function clearDoodleCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Frog logic
     const frog = document.getElementById('frog');
-    let frogX=50, frogY=50;
-    function moveFrog(x,y){
-      frogX = Math.max(0,Math.min(window.innerWidth-50,x));
-      frogY = Math.max(0,Math.min(window.innerHeight-50,y));
-      frog.style.left = frogX+'px';
-      frog.style.top = frogY+'px';
+    let frogX = 50, frogY = 50;
+    function moveFrog(x, y) {
+      frogX = Math.max(0, Math.min(window.innerWidth - 50, x));
+      frogY = Math.max(0, Math.min(window.innerHeight - 50, y));
+      frog.style.left = frogX + 'px';
+      frog.style.top = frogY + 'px';
     }
-    function hop(){
-      const dx = (Math.random()-0.5)*200;
-      const dy = (Math.random()-0.5)*200;
-      moveFrog(frogX+dx,frogY+dy);
+    function hop() {
+      const dx = (Math.random() - 0.5) * 200;
+      const dy = (Math.random() - 0.5) * 200;
+      moveFrog(frogX + dx, frogY + dy);
     }
-    function flee(e){
-      const d = Math.hypot(frogX-e.clientX,frogY-e.clientY);
-      if(d<120){
-        const a=Math.atan2(frogY-e.clientY,frogX-e.clientX);
-        moveFrog(frogX+Math.cos(a)*80,frogY+Math.sin(a)*80);
+    function flee(e) {
+      const d = Math.hypot(frogX - e.clientX, frogY - e.clientY);
+      if (d < 120) {
+        const a = Math.atan2(frogY - e.clientY, frogX - e.clientX);
+        moveFrog(frogX + Math.cos(a) * 80, frogY + Math.sin(a) * 80);
       }
     }
-    moveFrog(frogX,frogY);
-    setInterval(hop,2500);
-    document.addEventListener('mousemove',flee);
-    document.addEventListener('touchmove',e=>flee(e.touches[0]));
+    moveFrog(frogX, frogY);
+    setInterval(hop, 2500);
+    document.addEventListener('mousemove', flee);
+    document.addEventListener('touchmove', e => flee(e.touches[0]));
   </script>
 </body>
 </html>
