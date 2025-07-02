@@ -2,142 +2,65 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device‑width, initial‑scale=1.0, maximum‑scale=1.0" />
   <title>irie.ike</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg-color-dark: #121212;
-      --bg-color-light: #ffffff;
       --text-color-dark: #f1f1f1;
-      --text-color-light: #1a1a1a;
     }
-
     [data-theme="dark"] body {
       background: var(--bg-color-dark);
       color: var(--text-color-dark);
     }
-
-    [data-theme="light"] body {
-      background: var(--bg-color-light);
-      color: var(--text-color-light);
-    }
-
     body {
       margin: 0;
-      font-family: 'Press Start 2P', 'Garamond', serif;
+      font-family: 'Press Start 2P', serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
       min-height: 100vh;
       text-align: center;
-      transition: background 0.6s, color 0.6s;
+      overflow: hidden;
+      padding-top: 60px;
     }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .doodle-toggle, .clear-toggle {
-  position: fixed;
-  right: 20px;
-  background: #444;
-  color: #fff;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 10px;
-  font-size: 0.8em;
-  cursor: pointer;
-  z-index: 1001;
-  font-family: 'Press Start 2P', 'Garamond', serif;
-}
-
-
-
-    .doodle-toggle { top: 60px; }
-    .clear-toggle { top: 100px; }
-
-    .header-container {
-      background-color: rgba(0, 0, 0, 0.8);
-      padding: 20px 40px;
-      border-radius: 16px;
-      max-width: 90vw;
-    }
-
-    h1 {
-      font-size: 2.5em;
-      color: #d9d9d9;
-    }
-
-    .letter {
-      display: inline-block;
-      transition: transform 0.3s, color 0.3s;
-    }
-
-    h1:hover .letter {
-      animation: bounce 0.8s ease-in-out forwards;
-    }
-
-    @keyframes bounce {
-      0% { transform: translateY(0); color: white; }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); color: transparent; }
-    }
-
-    .navigation {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      margin-top: 30px;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      font-size: 1.5em;
-      padding: 18px 40px;
-      border-radius: 12px;
-      color: #fff;
-      font-weight: bold;
-      border: 2px solid #fff;
-      background-color: transparent;
-      transition: all 0.3s ease;
-      position: relative;
-    }
-
-    .nav-link:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-    }
-
-    footer {
-      width: 100%;
-      text-align: center;
-      padding: 20px;
-      font-size: 0.75em;
-      margin-top: 40px;
+    .stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .stars span { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; animation: sparkle 2s infinite ease-in-out; }
+    @keyframes sparkle { 0%,100%{opacity:0.2;transform:scale(1);}50%{opacity:1;transform:scale(2.5);} }
+    canvas { position: fixed; inset: 0; z-index: 1; touch-action: none; }
+    .spray-cans { position: fixed; bottom: 20px; left: 20px; z-index: 1002; display:flex; gap:10px; }
+    .spray-can { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; }
+    .doodle-toggle, .clear-toggle { position: fixed; right: 20px; background:#444; color:#fff; padding:10px; border:none; border-radius:8px; font-size:0.8em; cursor:pointer; z-index:2; font-family:'Press Start 2P', serif; }
+    .doodle-toggle { top: 20px;} .clear-toggle { top: 60px; }
+    .header-container { background: rgba(0,0,0,0.8); padding: 16px 24px; border-radius: 12px; z-index:2; margin-top: 20px; }
+    h1 { font-size:2.2em; color: #d9d9d9; margin:0; }
+    .letter { display:inline-block; transition:transform 0.3s,color 0.3s; }
+    h1:hover .letter { animation: bounce 0.8s; }
+    @keyframes bounce {0%{transform:translateY(0);}50%{transform:translateY(-8px);}100%{transform:translateY(0);color:transparent;}}
+    .navigation { display:flex; flex-direction:column; gap:15px; margin-top:20px; z-index:2; }
+    .nav-link { text-decoration:none; font-size:1.2em; padding:12px 24px; border-radius:10px; color:#fff; border:2px solid #fff; transition:0.3s; }
+    .nav-link:hover { transform:scale(1.05); box-shadow:0 0 10px rgba(255,255,255,0.5); }
+    footer { margin-top: 30px; padding: 16px; font-size:0.7em; width:100%; text-align:center; z-index:2; }
+    #frog { position:fixed; width:50px; height:50px; background:url('https://upload.wikimedia.org/wikipedia/commons/7/71/Frog_icon_48x48.png') no-repeat center/contain; z-index:999; border-radius:50%; box-shadow:0 0 8px 2px lime, 0 0 16px 4px green; transition:left 0.2s ease, top 0.2s ease; }
+    @media(max-width:600px) {
+      .spray-can { width:24px; height:24px; }
+      .doodle-toggle, .clear-toggle { font-size:0.7em; padding:8px; }
+      h1 { font-size:1.8em; }
+      .nav-link { font-size:1em; padding:10px 20px; }
+      #frog { width:40px; height:40px; }
     }
   </style>
 </head>
 <body>
+  <div class="stars"></div>
   <canvas id="doodle-canvas"></canvas>
   <button class="doodle-toggle" onclick="toggleDoodleMode()">Doodle Mode</button>
   <button class="clear-toggle" onclick="clearDoodleCanvas()">Clear Doodle</button>
 
   <div class="header-container">
-    <h1>
-      <span class="letter">S</span>
-      <span class="letter">A</span>
-      <span class="letter">C</span>
-      <span class="letter">K</span>
-    </h1>
+    <h1><span class="letter">R</span><span class="letter">U</span><span class="letter">D</span><span class="letter">E</span><span class="letter">B</span><span class="letter">O</span><span class="letter">Y</span></h1>
   </div>
 
   <div class="navigation">
@@ -147,58 +70,88 @@
     <a href="contact.html" class="nav-link">Contact</a>
   </div>
 
+  <div class="spray-cans"></div>
+  <div id="frog"></div>
   <footer>© 2024 @irie.ike</footer>
 
   <script>
+    // starfield
+    const starField = document.querySelector('.stars');
+    for(let i=0;i<80;i++){
+      const s = document.createElement('span');
+      s.style.left = Math.random()*100+'vw';
+      s.style.top = Math.random()*100+'vh';
+      s.style.animationDelay = Math.random()*2+'s';
+      starField.appendChild(s);
+    }
+
+    // spray cans
+    const sprayColors = ['#fff','#f44','#4f4','#4af','#ff4'];
+    let currentColor = sprayColors[0];
+    const sprayContainer = document.querySelector('.spray-cans');
+    sprayColors.forEach(c=>{
+      const can = document.createElement('div');
+      can.className='spray-can';
+      can.style.backgroundColor=c;
+      can.addEventListener('click',()=>currentColor=c);
+      sprayContainer.appendChild(can);
+    });
+
+    // doodle canvas
     const canvas = document.getElementById('doodle-canvas');
     const ctx = canvas.getContext('2d');
-    let isDoodleMode = false;
-    let isDrawing = false;
-
-    function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', resizeCanvas);
+    let isDoodle=false, isDrawing=false;
+    function resizeCanvas(){ canvas.width=innerWidth; canvas.height=innerHeight; }
+    window.addEventListener('resize',resizeCanvas);
     resizeCanvas();
 
-    canvas.addEventListener('mousedown', () => isDrawing = true);
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('mousemove', e => {
-      if (isDoodleMode && isDrawing) {
-        ctx.fillStyle = 'white';
+    canvas.addEventListener('mousedown',()=>isDrawing=true);
+    canvas.addEventListener('mouseup',()=>isDrawing=false);
+    canvas.addEventListener('mousemove',e=>draw(e));
+    canvas.addEventListener('touchstart',()=>isDrawing=true);
+    canvas.addEventListener('touchend',()=>isDrawing=false);
+    canvas.addEventListener('touchmove',e=>draw(e.touches[0]));
+
+    function draw(e){
+      if(isDoodle && isDrawing){
         ctx.beginPath();
-        ctx.arc(e.clientX, e.clientY, 3, 0, Math.PI * 2);
+        ctx.arc(e.clientX,e.clientY,4,0,2*Math.PI);
+        ctx.fillStyle = currentColor;
         ctx.fill();
       }
-    });
-
-    function toggleTheme() {
-      const html = document.documentElement;
-      html.setAttribute('data-theme', html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
     }
 
-    function toggleDoodleMode() {
-      isDoodleMode = !isDoodleMode;
-      canvas.style.pointerEvents = isDoodleMode ? 'auto' : 'none';
+    function toggleDoodleMode(){
+      isDoodle = !isDoodle;
+      canvas.style.pointerEvents = isDoodle ? 'auto' : 'none';
     }
+    function clearDoodleCanvas(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
 
-    function clearDoodleCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // frog logic
+    const frog = document.getElementById('frog');
+    let frogX=50, frogY=50;
+    function moveFrog(x,y){
+      frogX = Math.max(0,Math.min(window.innerWidth-50,x));
+      frogY = Math.max(0,Math.min(window.innerHeight-50,y));
+      frog.style.left = frogX+'px';
+      frog.style.top = frogY+'px';
     }
-
-    const letters = document.querySelectorAll('.letter');
-    document.querySelector('h1').addEventListener('mouseenter', () => {
-      letters.forEach((letter, i) => letter.style.animationDelay = `${i * 0.1}s`);
-    });
-
-    document.querySelector('h1').addEventListener('mouseleave', () => {
-      letters.forEach(letter => {
-        letter.style.animation = 'none';
-        void letter.offsetWidth;
-        letter.style.animation = '';
-      });
-    });
+    function hop(){
+      const dx = (Math.random()-0.5)*200;
+      const dy = (Math.random()-0.5)*200;
+      moveFrog(frogX+dx,frogY+dy);
+    }
+    function flee(e){
+      const d = Math.hypot(frogX-e.clientX,frogY-e.clientY);
+      if(d<120){
+        const a=Math.atan2(frogY-e.clientY,frogX-e.clientX);
+        moveFrog(frogX+Math.cos(a)*80,frogY+Math.sin(a)*80);
+      }
+    }
+    moveFrog(frogX,frogY);
+    setInterval(hop,2500);
+    document.addEventListener('mousemove',flee);
+    document.addEventListener('touchmove',e=>flee(e.touches[0]));
   </script>
 </body>
 </html>

@@ -1,336 +1,276 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>irie.ike</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> <!-- Font link -->
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>irie.ike | Shop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <script src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"></script>
   <style>
-    /* Global Styles */
+    :root {
+      --bg-color-dark: #121212;
+      --text-color-dark: #f1f1f1;
+    }
+
+    [data-theme="dark"] body {
+      background: var(--bg-color-dark);
+      color: var(--text-color-dark);
+    }
+
     body {
       margin: 0;
-      font-family: 'Press Start 2P', 'Garamond', serif; /* Apply Press Start 2P font */
-      background-color: #1a1a1a; /* Dark background */
-      color: #f1f1f1; /* Light text for contrast */
+      font-family: 'Press Start 2P', serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
+      min-height: 100vh;
       text-align: center;
-      background-image: url('openart-image_TLGvJEt6_1731963902592_raw.jpg'); /* Optional gothic background image */
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
-      min-height: 100vh; /* Ensures body takes full height of the screen */
+      overflow: hidden;
+      padding-top: 60px;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .stars span {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 2s infinite ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0%,100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(2.5); }
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      touch-action: none;
+    }
+
+    .doodle-toggle, .clear-toggle {
+      position: fixed;
+      right: 20px;
+      background: #444;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8em;
+      cursor: pointer;
+      z-index: 2;
+      font-family: 'Press Start 2P', serif;
+    }
+
+    .doodle-toggle { top: 20px; }
+    .clear-toggle { top: 60px; }
+
+    .header-container {
+      background: rgba(0,0,0,0.8);
+      padding: 16px 24px;
+      border-radius: 12px;
+      z-index: 2;
+      margin-top: 20px;
     }
 
     h1 {
-      font-size: 3em;
-      color: #d9d9d9; /* Lighter grey color for the header */
-      margin-bottom: 20px;
-      font-family: 'Press Start 2P', cursive; /* Gothic-style font for the header */
-      animation: fadeIn 2s ease-in-out; /* Adding animation for the header */
+      font-size: 2.2em;
+      color: #d9d9d9;
+      margin: 0;
+    }
+
+    .letter {
+      display: inline-block;
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    h1:hover .letter {
+      animation: bounce 0.8s;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); color: transparent; }
     }
 
     .navigation {
       display: flex;
-      justify-content: center;
-      gap: 30px;
+      flex-direction: column;
+      gap: 15px;
       margin-top: 20px;
+      z-index: 2;
     }
 
     .nav-link {
       text-decoration: none;
-      font-size: 1.5em;
-      padding: 10px 20px;
-      border-radius: 20px;
+      font-size: 1.2em;
+      padding: 12px 24px;
+      border-radius: 10px;
       color: #fff;
-      font-weight: bold;
-      background: linear-gradient(45deg, red 40%, gold 50%, green 60%);
-      background-size: 200% 200%;
-      background-position: right center;
-      border: 2px solid transparent;
-      transition: all 0.3s ease;
+      border: 2px solid #fff;
+      transition: 0.3s;
     }
 
     .nav-link:hover {
-      background-position: left center;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 
-    /* Clothing Items Grid */
-    .items-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 20px;
-      margin-top: 40px;
-      width: 80%;
-      max-width: 1200px;
-      flex-grow: 1; /* Allow the content to grow and push footer down */
+    .collection-box {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      margin: 60px 20px;
+      z-index: 2;
     }
 
-    .item-card {
-      background-color: #333;
-      padding: 15px;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-      transition: transform 0.3s ease;
+    .collection-item {
+      width: 300px;
+      background-color: #292929;
+      padding: 30px;
+      border-radius: 16px;
+      text-align: center;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.5);
+      transition: transform 0.3s;
+      cursor: pointer;
     }
 
-    .item-card:hover {
+    .collection-item:hover {
       transform: scale(1.05);
     }
 
-    .item-img {
+    .collection-item h2 {
+      font-size: 1.25em;
+      margin-bottom: 10px;
+      color: #f1c40f;
+    }
+
+    .collection-item img {
       width: 100%;
-      height: 200px;
-      object-fit: cover;
       border-radius: 10px;
       margin-bottom: 15px;
     }
 
-    .item-title {
-      font-size: 1.5em;
-      color: #f1f1f1;
-      margin-bottom: 10px;
-    }
-
-    .item-price {
-      font-size: 1.2em;
-      color: #b22222; /* Dark red for price */
-      margin-bottom: 10px;
-    }
-
-    .item-description {
-      font-size: 1em;
-      color: #d9d9d9;
-    }
-
-    /* Footer Styles */
     footer {
+      margin-top: 30px;
+      padding: 16px;
+      font-size: 0.7em;
       width: 100%;
       text-align: center;
-      padding: 20px;
-      background-color: #333;
-      color: #fff;
-      font-size: 1em;
-      font-family: 'Press Start 2P', cursive; /* Gothic font for footer */
-      margin-top: auto; /* Push the footer to the bottom */
+      z-index: 2;
     }
 
-    /* Animations */
-    @keyframes fadeIn {
-      0% {
-        opacity: 0;
-      }
-      100% {
-        opacity: 1;
-      }
-    }
-
-    /* Mobile Responsiveness */
-    @media (max-width: 768px) {
-      body {
-        padding: 20px;
+    @media (max-width: 600px) {
+      .doodle-toggle, .clear-toggle {
+        font-size: 0.7em;
+        padding: 8px;
       }
 
       h1 {
-        font-size: 2em;
+        font-size: 1.8em;
       }
 
-      .items-container {
-        width: 100%;
-      }
-
-      .item-card {
-        padding: 10px;
-      }
-
-      footer {
-        font-size: 0.8em;
+      .nav-link {
+        font-size: 1em;
+        padding: 10px 20px;
       }
     }
   </style>
 </head>
 <body>
+  <div class="stars"></div>
+  <canvas id="doodle-canvas"></canvas>
+  <button class="doodle-toggle" onclick="toggleDoodleMode()">Doodle Mode</button>
+  <button class="clear-toggle" onclick="clearDoodleCanvas()">Clear Doodle</button>
 
-  <h1>Vintage Clothing Shop</h1>
+  <div class="header-container">
+    <h1><span class="letter">S</span><span class="letter">H</span><span class="letter">O</span><span class="letter">P</span></h1>
+  </div>
 
-  <div id='collection-component-1731977904963'></div>
-<script type="text/javascript">
-/*<![CDATA[*/
-(function () {
-  var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
-  if (window.ShopifyBuy) {
-    if (window.ShopifyBuy.UI) {
-      ShopifyBuyInit();
-    } else {
-      loadScript();
-    }
-  } else {
-    loadScript();
-  }
-  function loadScript() {
-    var script = document.createElement('script');
-    script.async = true;
-    script.src = scriptURL;
-    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
-    script.onload = ShopifyBuyInit;
-  }
-  function ShopifyBuyInit() {
-    var client = ShopifyBuy.buildClient({
-      domain: '1jfh83-3e.myshopify.com',
-      storefrontAccessToken: '79844f07c8917c8602e08325b460d7b0',
-    });
-    ShopifyBuy.UI.onReady(client).then(function (ui) {
-      ui.createComponent('collection', {
-        id: '633184747813',
-        node: document.getElementById('collection-component-1731977904963'),
-        moneyFormat: '%24%7B%7Bamount%7D%7D',
-        options: {
-  "product": {
-    "styles": {
-      "product": {
-        "@media (min-width: 601px)": {
-          "max-width": "calc(25% - 20px)",
-          "margin-left": "20px",
-          "margin-bottom": "50px",
-          "width": "calc(25% - 20px)"
-        },
-        "img": {
-          "height": "calc(100% - 15px)",
-          "position": "absolute",
-          "left": "0",
-          "right": "0",
-          "top": "0"
-        },
-        "imgWrapper": {
-          "padding-top": "calc(75% + 15px)",
-          "position": "relative",
-          "height": "0"
-        }
-      }
-    },
-    "text": {
-      "button": "Add to cart"
-    }
-  },
-  "productSet": {
-    "styles": {
-      "products": {
-        "@media (min-width: 601px)": {
-          "margin-left": "-20px"
-        }
-      }
-    }
-  },
-  "modalProduct": {
-    "contents": {
-      "img": false,
-      "imgWithCarousel": true,
-      "button": false,
-      "buttonWithQuantity": true
-    },
-    "styles": {
-      "product": {
-        "@media (min-width: 601px)": {
-          "max-width": "100%",
-          "margin-left": "0px",
-          "margin-bottom": "0px"
-        }
-      }
-    },
-    "text": {
-      "button": "Add to cart"
-    }
-  },
-  "option": {},
-  "cart": {
-    "text": {
-      "total": "Subtotal",
-      "button": "Checkout"
-    },
-    "popup": false
-  },
-  "toggle": {}
-},
-      });
-    });
-  }
-})();
-/*]]>*/
-</script>
-
-  <!-- Navigation Bar -->
   <div class="navigation">
     <a href="index.html" class="nav-link">Home</a>
-    <a href="shop.html" class="nav-link">Shop</a>
+    <a href="project.html" class="nav-link">Projects</a>
     <a href="contact.html" class="nav-link">Contact</a>
   </div>
 
-  <!-- Clothing Items Display -->
-  <div class="items-container">
-    <!-- Example Item 1 -->
-    <div class="item-card">
-      <img src="https://via.placeholder.com/250" alt="Vintage Jacket" class="item-img">
-      <h3 class="item-title">Vintage Leather Jacket</h3>
-      <p class="item-price">$120</p>
-      <p class="item-description">A timeless vintage leather jacket, perfect for any gothic enthusiast.</p>
+  <div class="collection-box">
+    <div class="collection-item" onclick="window.location.href='collections.html?collection=307826458681'">
+      <img src="https://placehold.co/300x200?text=BAND" alt="Band Genre">
+      <h2>VINTAGE BAND</h2>
     </div>
-
-    <!-- Example Item 2 -->
-    <div class="item-card">
-      <img src="https://via.placeholder.com/250" alt="Vintage T-shirt" class="item-img">
-      <h3 class="item-title">Good Charlotte 2008 Tour 
-        T-shirt</h3>
-      <p class="item-price">$35</p>
-      <p class="item-description">No flaws</p>
+    <div class="collection-item" onclick="window.location.href='collections.html?collection=YOUR_NEXT_COLLECTION_ID'">
+      <img src="https://placehold.co/300x200?text=Goth" alt="Goth Genre">
+      <h2>GOTH</h2>
     </div>
-
-    <!-- Example Item 3 -->
-    <div class="item-card">
-      <img src="https://via.placeholder.com/250" alt="Vintage Skirt" class="item-img">
-      <h3 class="item-title">Gothic Skirt</h3>
-      <p class="item-price">$75</p>
-      <p class="item-description">A high-waisted gothic skirt, combining elegance with dark beauty.</p>
+    <div class="collection-item" onclick="window.location.href='collections.html?collection=YOUR_OTHER_COLLECTION_ID'">
+      <img src="https://placehold.co/300x200?text=Y2K" alt="Y2K Genre">
+      <h2>Y2K</h2>
     </div>
+  </div>
 
-    <!-- Example Item 4 -->
-    <div class="item-card">
-      <img src="https://via.placeholder.com/250" alt="Vintage Boots" class="item-img">
-      <h3 class="item-title">Vintage Boots</h3>
-      <p class="item-price">$90</p>
-      <p class="item-description">Sturdy and stylish vintage boots for the true goth fashionista.</p>
-    </div>
+  <footer>© 2024 @irie.ike</footer>
 
-    <!-- Example Item 5 -->
-    <div class="item-card">
-      <img src="https://via.placeholder.com/250" alt="Vintage Black Dress" class="item-img">
-      <h3 class="item-title">Vintage Black Dress</h3>
-      <p class="item-price">$150</p>
-      <p class="item-description">A stunning black dress with a vintage gothic flair. Perfect for an evening out.</p>
-    </div>
+  <script>
+    // Starfield
+    const starField = document.querySelector('.stars');
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('span');
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDelay = Math.random() * 2 + 's';
+      starField.appendChild(s);
+    }
 
-    <!-- Example Item 6 -->
-    <div class="item-card">
-      <img src="https://via.placeholder.com/250" alt="Gothic Boots" class="item-img">
-      <h3 class="item-title">Gothic Lace-Up Boots</h3>
-      <p class="item-price">$130</p>
-      <p class="item-description">Dark, edgy lace-up boots to complement any gothic outfit.</p>
-    </div>
+    // Doodle Canvas
+    const canvas = document.getElementById('doodle-canvas');
+    const ctx = canvas.getContext('2d');
+    let isDoodle = false;
+    let isDrawing = false;
 
-    <!-- Example Item 7 -->
-    <div class="item-card">
-      <img src="https://via.placeholder.com/250" alt="Gothic Belt" class="item-img">
-      <h3 class="item-title">Gothic Studded Belt</h3>
-      <p class="item-price">$40</p>
-      <p class="item-description">A black leather belt with silver studs to add an edge to any outfit.</p>
-    </div>
+    function resizeCanvas() {
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+    }
 
-    <!-- Example Item 8 -->
-    <div class="item-card">
-      <img src="https://via.placeholder.com/250" alt="Vintage
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mouseup', () => isDrawing = false);
+    canvas.addEventListener('mousemove', e => draw(e));
+    canvas.addEventListener('touchstart', () => isDrawing = true);
+    canvas.addEventListener('touchend', () => isDrawing = false);
+    canvas.addEventListener('touchmove', e => draw(e.touches[0]));
+
+    function draw(e) {
+      if (isDoodle && isDrawing) {
+        ctx.beginPath();
+        ctx.arc(e.clientX, e.clientY, 4, 0, 2 * Math.PI);
+        ctx.fillStyle = '#f1f1f1';
+        ctx.fill();
+      }
+    }
+
+    function toggleDoodleMode() {
+      isDoodle = !isDoodle;
+      canvas.style.pointerEvents = isDoodle ? 'auto' : 'none';
+    }
+
+    function clearDoodleCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+  </script>
+</body>
+</html>
