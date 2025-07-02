@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device‑width, initial‑scale=1.0, maximum‑scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>irie.ike</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
@@ -10,10 +10,12 @@
       --bg-color-dark: #121212;
       --text-color-dark: #f1f1f1;
     }
+
     [data-theme="dark"] body {
       background: var(--bg-color-dark);
       color: var(--text-color-dark);
     }
+
     body {
       margin: 0;
       font-family: 'Press Start 2P', serif;
@@ -26,30 +28,162 @@
       overflow: hidden;
       padding-top: 60px;
     }
-    .stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-    .stars span { position: absolute; width: 2px; height: 2px; background: white; border-radius: 50%; animation: sparkle 2s infinite ease-in-out; }
-    @keyframes sparkle { 0%,100%{opacity:0.2;transform:scale(1);}50%{opacity:1;transform:scale(2.5);} }
-    canvas { position: fixed; inset: 0; z-index: 1; touch-action: none; }
-    .spray-cans { position: fixed; bottom: 20px; left: 20px; z-index: 1002; display:flex; gap:10px; }
-    .spray-can { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; cursor: pointer; }
-    .doodle-toggle, .clear-toggle { position: fixed; right: 20px; background:#444; color:#fff; padding:10px; border:none; border-radius:8px; font-size:0.8em; cursor:pointer; z-index:2; font-family:'Press Start 2P', serif; }
-    .doodle-toggle { top: 20px;} .clear-toggle { top: 60px; }
-    .header-container { background: rgba(0,0,0,0.8); padding: 16px 24px; border-radius: 12px; z-index:2; margin-top: 20px; }
-    h1 { font-size:2.2em; color: #d9d9d9; margin:0; }
-    .letter { display:inline-block; transition:transform 0.3s,color 0.3s; }
-    h1:hover .letter { animation: bounce 0.8s; }
-    @keyframes bounce {0%{transform:translateY(0);}50%{transform:translateY(-8px);}100%{transform:translateY(0);color:transparent;}}
-    .navigation { display:flex; flex-direction:column; gap:15px; margin-top:20px; z-index:2; }
-    .nav-link { text-decoration:none; font-size:1.2em; padding:12px 24px; border-radius:10px; color:#fff; border:2px solid #fff; transition:0.3s; }
-    .nav-link:hover { transform:scale(1.05); box-shadow:0 0 10px rgba(255,255,255,0.5); }
-    footer { margin-top: 30px; padding: 16px; font-size:0.7em; width:100%; text-align:center; z-index:2; }
-    #frog { position:fixed; width:50px; height:50px; background:url('https://upload.wikimedia.org/wikipedia/commons/7/71/Frog_icon_48x48.png') no-repeat center/contain; z-index:999; border-radius:50%; box-shadow:0 0 8px 2px lime, 0 0 16px 4px green; transition:left 0.2s ease, top 0.2s ease; }
-    @media(max-width:600px) {
-      .spray-can { width:24px; height:24px; }
-      .doodle-toggle, .clear-toggle { font-size:0.7em; padding:8px; }
-      h1 { font-size:1.8em; }
-      .nav-link { font-size:1em; padding:10px 20px; }
-      #frog { width:40px; height:40px; }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .stars span {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 2s infinite ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0%,100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(2.5); }
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      touch-action: none;
+    }
+
+    .spray-cans {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1002;
+      display: flex;
+      gap: 10px;
+    }
+
+    .spray-can {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 2px solid white;
+      cursor: pointer;
+    }
+
+    .doodle-toggle, .clear-toggle {
+      position: fixed;
+      right: 20px;
+      background: #444;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.8em;
+      cursor: pointer;
+      z-index: 2;
+      font-family: 'Press Start 2P', serif;
+    }
+
+    .doodle-toggle { top: 20px; }
+    .clear-toggle { top: 60px; }
+
+    .header-container {
+      background: rgba(0,0,0,0.8);
+      padding: 16px 24px;
+      border-radius: 12px;
+      z-index: 2;
+      margin-top: 20px;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      color: #d9d9d9;
+      margin: 0;
+    }
+
+    .letter {
+      display: inline-block;
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    h1:hover .letter {
+      animation: bounce 0.8s;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); color: transparent; }
+    }
+
+    .navigation {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+      z-index: 2;
+    }
+
+    .nav-link {
+      text-decoration: none;
+      font-size: 1.2em;
+      padding: 12px 24px;
+      border-radius: 10px;
+      color: #fff;
+      border: 2px solid #fff;
+      transition: 0.3s;
+    }
+
+    .nav-link:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+    }
+
+    footer {
+      margin-top: 30px;
+      padding: 16px;
+      font-size: 0.7em;
+      width: 100%;
+      text-align: center;
+      z-index: 2;
+    }
+
+    #frog {
+      position: fixed;
+      width: 50px;
+      height: 50px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/7/71/Frog_icon_48x48.png') no-repeat center/contain;
+      z-index: 999;
+      border-radius: 50%;
+      box-shadow: 0 0 8px 2px lime, 0 0 16px 4px green;
+      transition: left 0.2s ease, top 0.2s ease;
+    }
+
+    @media(max-width: 600px) {
+      h1 { font-size: 1.8em; }
+      .nav-link {
+        font-size: 1em;
+        padding: 10px 20px;
+      }
+      .spray-can {
+        width: 24px;
+        height: 24px;
+      }
+      .doodle-toggle, .clear-toggle {
+        font-size: 0.7em;
+        padding: 8px;
+      }
+      #frog {
+        width: 40px;
+        height: 40px;
+      }
+      .spray-cans {
+        bottom: 60px;
+      }
     }
   </style>
 </head>
@@ -72,10 +206,11 @@
 
   <div class="spray-cans"></div>
   <div id="frog"></div>
+
   <footer>© 2024 @irie.ike</footer>
 
   <script>
-    // starfield
+    // Starfield
     const starField = document.querySelector('.stars');
     for(let i=0;i<80;i++){
       const s = document.createElement('span');
@@ -85,7 +220,7 @@
       starField.appendChild(s);
     }
 
-    // spray cans
+    // Spray cans
     const sprayColors = ['#fff','#f44','#4f4','#4af','#ff4'];
     let currentColor = sprayColors[0];
     const sprayContainer = document.querySelector('.spray-cans');
@@ -97,7 +232,7 @@
       sprayContainer.appendChild(can);
     });
 
-    // doodle canvas
+    // Doodle canvas
     const canvas = document.getElementById('doodle-canvas');
     const ctx = canvas.getContext('2d');
     let isDoodle=false, isDrawing=false;
@@ -125,9 +260,12 @@
       isDoodle = !isDoodle;
       canvas.style.pointerEvents = isDoodle ? 'auto' : 'none';
     }
-    function clearDoodleCanvas(){ ctx.clearRect(0,0,canvas.width,canvas.height); }
 
-    // frog logic
+    function clearDoodleCanvas(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+    }
+
+    // Frog logic
     const frog = document.getElementById('frog');
     let frogX=50, frogY=50;
     function moveFrog(x,y){
