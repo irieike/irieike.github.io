@@ -140,6 +140,33 @@
       box-shadow: 0 0 10px rgba(255,255,255,0.5);
     }
 
+    .platform-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 30px;
+      z-index: 2;
+    }
+
+    .platform-button {
+      font-family: 'Press Start 2P', serif;
+      background: linear-gradient(135deg, #444, #999, #444);
+      border: 2px solid white;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-size: 0.8em;
+      transition: 0.3s;
+    }
+
+    .platform-button:hover {
+      background: linear-gradient(135deg, #f1c40f, #e74c3c, #9b59b6);
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+    }
+
     footer {
       margin-top: 40px;
       padding: 16px;
@@ -154,6 +181,7 @@
       .nav-link { font-size: 0.8em; padding: 8px 16px; }
       .spray-can { width: 24px; height: 24px; }
       .doodle-controls button { font-size: 0.65em; padding: 6px; }
+      .platform-button { font-size: 0.65em; padding: 8px 14px; }
     }
   </style>
 </head>
@@ -162,8 +190,8 @@
   <canvas id="doodle-canvas"></canvas>
 
   <div class="doodle-controls">
-    <button onclick="toggleDoodleMode()" aria-label="Toggle doodle drawing mode">Doodle Mode</button>
-    <button onclick="clearDoodleCanvas()" aria-label="Clear doodle canvas">Clear Doodle</button>
+    <button onclick="toggleDoodleMode()">Doodle Mode</button>
+    <button onclick="clearDoodleCanvas()">Clear Doodle</button>
   </div>
 
   <div class="header-container">
@@ -179,10 +207,17 @@
   </div>
 
   <div class="navigation">
-    <a href="#" class="nav-link" aria-label="Go to Home page">Home</a>
-    <a href="shop.html" class="nav-link" aria-label="Go to Shop page">Shop</a>
-    <a href="project.html" class="nav-link" aria-label="Go to Projects page">Projects</a>
-    <a href="contact.html" class="nav-link" aria-label="Go to Contact page">Contact</a>
+    <a href="#" class="nav-link">Home</a>
+    <a href="shop.html" class="nav-link">Shop</a>
+    <a href="project.html" class="nav-link">Projects</a>
+    <a href="contact.html" class="nav-link">Contact</a>
+  </div>
+
+  <div class="platform-links">
+    <a href="https://www.ebay.com/usr/yourusername" target="_blank" class="platform-button">eBay</a>
+    <a href="https://www.depop.com/yourusername" target="_blank" class="platform-button">Depop</a>
+    <a href="https://www.etsy.com/shop/yourusername" target="_blank" class="platform-button">Etsy</a>
+    <a href="https://www.grailed.com/yourusername" target="_blank" class="platform-button">Grailed</a>
   </div>
 
   <div class="spray-cans"></div>
@@ -240,8 +275,6 @@
     function toggleDoodleMode() {
       isDoodle = !isDoodle;
       canvas.style.pointerEvents = isDoodle ? 'auto' : 'none';
-      document.body.classList.toggle('doodle-active', isDoodle);
-      document.querySelector('.doodle-controls button').textContent = isDoodle ? 'Exit Doodle' : 'Doodle Mode';
     }
 
     function clearDoodleCanvas() {
