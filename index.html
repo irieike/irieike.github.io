@@ -11,14 +11,11 @@
       --text-color-dark: #f1f1f1;
     }
 
-    [data-theme="dark"] body {
-      background: var(--bg-color-dark);
-      color: var(--text-color-dark);
-    }
-
     body {
       margin: 0;
       font-family: 'Press Start 2P', serif;
+      background: var(--bg-color-dark);
+      color: var(--text-color-dark);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -97,32 +94,27 @@
     }
 
     .header-container {
-      background: rgba(0,0,0,0.8);
-      padding: 16px 24px;
+      background: black;
+      padding: 24px 24px 16px;
       border-radius: 12px;
       z-index: 2;
       margin-top: 20px;
+      display: inline-block;
     }
 
     h1 {
       font-size: 2em;
-      color: #d9d9d9;
       margin: 0;
+      white-space: nowrap;
+      line-height: 1;
+      display: inline-block;
+      letter-spacing: 0.1em;
     }
 
     .letter {
       display: inline-block;
-      transition: transform 0.3s, color 0.3s;
-    }
-
-    h1:hover .letter {
-      animation: bounce 0.8s;
-    }
-
-    @keyframes bounce {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-      100% { transform: translateY(0); color: transparent; }
+      color: #d9d9d9;
+      animation: sparkle 2s infinite ease-in-out;
     }
 
     .navigation {
@@ -157,23 +149,11 @@
       z-index: 2;
     }
 
-    #frog {
-      position: fixed;
-      width: 40px;
-      height: 40px;
-      background: url('https://upload.wikimedia.org/wikipedia/commons/7/71/Frog_icon_48x48.png') no-repeat center/contain;
-      z-index: 999;
-      border-radius: 50%;
-      box-shadow: 0 0 8px 2px lime, 0 0 16px 4px green;
-      transition: left 0.2s ease, top 0.2s ease;
-    }
-
     @media(max-width: 600px) {
-      h1 { font-size: 1.6em; }
-      .nav-link { font-size: 0.9em; padding: 10px 20px; }
+      h1 { font-size: 1.2em; }
+      .nav-link { font-size: 0.8em; padding: 8px 16px; }
       .spray-can { width: 24px; height: 24px; }
-      .doodle-controls button { font-size: 0.7em; padding: 8px; }
-      #frog { width: 35px; height: 35px; }
+      .doodle-controls button { font-size: 0.65em; padding: 6px; }
     }
   </style>
 </head>
@@ -182,26 +162,30 @@
   <canvas id="doodle-canvas"></canvas>
 
   <div class="doodle-controls">
-    <button onclick="toggleDoodleMode()">Doodle Mode</button>
-    <button onclick="clearDoodleCanvas()">Clear Doodle</button>
+    <button onclick="toggleDoodleMode()" aria-label="Toggle doodle drawing mode">Doodle Mode</button>
+    <button onclick="clearDoodleCanvas()" aria-label="Clear doodle canvas">Clear Doodle</button>
   </div>
 
   <div class="header-container">
     <h1>
-      <span class="letter">R</span><span class="letter">U</span><span class="letter">D</span><span class="letter">E</span><span class="letter">B</span><span class="letter">O</span><span class="letter">Y</span>
+      <span class="letter">R</span>
+      <span class="letter">U</span>
+      <span class="letter">D</span>
+      <span class="letter">E</span>
+      <span class="letter">B</span>
+      <span class="letter">O</span>
+      <span class="letter">Y</span>
     </h1>
   </div>
 
   <div class="navigation">
-    <a href="#" class="nav-link">Home</a>
-    <a href="shop.html" class="nav-link">Shop</a>
-    <a href="project.html" class="nav-link">Projects</a>
-    <a href="contact.html" class="nav-link">Contact</a>
+    <a href="#" class="nav-link" aria-label="Go to Home page">Home</a>
+    <a href="shop.html" class="nav-link" aria-label="Go to Shop page">Shop</a>
+    <a href="project.html" class="nav-link" aria-label="Go to Projects page">Projects</a>
+    <a href="contact.html" class="nav-link" aria-label="Go to Contact page">Contact</a>
   </div>
 
   <div class="spray-cans"></div>
-  <div id="frog"></div>
-
   <footer>© 2024 @irie.ike</footer>
 
   <script>
@@ -228,7 +212,12 @@
     const canvas = document.getElementById('doodle-canvas');
     const ctx = canvas.getContext('2d');
     let isDoodle = false, isDrawing = false;
-    function resizeCanvas() { canvas.width = innerWidth; canvas.height = innerHeight; }
+
+    function resizeCanvas() {
+      canvas.width = innerWidth;
+      canvas.height = innerHeight;
+    }
+
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
@@ -251,39 +240,13 @@
     function toggleDoodleMode() {
       isDoodle = !isDoodle;
       canvas.style.pointerEvents = isDoodle ? 'auto' : 'none';
+      document.body.classList.toggle('doodle-active', isDoodle);
+      document.querySelector('.doodle-controls button').textContent = isDoodle ? 'Exit Doodle' : 'Doodle Mode';
     }
 
     function clearDoodleCanvas() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
-
-    const frog = document.getElementById('frog');
-    let frogX = 50, frogY = 50;
-    function moveFrog(x, y) {
-      frogX = Math.max(0, Math.min(window.innerWidth - 50, x));
-      frogY = Math.max(0, Math.min(window.innerHeight - 50, y));
-      frog.style.left = frogX + 'px';
-      frog.style.top = frogY + 'px';
-    }
-
-    function hop() {
-      const dx = (Math.random() - 0.5) * 200;
-      const dy = (Math.random() - 0.5) * 200;
-      moveFrog(frogX + dx, frogY + dy);
-    }
-
-    function flee(e) {
-      const d = Math.hypot(frogX - e.clientX, frogY - e.clientY);
-      if (d < 120) {
-        const a = Math.atan2(frogY - e.clientY, frogX - e.clientX);
-        moveFrog(frogX + Math.cos(a) * 80, frogY + Math.sin(a) * 80);
-      }
-    }
-
-    moveFrog(frogX, frogY);
-    setInterval(hop, 2500);
-    document.addEventListener('mousemove', flee);
-    document.addEventListener('touchmove', e => flee(e.touches[0]));
   </script>
 </body>
 </html>

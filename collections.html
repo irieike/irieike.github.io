@@ -1,35 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>irie.ike | Collection</title>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <script src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"></script>
   <style>
+    :root {
+      --bg-color-dark: #121212;
+      --text-color-dark: #f1f1f1;
+    }
+
     body {
       margin: 0;
       font-family: 'Press Start 2P', 'Garamond', serif;
-      background-color: #1a1a1a;
-      color: #f1f1f1;
+      background: var(--bg-color-dark);
+      color: var(--text-color-dark);
       display: flex;
       flex-direction: column;
       align-items: center;
       min-height: 100vh;
       text-align: center;
-      padding: 40px 20px 20px 20px;
+      padding: 60px 20px 20px;
+      overflow-x: hidden;
     }
 
     h1 {
       font-size: 2.2em;
-      color: #fff;
-      margin-bottom: 30px;
+      color: #f1c40f;
+      margin-top: 100px;
     }
 
-    #collection-component {
-      width: 100%;
-      max-width: 1200px;
-      margin-top: 40px;
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .stars span {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 2s infinite ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(2.5); }
     }
 
     .fixed-buttons {
@@ -52,19 +73,128 @@
       cursor: pointer;
       font-family: 'Press Start 2P', 'Garamond', serif;
     }
+
+    #collection-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 60px;
+      max-width: 1200px;
+      width: 100%;
+      z-index: 2;
+    }
+
+    .product-card {
+      width: 280px;
+      background-color: #292929;
+      color: #f1f1f1;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 0 12px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: scale(1.05);
+    }
+
+    .product-card img {
+      width: 100%;
+      border-radius: 10px;
+      object-fit: cover;
+    }
+
+    .product-info {
+      margin-top: 12px;
+    }
+
+    .product-title {
+      font-size: 0.8em;
+      color: #f1c40f;
+    }
+
+    .product-price {
+      font-size: 0.9em;
+      margin-top: 5px;
+    }
+
+    .quick-view-modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1002;
+    }
+
+    .quick-view-content {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 600px;
+      color: #fff;
+      text-align: left;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    .quick-view-content img {
+      width: 100%;
+      border-radius: 12px;
+    }
+
+    .close-modal {
+      margin-top: 20px;
+      background: #f1c40f;
+      color: #000;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-family: 'Press Start 2P', 'Garamond', serif;
+      cursor: pointer;
+    }
+
+    @media(max-width: 600px) {
+      h1 { font-size: 1.8em; }
+      .product-card { width: 90%; }
+    }
   </style>
 </head>
 <body>
+  <div class="stars"></div>
+
   <div class="fixed-buttons">
     <button onclick="window.location.href='shop.html'">Back to Genres</button>
   </div>
 
   <h1 id="genreTitle">Collection</h1>
-  <div id="collection-component"></div>
+  <div id="collection-grid"></div>
+
+  <div class="quick-view-modal" id="quickViewModal">
+    <div class="quick-view-content" id="modalContent">
+      <img id="modalImg" src="" alt="">
+      <h2 id="modalTitle"></h2>
+      <p id="modalPrice"></p>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Product description goes here.</p>
+      <button class="close-modal" onclick="closeModal()">Close</button>
+    </div>
+  </div>
 
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const collectionId = urlParams.get('collection');
+    const starField = document.querySelector('.stars');
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('span');
+      s.style.left = Math.random() * 100 + 'vw';
+      s.style.top = Math.random() * 100 + 'vh';
+      s.style.animationDelay = Math.random() * 2 + 's';
+      starField.appendChild(s);
+    }
 
     const genreMap = {
       '307826458681': 'Vintage Band Tees',
@@ -73,51 +203,51 @@
       'YOUR_FOURTH_COLLECTION_ID': 'Alt'
     };
 
+    const urlParams = new URLSearchParams(window.location.search);
+    const collectionId = urlParams.get('collection');
     document.getElementById('genreTitle').textContent = genreMap[collectionId] || 'Collection';
 
-    if (collectionId) {
-      const client = ShopifyBuy.buildClient({
-        domain: 'lootsaac.myshopify.com',
-        storefrontAccessToken: '4a16403160160e06dc63c84b1498b579',
-      });
+    const products = [
+      {
+        title: "Vintage Nirvana Tee",
+        price: "$49.99",
+        image: "https://placehold.co/300x300?text=Nirvana"
+      },
+      {
+        title: "Guns N' Roses Shirt",
+        price: "$39.99",
+        image: "https://placehold.co/300x300?text=GNR"
+      },
+      {
+        title: "Metallica Tour Tee",
+        price: "$59.99",
+        image: "https://placehold.co/300x300?text=Metallica"
+      }
+    ];
 
-      ShopifyBuy.UI.onReady(client).then(function (ui) {
-        ui.createComponent('collection', {
-          id: collectionId,
-          node: document.getElementById('collection-component'),
-          moneyFormat: '%24%7B%7Bamount%7D%7D',
-          options: {
-            product: {
-              iframe: true,
-              styles: {
-                product: {
-                  'background-color': '#292929',
-                  'color': '#f1f1f1',
-                  'font-family': 'Press Start 2P, Garamond, serif',
-                  'border-radius': '16px',
-                  'padding': '20px'
-                },
-                button: {
-                  'background-color': '#f1c40f',
-                  'color': '#1a1a1a',
-                  'border-radius': '10px',
-                  'padding': '10px',
-                  'font-family': 'Press Start 2P, Garamond, serif'
-                }
-              },
-              contents: {
-                img: true,
-                title: true,
-                price: true,
-                button: true
-              }
-            },
-            cart: {
-              startOpen: false
-            }
-          }
-        });
-      });
+    const grid = document.getElementById('collection-grid');
+    products.forEach(p => {
+      const card = document.createElement('div');
+      card.className = 'product-card';
+      card.innerHTML = `
+        <img src="${p.image}" alt="${p.title}" />
+        <div class="product-info">
+          <div class="product-title">${p.title}</div>
+          <div class="product-price">${p.price}</div>
+        </div>`;
+      card.addEventListener('click', () => openModal(p));
+      grid.appendChild(card);
+    });
+
+    function openModal(product) {
+      document.getElementById('modalImg').src = product.image;
+      document.getElementById('modalTitle').textContent = product.title;
+      document.getElementById('modalPrice').textContent = product.price;
+      document.getElementById('quickViewModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('quickViewModal').style.display = 'none';
     }
   </script>
 </body>

@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>irie.ike | Shop</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
-  <script src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"></script>
   <style>
     :root {
       --bg-color-dark: #121212;
@@ -26,7 +25,7 @@
       justify-content: flex-start;
       min-height: 100vh;
       text-align: center;
-      overflow: hidden;
+      overflow-x: hidden;
       padding-top: 60px;
     }
 
@@ -51,80 +50,37 @@
       50% { opacity: 1; transform: scale(2.5); }
     }
 
-    canvas {
+    .fixed-buttons {
       position: fixed;
-      inset: 0;
-      z-index: 1;
-      touch-action: none;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 2;
     }
 
-    .doodle-toggle, .clear-toggle {
-      position: fixed;
-      right: 20px;
+    .fixed-buttons button {
       background: #444;
       color: #fff;
-      padding: 10px;
+      padding: 10px 20px;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       font-size: 0.8em;
       cursor: pointer;
-      z-index: 2;
-      font-family: 'Press Start 2P', serif;
+      font-family: 'Press Start 2P', 'Garamond', serif;
     }
 
-    .doodle-toggle { top: 20px; }
-    .clear-toggle { top: 60px; }
-
-    .header-container {
-      background: rgba(0,0,0,0.8);
-      padding: 16px 24px;
-      border-radius: 12px;
-      z-index: 2;
-      margin-top: 20px;
+    .fixed-buttons .home-button {
+      font-size: 1em;
+      padding: 14px 28px;
     }
 
     h1 {
       font-size: 2.2em;
       color: #d9d9d9;
-      margin: 0;
-    }
-
-    .letter {
-      display: inline-block;
-      transition: transform 0.3s, color 0.3s;
-    }
-
-    h1:hover .letter {
-      animation: bounce 0.8s;
-    }
-
-    @keyframes bounce {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-      100% { transform: translateY(0); color: transparent; }
-    }
-
-    .navigation {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
+      margin: 20px 0;
       z-index: 2;
-    }
-
-    .nav-link {
-      text-decoration: none;
-      font-size: 1.2em;
-      padding: 12px 24px;
-      border-radius: 10px;
-      color: #fff;
-      border: 2px solid #fff;
-      transition: 0.3s;
-    }
-
-    .nav-link:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 
     .collection-box {
@@ -132,7 +88,7 @@
       flex-wrap: wrap;
       justify-content: center;
       gap: 40px;
-      margin: 60px 20px;
+      padding: 40px 20px 60px;
       z-index: 2;
     }
 
@@ -159,6 +115,8 @@
 
     .collection-item img {
       width: 100%;
+      height: 200px;
+      object-fit: cover;
       border-radius: 10px;
       margin-bottom: 15px;
     }
@@ -173,49 +131,40 @@
     }
 
     @media (max-width: 600px) {
-      .doodle-toggle, .clear-toggle {
-        font-size: 0.7em;
-        padding: 8px;
-      }
-
       h1 {
         font-size: 1.8em;
       }
 
-      .nav-link {
+      .collection-item {
+        width: 90%;
+      }
+
+      .collection-item h2 {
         font-size: 1em;
-        padding: 10px 20px;
       }
     }
   </style>
 </head>
 <body>
   <div class="stars"></div>
-  <canvas id="doodle-canvas"></canvas>
-  <button class="doodle-toggle" onclick="toggleDoodleMode()">Doodle Mode</button>
-  <button class="clear-toggle" onclick="clearDoodleCanvas()">Clear Doodle</button>
 
-  <div class="header-container">
-    <h1><span class="letter">S</span><span class="letter">H</span><span class="letter">O</span><span class="letter">P</span></h1>
+  <div class="fixed-buttons">
+    <button class="home-button" onclick="window.location.href='index.html'">Home</button>
   </div>
 
-  <div class="navigation">
-    <a href="index.html" class="nav-link">Home</a>
-    <a href="project.html" class="nav-link">Projects</a>
-    <a href="contact.html" class="nav-link">Contact</a>
-  </div>
+  <h1>SHOP BY GENRE</h1>
 
   <div class="collection-box">
     <div class="collection-item" onclick="window.location.href='collections.html?collection=307826458681'">
-      <img src="https://placehold.co/300x200?text=BAND" alt="Band Genre">
+      <img src="giphy.gif" alt="Band Genre">
       <h2>VINTAGE BAND</h2>
     </div>
     <div class="collection-item" onclick="window.location.href='collections.html?collection=YOUR_NEXT_COLLECTION_ID'">
-      <img src="https://placehold.co/300x200?text=Goth" alt="Goth Genre">
+      <img src="goth.gif" alt="Goth Genre">
       <h2>GOTH</h2>
     </div>
     <div class="collection-item" onclick="window.location.href='collections.html?collection=YOUR_OTHER_COLLECTION_ID'">
-      <img src="https://placehold.co/300x200?text=Y2K" alt="Y2K Genre">
+      <img src="DISCO.gif" alt="Y2K Genre">
       <h2>Y2K</h2>
     </div>
   </div>
@@ -223,7 +172,6 @@
   <footer>© 2024 @irie.ike</footer>
 
   <script>
-    // Starfield
     const starField = document.querySelector('.stars');
     for (let i = 0; i < 80; i++) {
       const s = document.createElement('span');
@@ -231,45 +179,6 @@
       s.style.top = Math.random() * 100 + 'vh';
       s.style.animationDelay = Math.random() * 2 + 's';
       starField.appendChild(s);
-    }
-
-    // Doodle Canvas
-    const canvas = document.getElementById('doodle-canvas');
-    const ctx = canvas.getContext('2d');
-    let isDoodle = false;
-    let isDrawing = false;
-
-    function resizeCanvas() {
-      canvas.width = innerWidth;
-      canvas.height = innerHeight;
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    canvas.addEventListener('mousedown', () => isDrawing = true);
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('mousemove', e => draw(e));
-    canvas.addEventListener('touchstart', () => isDrawing = true);
-    canvas.addEventListener('touchend', () => isDrawing = false);
-    canvas.addEventListener('touchmove', e => draw(e.touches[0]));
-
-    function draw(e) {
-      if (isDoodle && isDrawing) {
-        ctx.beginPath();
-        ctx.arc(e.clientX, e.clientY, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = '#f1f1f1';
-        ctx.fill();
-      }
-    }
-
-    function toggleDoodleMode() {
-      isDoodle = !isDoodle;
-      canvas.style.pointerEvents = isDoodle ? 'auto' : 'none';
-    }
-
-    function clearDoodleCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
   </script>
 </body>

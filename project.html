@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,50 +8,57 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg-color-dark: #1e1e1e;
+      --text-color: #f1f1f1;
+      --highlight: #f1c40f;
+      --card-bg: #292929;
+    }
+
     body {
-      font-family: 'Press Start 2P', 'Garamond', serif;
-      background-color: #1e1e1e;
-      color: #f1f1f1;
       margin: 0;
-      padding: 40px 20px;
+      font-family: 'Press Start 2P', 'Garamond', serif;
+      background-color: var(--bg-color-dark);
+      color: var(--text-color);
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: 100vh;
+      padding: 80px 20px 40px;
       text-align: center;
     }
 
     h1 {
-      font-size: 2.5em;
-      color: #f1c40f;
+      font-size: 2.2em;
+      color: var(--highlight);
       margin-bottom: 10px;
     }
 
     p {
-      font-size: 1.2em;
+      font-size: 1em;
       color: #ccc;
       margin-bottom: 30px;
+      max-width: 600px;
     }
 
     .project-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       gap: 20px;
       width: 100%;
-      max-width: 1200px;
-      margin-top: 160px;
+      max-width: 1000px;
+      margin-top: 30px;
     }
 
     .project-item {
-      background-color: #292929;
-      border-radius: 10px;
+      background-color: var(--card-bg);
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
       transition: transform 0.3s ease;
     }
 
     .project-item:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
     }
 
     .project-item img,
@@ -62,73 +69,52 @@
     }
 
     .project-title {
-      padding: 10px;
-      font-size: 1em;
-      color: #f1c40f;
-      background: #1a1a1a;
+      padding: 10px 12px;
+      font-size: 0.8em;
+      background-color: #1a1a1a;
+      color: var(--highlight);
     }
 
     .fixed-buttons {
       position: fixed;
-      top: 20px;
+      bottom: 20px;
       right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
       z-index: 1001;
     }
 
     .fixed-buttons button {
-      background: #444;
+      background-color: #444;
       color: #fff;
-      padding: 10px 20px;
+      padding: 12px 20px;
       border: none;
       border-radius: 10px;
-      font-size: 0.8em;
+      font-size: 0.75em;
       cursor: pointer;
       font-family: 'Press Start 2P', 'Garamond', serif;
     }
 
-    .fixed-buttons .home-button {
-      font-size: 1em;
-      padding: 14px 28px;
-    }
-
-    .cart-count {
-      position: fixed;
-      bottom: 10px;
-      right: 10px;
-      transform: translate(20%, -20%);
-      background: #292929;
-      border: 2px solid #fff;
-      color: #fff;
-      border-radius: 50%;
-      width: 30px;
-      height: 30px;
-      font-size: 0.8em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Press Start 2P', 'Garamond', serif;
-      z-index: 1002;
-      pointer-events: none;
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 600px) {
       h1 {
-        font-size: 2em;
+        font-size: 1.4em;
+      }
+
+      p {
+        font-size: 0.85em;
+        padding: 0 10px;
       }
 
       .project-title {
-        font-size: 0.9em;
+        font-size: 0.7em;
+      }
+
+      .fixed-buttons button {
+        padding: 10px 16px;
+        font-size: 0.7em;
       }
     }
   </style>
 </head>
 <body>
-  <div class="fixed-buttons">
-    <button class="home-button" onclick="window.location.href='index.html'">Home</button>
-  </div>
 
   <h1>Projects</h1>
   <p>Explore my collection of art, videos, and creative projects.</p>
@@ -139,14 +125,14 @@
       <div class="project-title">Art 1</div>
     </div>
     <div class="project-item">
-      <video src="video1.mp4" muted autoplay loop></video>
+      <video src="video1.mp4" muted autoplay loop playsinline></video>
       <div class="project-title">Video 1</div>
     </div>
   </div>
 
-  <script>
-    let cartItemCount = 0;
-    document.getElementById('cart-count').innerText = cartItemCount;
-  </script>
+  <div class="fixed-buttons">
+    <button onclick="window.location.href='index.html'">Home</button>
+  </div>
+
 </body>
 </html>
