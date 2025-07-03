@@ -1,36 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>-</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact | irie.ike</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <style>
-    /* Global Styles */
+    :root {
+      --bg-color-dark: #121212;
+      --text-color-dark: #f1f1f1;
+    }
+
+    [data-theme="dark"] body {
+      background: var(--bg-color-dark);
+      color: var(--text-color-dark);
+    }
+
     body {
       margin: 0;
-      font-family: 'Press Start 2P', 'Garamond', serif; /* Apply the font globally */
-      background-color: #1a1a1a;
-      color: #f1f1f1;
+      font-family: 'Press Start 2P', serif;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      text-align: center;
-      background-image: url('https://images.unsplash.com/photo-1518380365020-2a5c3159f8f4');
-      background-size: cover;
-      background-position: center;
-      background-attachment: fixed;
+      justify-content: flex-start;
       min-height: 100vh;
+      text-align: center;
+      padding-top: 80px;
+      overflow-x: hidden;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .stars span {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      animation: sparkle 2s infinite ease-in-out;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(2.5); }
     }
 
     h1 {
-      font-size: 3.5em;
+      font-size: 2em;
       color: #d9d9d9;
-      margin-bottom: 20px;
+      z-index: 1;
     }
 
     .navigation {
@@ -40,25 +63,31 @@
       transform: translateX(-50%);
       display: flex;
       gap: 20px;
+      z-index: 2;
     }
 
     .nav-link {
       color: #fff;
       text-decoration: none;
-      font-size: 1.5em;
+      font-size: 1em;
+      border: 2px solid #fff;
+      padding: 10px 16px;
+      border-radius: 8px;
       transition: 0.3s;
     }
 
     .nav-link:hover {
-      color: #32cd32; /* Green color on hover */
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
 
     .contact-container {
-      background-color: rgba(0, 0, 0, 0.6);
-      padding: 20px;
-      border-radius: 15px;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 16px;
       max-width: 500px;
-      width: 100%;
+      width: 90%;
+      z-index: 1;
     }
 
     .contact-form {
@@ -68,28 +97,25 @@
     }
 
     input, textarea {
-      padding: 10px;
-      font-size: 1.2em;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-      background-color: #333;
+      padding: 12px;
+      font-size: 1em;
+      border-radius: 10px;
+      border: none;
+      background-color: #292929;
       color: #fff;
-      font-family: 'Press Start 2P', sans-serif;
+      font-family: 'Press Start 2P', serif;
     }
 
-    /* Gradient Button Styles */
     button, .return-home-button {
-      padding: 10px;
+      padding: 12px;
       background: linear-gradient(135deg, red, gold, green);
       color: #fff;
       border: none;
-      border-radius: 5px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 1.5em;
+      font-size: 1em;
       transition: 0.3s;
-      text-decoration: none;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
-      font-family: 'Press Start 2P', sans-serif; /* Apply the same font to both buttons */
+      font-family: 'Press Start 2P', serif;
     }
 
     button:hover, .return-home-button:hover {
@@ -101,44 +127,51 @@
       animation: bounce 0.3s ease-in-out;
     }
 
-    /* Bounce Effect */
     @keyframes bounce {
-      0% {
-        transform: scale(1);
-      }
-      50% {
-        transform: scale(1.2);
-      }
-      100% {
-        transform: scale(1);
-      }
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
 
     footer {
       width: 100%;
       text-align: center;
       padding: 20px;
-      background-color: #333;
-      color: #fff;
-      font-size: 1em;
+      font-size: 0.75em;
       margin-top: auto;
+      z-index: 1;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 1.5em;
+      }
+
+      .nav-link {
+        font-size: 0.8em;
+        padding: 8px 12px;
+      }
+
+      button {
+        font-size: 0.8em;
+      }
     }
   </style>
 </head>
 <body>
-
+  <div class="stars"></div>
   <div class="navigation">
     <a href="index.html" class="nav-link">Home</a>
     <a href="shop.html" class="nav-link">Shop</a>
     <a href="contact.html" class="nav-link">Contact</a>
   </div>
 
-  <h1></h1>
+  <h1>Contact</h1>
 
   <div class="contact-container">
     <form id="contactForm" action="https://formspree.io/f/xpwzlwbl" method="POST" class="contact-form">
-      <input type="text" name="name" placeholder="Your Name" required>
-      <input type="email" name="email" placeholder="Your Email" required>
+      <input type="text" name="name" placeholder="Your Name" required />
+      <input type="email" name="email" placeholder="Your Email" required />
       <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
       <button type="submit" id="submitButton">Send Message</button>
     </form>
@@ -146,40 +179,41 @@
 
   <button class="return-home-button" onclick="window.location.href='index.html';">Return to Home</button>
 
-  <footer>
-    © 2024 
-  </footer>
+  <footer>© 2024 @irie.ike</footer>
 
   <script>
-    // Handle the form submission
+    // Starfield
+    const starField = document.querySelector('.stars');
+    for(let i=0; i<80; i++){
+      const s = document.createElement('span');
+      s.style.left = Math.random()*100 + 'vw';
+      s.style.top = Math.random()*100 + 'vh';
+      s.style.animationDelay = Math.random()*2 + 's';
+      starField.appendChild(s);
+    }
+
+    // Form submission
     document.getElementById('contactForm').addEventListener('submit', function (e) {
-      e.preventDefault(); // Prevent default form submission
-  
+      e.preventDefault();
       const submitButton = document.getElementById('submitButton');
-      submitButton.innerHTML = '😊'; // Change button text to a smiley face
-  
-      // Submit the form data via Fetch API
+      submitButton.innerHTML = '😊';
+
       fetch('https://formspree.io/f/xpwzlwbl', {
         method: 'POST',
         body: new FormData(this),
-        headers: {
-          'Accept': 'application/json',
-        },
+        headers: { 'Accept': 'application/json' }
       })
-        .then((response) => {
-          if (response.ok) {
-            console.log('Form submitted successfully');
-            submitButton.innerHTML = '✔️'; // Success icon
-          } else {
-            throw new Error('Form submission error');
-          }
-        })
-        .catch((error) => {
-          console.error('Error submitting form:', error);
-          submitButton.innerHTML = '😞'; // Sad face on error
-        });
+      .then((response) => {
+        if (response.ok) {
+          submitButton.innerHTML = '✔️';
+        } else {
+          throw new Error('Form submission error');
+        }
+      })
+      .catch(() => {
+        submitButton.innerHTML = '😞';
+      });
     });
   </script>
-
 </body>
 </html>
