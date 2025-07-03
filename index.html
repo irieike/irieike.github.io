@@ -256,19 +256,31 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
 
-    canvas.addEventListener('mousedown', () => isDrawing = true);
+    canvas.addEventListener('mousedown', e => {
+      if (e.button === 0) isDrawing = true;
+    });
     canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('mousemove', e => draw(e));
+    canvas.addEventListener('mouseleave', () => isDrawing = false);
+    canvas.addEventListener('mousemove', e => drawSpray(e));
     canvas.addEventListener('touchstart', () => isDrawing = true);
     canvas.addEventListener('touchend', () => isDrawing = false);
-    canvas.addEventListener('touchmove', e => draw(e.touches[0]));
+    canvas.addEventListener('touchcancel', () => isDrawing = false);
+    canvas.addEventListener('touchmove', e => drawSpray(e.touches[0]));
 
-    function draw(e) {
+    function drawSpray(e) {
       if (isDoodle && isDrawing) {
-        ctx.beginPath();
-        ctx.arc(e.clientX, e.clientY, 4, 0, 2 * Math.PI);
-        ctx.fillStyle = currentColor;
-        ctx.fill();
+        const density = 30;
+        const radius = 20;
+        for (let i = 0; i < density; i++) {
+          const angle = Math.random() * 2 * Math.PI;
+          const r = Math.random() * radius;
+          const offsetX = Math.cos(angle) * r;
+          const offsetY = Math.sin(angle) * r;
+          ctx.beginPath();
+          ctx.arc(e.clientX + offsetX, e.clientY + offsetY, 1 + Math.random() * 1.5, 0, 2 * Math.PI);
+          ctx.fillStyle = currentColor;
+          ctx.fill();
+        }
       }
     }
 
