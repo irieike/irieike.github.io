@@ -8,10 +8,17 @@
   <meta name="author" content="irie.ike" />
   <meta name="robots" content="index, follow" />
   
-  <!-- iOS specific meta tags -->
+  <!-- PWA Meta Tags -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="RUDEBOY" />
   <meta name="format-detection" content="telephone=no" />
+  <meta name="theme-color" content="#121212" />
+  <meta name="msapplication-TileColor" content="#121212" />
+  
+  <!-- PWA Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3e%3crect width='32' height='32' fill='%23121212'/%3e%3ctext x='16' y='20' text-anchor='middle' fill='%23f1c40f' font-family='monospace' font-size='10' font-weight='bold'%3eR%3c/text%3e%3c/svg%3e" />
+  <link rel="manifest" href="manifest.json" />
   
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self';" />
@@ -25,6 +32,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link rel="prefetch" href="shop.html" />
   <link rel="prefetch" href="contact.html" />
+  <link rel="dns-prefetch" href="https://irieike.github.io" />
   
   <title>RUDEBOY | irie.ike - Vintage & Alternative Fashion</title>
   
@@ -101,13 +109,54 @@
       position: relative;
     }
 
-    /* Enhanced star field with better performance */
+    /* Advanced loading animation */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 1;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .loading-animation {
+      display: flex;
+      gap: 8px;
+    }
+
+    .loading-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-primary);
+      animation: loadingPulse 1.5s infinite ease-in-out;
+    }
+
+    .loading-dot:nth-child(2) { animation-delay: 0.2s; }
+    .loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes loadingPulse {
+      0%, 80%, 100% { transform: scale(0.8); opacity: 0.5; }
+      40% { transform: scale(1.2); opacity: 1; }
+    }
+
+    /* Enhanced star field with performance optimizations */
     .stars {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
       will-change: transform;
+      contain: layout style paint;
     }
 
     .stars span {
@@ -118,6 +167,7 @@
       border-radius: 50%;
       animation: sparkle 3s infinite ease-in-out;
       will-change: opacity, transform;
+      contain: layout style paint;
     }
 
     @keyframes sparkle {
@@ -131,13 +181,84 @@
       }
     }
 
-    /* Enhanced canvas with better touch handling */
+    /* Parallax scrolling effect */
+    .parallax-bg {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 30% 20%, rgba(241, 196, 15, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 70% 80%, rgba(231, 76, 60, 0.03) 0%, transparent 50%),
+                  radial-gradient(circle at 50% 50%, rgba(155, 89, 182, 0.02) 0%, transparent 50%);
+      z-index: -1;
+      will-change: transform;
+      animation: parallaxFloat 20s infinite ease-in-out;
+    }
+
+    @keyframes parallaxFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      33% { transform: translateY(-10px) rotate(1deg); }
+      66% { transform: translateY(5px) rotate(-0.5deg); }
+    }
+
+    /* Enhanced canvas with performance boost */
     canvas {
       position: fixed;
       inset: 0;
       z-index: 1;
       touch-action: none;
       will-change: contents;
+      image-rendering: optimizeSpeed;
+      image-rendering: -webkit-optimize-contrast;
+    }
+
+    /* Animated entrance effects */
+    .fade-in-up {
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .fade-in-up.delay-1 { animation-delay: 0.2s; }
+    .fade-in-up.delay-2 { animation-delay: 0.4s; }
+    .fade-in-up.delay-3 { animation-delay: 0.6s; }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Stagger animation for letters */
+    .letter-animate {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(20px) rotateX(90deg);
+      animation: letterDrop 0.6s ease forwards;
+    }
+
+    .letter-animate:nth-child(1) { animation-delay: 0.1s; }
+    .letter-animate:nth-child(2) { animation-delay: 0.2s; }
+    .letter-animate:nth-child(3) { animation-delay: 0.3s; }
+    .letter-animate:nth-child(4) { animation-delay: 0.4s; }
+    .letter-animate:nth-child(5) { animation-delay: 0.5s; }
+    .letter-animate:nth-child(6) { animation-delay: 0.6s; }
+    .letter-animate:nth-child(7) { animation-delay: 0.7s; }
+
+    @keyframes letterDrop {
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0deg);
+      }
+    }
+
+    /* Floating animation for elements */
+    .float-animation {
+      animation: floatGentle 6s ease-in-out infinite;
+    }
+
+    @keyframes floatGentle {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-8px); }
     }
 
     /* Static Drawing Toggle - always visible in top-right */
@@ -172,6 +293,7 @@
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      animation: floatGentle 4s ease-in-out infinite;
     }
 
     .drawing-fab:hover {
@@ -182,6 +304,7 @@
         inset 0 3px 0 rgba(255, 255, 255, 0.4),
         inset 0 -3px 0 rgba(0, 0, 0, 0.3);
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+      animation: none;
     }
 
     .drawing-fab:active {
@@ -205,11 +328,13 @@
       opacity: 0;
       pointer-events: none;
       transition: all var(--transition-medium);
+      transform: translateX(100px);
     }
 
     .canvas-controls.visible {
       opacity: 1;
       pointer-events: auto;
+      transform: translateX(0);
     }
 
     .control-button {
@@ -296,11 +421,13 @@
       opacity: 0;
       pointer-events: none;
       transition: all var(--transition-medium);
+      transform: translateX(-100px);
     }
 
     .color-palette.visible {
       opacity: 1;
       pointer-events: auto;
+      transform: translateX(0);
     }
 
     .color-swatch {
@@ -316,6 +443,13 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.2),
         inset 0 -1px 0 rgba(0, 0, 0, 0.3);
       position: relative;
+      animation: colorPulse 3s ease-in-out infinite;
+      animation-delay: calc(var(--index) * 0.2s);
+    }
+
+    @keyframes colorPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
     }
 
     .color-swatch:hover {
@@ -326,6 +460,7 @@
         inset 0 2px 0 rgba(255, 255, 255, 0.3),
         inset 0 -2px 0 rgba(0, 0, 0, 0.4);
       border-color: #444;
+      animation: none;
     }
 
     .color-swatch.active {
@@ -337,6 +472,12 @@
         inset 0 2px 0 rgba(255, 255, 255, 0.4),
         inset 0 -2px 0 rgba(0, 0, 0, 0.4);
       border-color: currentColor;
+      animation: activeGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes activeGlow {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.2); }
     }
 
     .color-swatch:active {
@@ -353,7 +494,7 @@
       outline-offset: 4px;
     }
 
-    /* Main content container */
+    /* Main content container with scroll animations */
     main {
       display: flex;
       flex-direction: column;
@@ -365,7 +506,7 @@
       gap: var(--spacing-md);
     }
 
-    /* Professional header design - mobile optimized */
+    /* Professional header design with animations */
     .header-container {
       background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
       padding: var(--spacing-md) var(--spacing-lg);
@@ -377,6 +518,18 @@
       position: relative;
       overflow: hidden;
       width: 100%;
+      animation: headerPulse 8s ease-in-out infinite;
+    }
+
+    @keyframes headerPulse {
+      0%, 100% { 
+        box-shadow: 0 8px 32px var(--shadow-dark);
+        border-color: var(--border-color);
+      }
+      50% { 
+        box-shadow: 0 12px 40px var(--shadow-dark), 0 0 20px rgba(241, 196, 15, 0.1);
+        border-color: rgba(241, 196, 15, 0.2);
+      }
     }
 
     .header-container::before {
@@ -387,7 +540,7 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(90deg, transparent, var(--shadow-light), transparent);
-      animation: shimmer 3s infinite;
+      animation: shimmer 4s infinite;
     }
 
     @keyframes shimmer {
@@ -413,15 +566,17 @@
       transition: all var(--transition-medium);
       cursor: default;
       margin: 0 clamp(-4px, 0vw, -1px);
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
     }
 
     .letter:hover {
       color: var(--accent-primary);
-      transform: translateY(-2px) rotate(2deg);
-      text-shadow: 0 2px 4px var(--accent-primary);
+      transform: translateY(-2px) rotate(2deg) scale(1.1);
+      text-shadow: 0 4px 8px var(--accent-primary);
+      filter: drop-shadow(0 4px 8px rgba(241, 196, 15, 0.4));
     }
 
-    /* Enhanced navigation - mobile optimized */
+    /* Enhanced navigation with micro-interactions */
     .navigation {
       display: flex;
       flex-direction: column;
@@ -450,6 +605,7 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.1),
         inset 0 -1px 0 rgba(0, 0, 0, 0.2);
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+      transform: perspective(1000px) rotateX(0deg);
     }
 
     .nav-link::before {
@@ -464,13 +620,29 @@
       z-index: -1;
     }
 
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 0;
+      height: 2px;
+      background: var(--accent-primary);
+      transition: all var(--transition-medium);
+      transform: translateX(-50%);
+    }
+
     .nav-link:hover::before {
       left: 0;
     }
 
+    .nav-link:hover::after {
+      width: 80%;
+    }
+
     .nav-link:hover {
       color: var(--text-primary);
-      transform: translateY(-4px);
+      transform: perspective(1000px) rotateX(-5deg) translateY(-4px);
       box-shadow: 
         0 12px 24px rgba(0, 0, 0, 0.5),
         0 4px 8px rgba(0, 0, 0, 0.4),
@@ -480,7 +652,7 @@
     }
 
     .nav-link:active {
-      transform: translateY(-1px);
+      transform: perspective(1000px) rotateX(0deg) translateY(-1px);
       box-shadow: 
         0 4px 8px rgba(0, 0, 0, 0.3),
         0 1px 2px rgba(0, 0, 0, 0.2),
@@ -493,7 +665,7 @@
       outline-offset: 4px;
     }
 
-    /* Circular platform buttons at bottom */
+    /* Enhanced platform dock with wave animation */
     .platform-dock {
       position: fixed;
       bottom: 0;
@@ -510,6 +682,12 @@
       -webkit-backdrop-filter: blur(20px);
       z-index: 1001;
       box-shadow: 0 -4px 20px var(--shadow-dark);
+      animation: dockFloat 6s ease-in-out infinite;
+    }
+
+    @keyframes dockFloat {
+      0%, 100% { transform: translateX(-50%) translateY(0px); }
+      50% { transform: translateX(-50%) translateY(-2px); }
     }
 
     .platform-circle {
@@ -537,6 +715,13 @@
         inset 0 1px 0 rgba(255, 255, 255, 0.15),
         inset 0 -1px 0 rgba(0, 0, 0, 0.25);
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
+      animation: circleWave 4s ease-in-out infinite;
+      animation-delay: calc(var(--index) * 0.2s);
+    }
+
+    @keyframes circleWave {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-4px) scale(1.02); }
     }
 
     .platform-circle::before {
@@ -566,6 +751,7 @@
         inset 0 2px 0 rgba(255, 255, 255, 0.3),
         inset 0 -2px 0 rgba(0, 0, 0, 0.3);
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+      animation: none;
     }
 
     .platform-circle:active {
@@ -582,7 +768,7 @@
       outline-offset: 4px;
     }
 
-    /* Enhanced footer */
+    /* Enhanced footer with typing animation */
     footer {
       position: fixed;
       bottom: 80px;
@@ -593,6 +779,7 @@
       text-align: center;
       z-index: 2;
       white-space: nowrap;
+      animation: floatGentle 8s ease-in-out infinite;
     }
 
     /* Loading states */
@@ -619,6 +806,30 @@
     @keyframes spin {
       0% { transform: translate(-50%, -50%) rotate(0deg); }
       100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Intersection Observer animations */
+    .animate-on-scroll {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+    }
+
+    .animate-on-scroll.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Performance optimizations for animations */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
     }
 
     /* Mobile-first responsive design */
@@ -757,20 +968,6 @@
       }
     }
 
-
-
-    /* Accessibility improvements */
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-
     /* High contrast mode support */
     @media (prefers-contrast: high) {
       :root {
@@ -792,7 +989,7 @@
       body {
         padding-left: max(var(--spacing-md), env(safe-area-inset-left));
         padding-right: max(var(--spacing-md), env(safe-area-inset-right));
-        padding-bottom: max(80px, env(safe-area-inset-bottom) + 80px);
+        padding-bottom: max(100px, env(safe-area-inset-bottom) + 100px);
       }
       
       .platform-dock {
@@ -815,91 +1012,110 @@
       }
     }
 
-    /* Prevent zoom on iOS */
-    input[type="color"],
-    input[type="date"],
-    input[type="datetime"],
-    input[type="datetime-local"],
-    input[type="email"],
-    input[type="month"],
-    input[type="number"],
-    input[type="password"],
-    input[type="search"],
-    input[type="tel"],
-    input[type="text"],
-    input[type="time"],
-    input[type="url"],
-    input[type="week"],
-    select:focus,
-    textarea {
-      font-size: 16px !important;
+    /* Critical resource hints for performance */
+    .preload-image {
+      content: url('giphy.gif') url('goth.gif') url('DISCO.gif');
+      position: absolute;
+      left: -9999px;
+      top: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
     }
   </style>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-animation">
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+      <div class="loading-dot"></div>
+    </div>
+  </div>
+
+  <!-- Parallax Background -->
+  <div class="parallax-bg"></div>
+  
+  <!-- Performance: Preload critical images -->
+  <div class="preload-image" aria-hidden="true"></div>
+  
   <div class="stars" role="presentation" aria-hidden="true"></div>
   <canvas id="doodle-canvas" aria-label="Interactive drawing canvas"></canvas>
 
-  <!-- Floating drawing toggle -->
+  <!-- Drawing toggle with floating animation -->
   <div class="drawing-toggle" id="drawingToggle">
-    <button class="drawing-fab" onclick="CanvasController.toggleDrawingMode()" aria-label="Toggle drawing mode">
+    <button class="drawing-fab float-animation" onclick="CanvasController.toggleDrawingMode()" aria-label="Toggle drawing mode">
       ✏️
     </button>
   </div>
 
-  <!-- Canvas controls - only visible when drawing -->
+  <!-- Canvas controls with slide animation -->
   <div class="canvas-controls" id="canvasControls">
     <button class="control-button" onclick="CanvasController.clearCanvas()" aria-label="Clear drawing canvas">
       Clear
     </button>
   </div>
 
-  <!-- Color palette - only visible when drawing -->
+  <!-- Color palette with stagger animation -->
   <div class="color-palette" id="colorPalette" role="toolbar" aria-label="Drawing color selection"></div>
 
   <main>
-    <header class="header-container">
+    <header class="header-container fade-in-up">
       <h1>
-        <span class="letter" tabindex="0">R</span>
-        <span class="letter" tabindex="0">U</span>
-        <span class="letter" tabindex="0">D</span>
-        <span class="letter" tabindex="0">E</span>
-        <span class="letter" tabindex="0">B</span>
-        <span class="letter" tabindex="0">O</span>
-        <span class="letter" tabindex="0">Y</span>
+        <span class="letter letter-animate" tabindex="0">R</span>
+        <span class="letter letter-animate" tabindex="0">U</span>
+        <span class="letter letter-animate" tabindex="0">D</span>
+        <span class="letter letter-animate" tabindex="0">E</span>
+        <span class="letter letter-animate" tabindex="0">B</span>
+        <span class="letter letter-animate" tabindex="0">O</span>
+        <span class="letter letter-animate" tabindex="0">Y</span>
       </h1>
     </header>
 
-    <nav class="navigation" role="navigation" aria-label="Main navigation">
-      <a href="#" class="nav-link" aria-current="page">Home</a>
-      <a href="shop.html" class="nav-link">Shop</a>
-      <a href="project.html" class="nav-link">Projects</a>
-      <a href="contact.html" class="nav-link">Contact</a>
+    <nav class="navigation fade-in-up delay-1" role="navigation" aria-label="Main navigation">
+      <a href="#" class="nav-link animate-on-scroll" aria-current="page">Home</a>
+      <a href="shop.html" class="nav-link animate-on-scroll">Shop</a>
+      <a href="project.html" class="nav-link animate-on-scroll">Projects</a>
+      <a href="contact.html" class="nav-link animate-on-scroll">Contact</a>
     </nav>
   </main>
 
-  <!-- Platform dock at bottom -->
-  <div class="platform-dock" aria-label="External platforms">
-    <a href="https://www.ebay.com/usr/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit eBay store">
+  <!-- Platform dock with wave animations -->
+  <div class="platform-dock fade-in-up delay-3" aria-label="External platforms">
+    <a href="https://www.ebay.com/usr/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit eBay store" style="--index: 0">
       eBay
     </a>
-    <a href="https://www.depop.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Depop profile">
+    <a href="https://www.depop.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Depop profile" style="--index: 1">
       Depop
     </a>
-    <a href="https://www.etsy.com/shop/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Etsy shop">
+    <a href="https://www.etsy.com/shop/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Etsy shop" style="--index: 2">
       Etsy
     </a>
-    <a href="https://www.grailed.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Grailed profile">
+    <a href="https://www.grailed.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Grailed profile" style="--index: 3">
       Grailed
     </a>
   </div>
   
-  <footer>
+  <footer class="fade-in-up delay-2">
     <p>&copy; 2024 @irie.ike | All rights reserved</p>
   </footer>
 
   <script>
     'use strict';
+
+    // Service Worker Registration for PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('SW registered: ', registration);
+          })
+          .catch(registrationError => {
+            console.log('SW registration failed: ', registrationError);
+          });
+      });
+    }
 
     // Enhanced error handling and performance monitoring
     window.addEventListener('error', (e) => {
@@ -910,19 +1126,95 @@
       console.error('Unhandled promise rejection:', e.reason);
     });
 
-    // Performance-optimized star field
+    // Advanced Loading Manager
+    class LoadingManager {
+      constructor() {
+        this.loadingScreen = document.getElementById('loadingScreen');
+        this.loadStartTime = performance.now();
+        this.minLoadTime = 1000; // Minimum loading time for UX
+        this.init();
+      }
+
+      init() {
+        // Hide loading screen after minimum time and when content is ready
+        window.addEventListener('load', () => {
+          const loadTime = performance.now() - this.loadStartTime;
+          const remainingTime = Math.max(0, this.minLoadTime - loadTime);
+          
+          setTimeout(() => {
+            this.hideLoadingScreen();
+          }, remainingTime);
+        });
+      }
+
+      hideLoadingScreen() {
+        this.loadingScreen.classList.add('hidden');
+        // Start entrance animations
+        this.triggerEntranceAnimations();
+      }
+
+      triggerEntranceAnimations() {
+        // Add stagger delays to elements
+        const animatedElements = document.querySelectorAll('.fade-in-up');
+        animatedElements.forEach((el, index) => {
+          el.style.animationDelay = `${index * 0.1}s`;
+        });
+      }
+    }
+
+    // Intersection Observer for scroll animations
+    class ScrollAnimations {
+      constructor() {
+        this.observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+        this.init();
+      }
+
+      init() {
+        if ('IntersectionObserver' in window) {
+          this.observer = new IntersectionObserver(
+            this.handleIntersection.bind(this),
+            this.observerOptions
+          );
+
+          const elements = document.querySelectorAll('.animate-on-scroll');
+          elements.forEach(el => this.observer.observe(el));
+        }
+      }
+
+      handleIntersection(entries) {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            this.observer.unobserve(entry.target);
+          }
+        });
+      }
+    }
+
+    // Performance-optimized star field with throttling
     class StarField {
       constructor() {
         this.container = document.querySelector('.stars');
         this.stars = [];
+        this.animationFrame = null;
+        this.lastResize = 0;
+        this.resizeThrottle = 250;
         this.init();
       }
 
       init() {
         const fragment = document.createDocumentFragment();
-        // Responsive star count based on device
+        // Responsive star count based on device performance
         const isMobile = window.innerWidth <= 768;
-        const starCount = Math.min(isMobile ? 30 : 60, window.innerWidth / 30);
+        const devicePixelRatio = window.devicePixelRatio || 1;
+        const performanceMultiplier = devicePixelRatio > 2 ? 0.7 : 1;
+        const starCount = Math.min(
+          Math.floor((isMobile ? 25 : 50) * performanceMultiplier), 
+          window.innerWidth / 35
+        );
         
         for (let i = 0; i < starCount; i++) {
           const star = document.createElement('span');
@@ -943,24 +1235,37 @@
       }
 
       resize() {
-        this.destroy();
-        this.init();
+        const now = performance.now();
+        if (now - this.lastResize < this.resizeThrottle) return;
+        
+        this.lastResize = now;
+        if (this.animationFrame) cancelAnimationFrame(this.animationFrame);
+        
+        this.animationFrame = requestAnimationFrame(() => {
+          this.destroy();
+          this.init();
+        });
       }
     }
 
-    // Enhanced canvas controller with clever drawing toggle
+    // Enhanced canvas controller with performance optimizations
     class CanvasController {
       constructor() {
         this.canvas = document.getElementById('doodle-canvas');
-        this.ctx = this.canvas.getContext('2d', { alpha: false });
+        this.ctx = this.canvas.getContext('2d', { 
+          alpha: false,
+          desynchronized: true,
+          willReadFrequently: false
+        });
         this.isDrawingMode = false;
         this.isDrawing = false;
         this.currentColor = '#ffffff';
         this.colors = ['#ffffff', '#ff4444', '#44ff44', '#4444ff', '#ffff44', '#ff44ff', '#44ffff'];
         this.brushSize = window.innerWidth <= 768 ? 2 : 3;
-        this.density = window.innerWidth <= 768 ? 15 : 20;
-        this.radius = window.innerWidth <= 768 ? 12 : 15;
-        this.drawingToggleTimeout = null;
+        this.density = window.innerWidth <= 768 ? 12 : 18;
+        this.radius = window.innerWidth <= 768 ? 10 : 13;
+        this.lastDrawTime = 0;
+        this.drawThrottle = 16; // ~60fps
         
         this.init();
       }
@@ -975,7 +1280,7 @@
       optimizeContext() {
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
-        this.ctx.imageSmoothingEnabled = true;
+        this.ctx.imageSmoothingEnabled = false; // Better performance
       }
 
       setupCanvas() {
@@ -984,7 +1289,7 @@
       }
 
       resizeCanvas() {
-        const dpr = window.devicePixelRatio || 1;
+        const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap DPR for performance
         const rect = this.canvas.getBoundingClientRect();
         
         this.canvas.width = rect.width * dpr;
@@ -995,8 +1300,6 @@
         this.ctx.scale(dpr, dpr);
         this.optimizeContext();
       }
-
-
 
       setupEventListeners() {
         // Mouse events
@@ -1037,7 +1340,7 @@
           }
         });
 
-        // Window resize with throttling
+        // Throttled window resize
         let resizeTimeout;
         window.addEventListener('resize', () => {
           clearTimeout(resizeTimeout);
@@ -1046,8 +1349,8 @@
             // Update mobile-specific settings
             const isMobile = window.innerWidth <= 768;
             this.brushSize = isMobile ? 2 : 3;
-            this.density = isMobile ? 15 : 20;
-            this.radius = isMobile ? 12 : 15;
+            this.density = isMobile ? 12 : 18;
+            this.radius = isMobile ? 10 : 13;
           }, 250);
         });
       }
@@ -1060,6 +1363,7 @@
           const swatch = document.createElement('button');
           swatch.className = 'color-swatch';
           swatch.style.backgroundColor = color;
+          swatch.style.setProperty('--index', index);
           swatch.setAttribute('aria-label', `Select color ${index + 1}`);
           swatch.setAttribute('data-color', color);
           swatch.tabIndex = 0;
@@ -1096,6 +1400,11 @@
       draw(e) {
         if (!this.isDrawingMode || !this.isDrawing) return;
 
+        // Throttle drawing for performance
+        const now = performance.now();
+        if (now - this.lastDrawTime < this.drawThrottle) return;
+        this.lastDrawTime = now;
+
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
@@ -1108,6 +1417,8 @@
       drawSpray(x, y) {
         this.ctx.fillStyle = this.currentColor;
         
+        // Batch drawing operations for better performance
+        this.ctx.beginPath();
         for (let i = 0; i < this.density; i++) {
           const angle = Math.random() * 2 * Math.PI;
           const distance = Math.random() * this.radius;
@@ -1115,10 +1426,10 @@
           const offsetY = Math.sin(angle) * distance;
           const size = this.brushSize * (0.5 + Math.random() * 0.5);
           
-          this.ctx.beginPath();
+          this.ctx.moveTo(x + offsetX + size, y + offsetY);
           this.ctx.arc(x + offsetX, y + offsetY, size, 0, 2 * Math.PI);
-          this.ctx.fill();
         }
+        this.ctx.fill();
       }
 
       stopDrawing() {
@@ -1129,10 +1440,9 @@
         this.isDrawingMode = !this.isDrawingMode;
         this.canvas.style.pointerEvents = this.isDrawingMode ? 'auto' : 'none';
         
-        // Show/hide drawing controls
+        // Show/hide drawing controls with animations
         const controls = document.getElementById('canvasControls');
         const palette = document.getElementById('colorPalette');
-        const toggle = document.getElementById('drawingToggle');
         
         if (this.isDrawingMode) {
           controls.classList.add('visible');
@@ -1140,7 +1450,7 @@
           document.body.style.cursor = 'crosshair';
           
           // Update button appearance
-          const fab = toggle.querySelector('.drawing-fab');
+          const fab = document.querySelector('.drawing-fab');
           fab.textContent = '❌';
           fab.setAttribute('aria-label', 'Exit drawing mode');
         } else {
@@ -1149,7 +1459,7 @@
           document.body.style.cursor = 'default';
           
           // Update button appearance
-          const fab = toggle.querySelector('.drawing-fab');
+          const fab = document.querySelector('.drawing-fab');
           fab.textContent = '✏️';
           fab.setAttribute('aria-label', 'Enter drawing mode');
         }
@@ -1175,21 +1485,33 @@
       }
     }
 
-    // Enhanced app initialization with mobile optimizations
+    // Enhanced app initialization with performance monitoring
     class App {
       constructor() {
         this.starField = null;
         this.canvasController = null;
+        this.loadingManager = null;
+        this.scrollAnimations = null;
+        this.performanceMetrics = {};
         this.init();
       }
 
       async init() {
         try {
+          // Start performance monitoring
+          this.performanceMetrics.startTime = performance.now();
+          
+          // Initialize loading manager
+          this.loadingManager = new LoadingManager();
+          
           // Detect keyboard navigation
           this.setupKeyboardDetection();
           
           // Initialize components
           await this.initializeComponents();
+          
+          // Setup scroll animations
+          this.scrollAnimations = new ScrollAnimations();
           
           // Setup performance monitoring
           this.setupPerformanceMonitoring();
@@ -1197,7 +1519,10 @@
           // iOS specific optimizations
           this.setupIOSOptimizations();
           
-          console.log('App initialized successfully');
+          // Log performance metrics
+          this.logPerformanceMetrics();
+          
+          console.log('Advanced app initialized successfully');
         } catch (error) {
           console.error('Failed to initialize app:', error);
         }
@@ -1214,7 +1539,7 @@
       }
 
       async initializeComponents() {
-        // Initialize star field
+        // Initialize star field with performance considerations
         this.starField = new StarField();
         
         // Initialize canvas controller
@@ -1257,15 +1582,42 @@
       }
 
       setupPerformanceMonitoring() {
-        // Monitor performance
+        // Monitor performance metrics
         if ('performance' in window) {
           window.addEventListener('load', () => {
             setTimeout(() => {
               const perfData = performance.getEntriesByType('navigation')[0];
-              console.log(`Page load time: ${perfData.loadEventEnd - perfData.loadEventStart}ms`);
+              const paintMetrics = performance.getEntriesByType('paint');
+              
+              this.performanceMetrics.loadTime = perfData.loadEventEnd - perfData.loadEventStart;
+              this.performanceMetrics.domContentLoaded = perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart;
+              
+              paintMetrics.forEach(metric => {
+                this.performanceMetrics[metric.name] = metric.startTime;
+              });
+              
+              // Log metrics in development
+              if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                console.table(this.performanceMetrics);
+              }
             }, 0);
           });
         }
+
+        // Monitor memory usage (Chrome only)
+        if ('memory' in performance) {
+          setInterval(() => {
+            const memory = performance.memory;
+            if (memory.usedJSHeapSize > memory.jsHeapSizeLimit * 0.9) {
+              console.warn('High memory usage detected');
+            }
+          }, 30000);
+        }
+      }
+
+      logPerformanceMetrics() {
+        const initTime = performance.now() - this.performanceMetrics.startTime;
+        console.log(`App initialization time: ${initTime.toFixed(2)}ms`);
       }
     }
 
@@ -1276,9 +1628,28 @@
       new App();
     }
 
-    // Global error recovery
+    // Global error recovery and cleanup
     window.addEventListener('beforeunload', () => {
       console.log('App cleanup initiated');
+      // Cleanup animations to prevent memory leaks
+      const animations = document.getAnimations();
+      animations.forEach(animation => animation.cancel());
+    });
+
+    // PWA Install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      deferredPrompt = e;
+      console.log('PWA install prompt available');
+    });
+
+    // Network status monitoring
+    window.addEventListener('online', () => {
+      console.log('Network: Online');
+    });
+
+    window.addEventListener('offline', () => {
+      console.log('Network: Offline');
     });
   </script>
 </body>
