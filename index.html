@@ -231,7 +231,7 @@
     /* Stagger animation for letters */
     .letter-animate {
       display: inline-block;
-      opacity: 0;
+      opacity: 1; /* Start visible */
       transform: translateY(20px) rotateX(90deg);
       animation: letterDrop 0.6s ease forwards;
     }
@@ -245,6 +245,10 @@
     .letter-animate:nth-child(7) { animation-delay: 0.7s; }
 
     @keyframes letterDrop {
+      0% {
+        opacity: 1;
+        transform: translateY(20px) rotateX(90deg);
+      }
       to {
         opacity: 1;
         transform: translateY(0) rotateX(0deg);
@@ -567,6 +571,7 @@
       cursor: default;
       margin: 0 clamp(-4px, 0vw, -1px);
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+      opacity: 1; /* Ensure always visible */
     }
 
     .letter:hover {
@@ -778,8 +783,15 @@
       color: var(--text-muted);
       text-align: center;
       z-index: 2;
-      white-space: nowrap;
+      white-space: nowrap; /* Keep single line */
+      max-width: 95vw; /* Prevent overflow */
+      overflow: hidden; /* Hide any overflow */
       animation: floatGentle 8s ease-in-out infinite;
+    }
+
+    footer p {
+      margin: 0;
+      padding: 0;
     }
 
     /* Loading states */
@@ -907,7 +919,9 @@
       
       footer {
         bottom: 70px;
-        font-size: 0.45rem;
+        font-size: 0.4rem;
+        max-width: 100vw; /* Full width on mobile */
+        padding: 0 var(--spacing-xs); /* Add padding instead */
       }
     }
 
@@ -1098,7 +1112,7 @@
   </div>
   
   <footer class="fade-in-up delay-2">
-    <p>&copy; 2024 @irie.ike | All rights reserved</p>
+    <p>&copy; 2024 @irie.ike</p>
   </footer>
 
   <script>
