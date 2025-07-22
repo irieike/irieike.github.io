@@ -3,37 +3,91 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact | irie.ike</title>
+  <meta name="description" content="Contact RUDEBOY - Get in touch for inquiries about vintage band merch, goth fashion, custom orders, and collaborations." />
+  <meta name="keywords" content="contact, vintage clothing, band merch, goth fashion, custom orders, collaboration" />
+  <meta name="author" content="irie.ike" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https://formspree.io; form-action 'self' https://formspree.io;" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+  
+  <!-- Performance optimizations -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="prefetch" href="index.html" />
+  <link rel="prefetch" href="shop.html" />
+  
+  <title>Contact Us | RUDEBOY - irie.ike</title>
+  
   <style>
+    /* CSS Custom Properties for consistent theming */
     :root {
-      --bg-color-dark: #121212;
-      --text-color-dark: #f1f1f1;
+      --bg-primary: #121212;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #2a2a2a;
+      --text-primary: #f1f1f1;
+      --text-secondary: #d9d9d9;
+      --text-muted: #aaa;
+      --accent-primary: #f1c40f;
+      --accent-secondary: #e74c3c;
+      --accent-tertiary: #9b59b6;
+      --success-color: #27ae60;
+      --error-color: #e74c3c;
+      --warning-color: #f39c12;
+      --border-color: #333;
+      --shadow-light: rgba(255, 255, 255, 0.1);
+      --shadow-dark: rgba(0, 0, 0, 0.5);
+      --transition-fast: 0.2s ease;
+      --transition-medium: 0.3s ease;
+      --transition-slow: 0.5s ease;
+      --border-radius: 12px;
+      --spacing-xs: 8px;
+      --spacing-sm: 16px;
+      --spacing-md: 24px;
+      --spacing-lg: 32px;
+      --spacing-xl: 48px;
     }
 
-    [data-theme="dark"] body {
-      background: var(--bg-color-dark);
-      color: var(--text-color-dark);
+    /* Performance and accessibility optimizations */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
-      font-family: 'Press Start 2P', serif;
+      font-family: 'Press Start 2P', monospace, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
       text-align: center;
-      padding-top: 80px;
+      padding-top: var(--spacing-xl);
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
+    /* Enhanced star field with better performance */
     .stars {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
+      will-change: transform;
     }
 
     .stars span {
@@ -42,198 +96,879 @@
       height: 2px;
       background: white;
       border-radius: 50%;
-      animation: sparkle 2s infinite ease-in-out;
+      animation: sparkle 3s infinite ease-in-out;
+      will-change: opacity, transform;
     }
 
     @keyframes sparkle {
-      0%, 100% { opacity: 0.2; transform: scale(1); }
-      50% { opacity: 1; transform: scale(2.5); }
+      0%, 100% { 
+        opacity: 0.2; 
+        transform: scale(1) rotate(0deg); 
+      }
+      50% { 
+        opacity: 1; 
+        transform: scale(2.5) rotate(180deg); 
+      }
     }
 
-    h1 {
-      font-size: 2em;
-      color: #d9d9d9;
-      z-index: 1;
-    }
-
+    /* Enhanced navigation */
     .navigation {
       position: fixed;
-      top: 20px;
+      top: var(--spacing-sm);
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 20px;
-      z-index: 2;
+      gap: var(--spacing-sm);
+      z-index: 1000;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(0, 0, 0, 0.3);
+      padding: var(--spacing-xs);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
     }
 
     .nav-link {
-      color: #fff;
+      color: var(--text-primary);
       text-decoration: none;
-      font-size: 1em;
-      border: 2px solid #fff;
-      padding: 10px 16px;
-      border-radius: 8px;
-      transition: 0.3s;
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      border: 2px solid var(--border-color);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border-radius: var(--border-radius);
+      transition: all var(--transition-medium);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      transition: left var(--transition-medium);
+      z-index: -1;
+    }
+
+    .nav-link:hover::before {
+      left: 0;
     }
 
     .nav-link:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      color: var(--bg-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--shadow-dark);
+      border-color: transparent;
     }
 
+    .nav-link:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 4px;
+    }
+
+    .nav-link[aria-current="page"] {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      border-color: var(--accent-primary);
+    }
+
+    /* Enhanced main heading */
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      color: var(--text-secondary);
+      z-index: 1;
+      margin: var(--spacing-sm) 0 var(--spacing-md);
+      position: relative;
+      text-shadow: 2px 2px 4px var(--shadow-dark);
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      width: 50%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    /* Enhanced contact form container */
     .contact-container {
-      background-color: rgba(0, 0, 0, 0.7);
-      padding: 30px;
-      border-radius: 16px;
-      max-width: 500px;
+      background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+      padding: var(--spacing-lg);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 16px 48px var(--shadow-dark);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      max-width: 600px;
       width: 90%;
       z-index: 1;
+      position: relative;
+      overflow: hidden;
     }
 
+    .contact-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--shadow-light), transparent);
+      animation: shimmer 4s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+
+    /* Enhanced form styling */
     .contact-form {
       display: flex;
       flex-direction: column;
-      gap: 15px;
-    }
-
-    input, textarea {
-      padding: 12px;
-      font-size: 1em;
-      border-radius: 10px;
-      border: none;
-      background-color: #292929;
-      color: #fff;
-      font-family: 'Press Start 2P', serif;
-    }
-
-    button, .return-home-button {
-      padding: 12px;
-      background: linear-gradient(135deg, red, gold, green);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 1em;
-      transition: 0.3s;
-      font-family: 'Press Start 2P', serif;
-    }
-
-    button:hover, .return-home-button:hover {
-      background: linear-gradient(135deg, gold, green, red);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
-    }
-
-    button:active, .return-home-button:active {
-      animation: bounce 0.3s ease-in-out;
-    }
-
-    @keyframes bounce {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); }
-    }
-
-    footer {
-      width: 100%;
-      text-align: center;
-      padding: 20px;
-      font-size: 0.75em;
-      margin-top: auto;
+      gap: var(--spacing-md);
+      position: relative;
       z-index: 1;
     }
 
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 1.5em;
-      }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: var(--spacing-xs);
+    }
 
-      .nav-link {
-        font-size: 0.8em;
-        padding: 8px 12px;
-      }
+    .form-group label {
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      font-weight: normal;
+    }
 
-      button {
-        font-size: 0.8em;
+    .form-group input,
+    .form-group textarea {
+      padding: var(--spacing-sm);
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      border-radius: var(--border-radius);
+      border: 2px solid var(--border-color);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: inherit;
+      transition: all var(--transition-medium);
+      resize: vertical;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 3px rgba(241, 196, 15, 0.2);
+      background: var(--bg-secondary);
+    }
+
+    .form-group input:invalid,
+    .form-group textarea:invalid {
+      border-color: var(--error-color);
+    }
+
+    .form-group input:valid,
+    .form-group textarea:valid {
+      border-color: var(--success-color);
+    }
+
+    /* Enhanced submit button */
+    .submit-button {
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+      color: var(--bg-primary);
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      font-family: inherit;
+      font-weight: bold;
+      transition: all var(--transition-medium);
+      position: relative;
+      overflow: hidden;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .submit-button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--shadow-dark);
+      background: linear-gradient(135deg, var(--accent-secondary), var(--accent-tertiary), var(--accent-primary));
+    }
+
+    .submit-button:active:not(:disabled) {
+      transform: translateY(0);
+    }
+
+    .submit-button:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .submit-button:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 4px;
+    }
+
+    /* Loading state */
+    .submit-button.loading::after {
+      content: '';
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--bg-primary);
+      border-top: 2px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Form validation messages */
+    .error-message {
+      color: var(--error-color);
+      font-size: 0.7rem;
+      margin-top: var(--spacing-xs);
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+      animation: fadeIn var(--transition-medium);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Success message */
+    .success-message {
+      background: var(--success-color);
+      color: white;
+      padding: var(--spacing-md);
+      border-radius: var(--border-radius);
+      margin-top: var(--spacing-md);
+      display: none;
+      animation: slideIn var(--transition-medium);
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Enhanced return home button */
+    .return-home-button {
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary));
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: clamp(0.8rem, 1.8vw, 1rem);
+      font-family: inherit;
+      text-decoration: none;
+      transition: all var(--transition-medium);
+      margin-top: var(--spacing-lg);
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .return-home-button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, var(--accent-primary), var(--accent-secondary));
+      transition: all var(--transition-medium);
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    .return-home-button:hover::before {
+      width: 300%;
+      height: 300%;
+    }
+
+    .return-home-button:hover {
+      color: var(--bg-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--shadow-dark);
+      border-color: var(--accent-primary);
+    }
+
+    .return-home-button:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 4px;
+    }
+
+    /* Enhanced footer */
+    footer {
+      margin-top: auto;
+      padding: var(--spacing-md);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: center;
+      z-index: 1;
+      border-top: 1px solid var(--border-color);
+      width: 100%;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    /* Enhanced responsive design */
+    @media (max-width: 768px) {
+      body {
+        padding-top: var(--spacing-lg);
       }
+      
+      .navigation {
+        position: relative;
+        transform: none;
+        margin-bottom: var(--spacing-md);
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      
+      .contact-container {
+        padding: var(--spacing-md);
+        width: 95%;
+      }
+      
+      .form-group input,
+      .form-group textarea {
+        font-size: 16px; /* Prevent zoom on iOS */
+      }
+    }
+
+    @media (max-width: 480px) {
+      .contact-container {
+        padding: var(--spacing-sm);
+      }
+      
+      .form-group {
+        gap: var(--spacing-xs);
+      }
+    }
+
+    /* Accessibility improvements */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --bg-primary: #000000;
+        --text-primary: #ffffff;
+        --accent-primary: #ffff00;
+        --border-color: #ffffff;
+      }
+    }
+
+    /* Focus indicators for keyboard navigation */
+    .keyboard-user *:focus {
+      outline: 3px solid var(--accent-primary) !important;
+      outline-offset: 2px !important;
+    }
+
+    /* Character counter */
+    .char-counter {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: var(--spacing-xs);
+    }
+
+    .char-counter.warning {
+      color: var(--warning-color);
+    }
+
+    .char-counter.error {
+      color: var(--error-color);
     }
   </style>
 </head>
 <body>
-  <div class="stars"></div>
-  <div class="navigation">
+  <div class="stars" role="presentation" aria-hidden="true"></div>
+  
+  <nav class="navigation" role="navigation" aria-label="Main navigation">
     <a href="index.html" class="nav-link">Home</a>
     <a href="shop.html" class="nav-link">Shop</a>
-    <a href="contact.html" class="nav-link">Contact</a>
-  </div>
+    <a href="contact.html" class="nav-link" aria-current="page">Contact</a>
+  </nav>
 
-  <h1>Contact</h1>
+  <main>
+    <h1>Contact Us</h1>
 
-  <div class="contact-container">
-    <form id="contactForm" action="https://formspree.io/f/xpwzlwbl" method="POST" class="contact-form">
-      <input type="text" name="name" placeholder="Your Name" required />
-      <input type="email" name="email" placeholder="Your Email" required />
-      <textarea name="message" placeholder="Your Message" rows="5" required></textarea>
-      <button type="submit" id="submitButton">Send Message</button>
-    </form>
-  </div>
+    <div class="contact-container">
+      <form 
+        id="contactForm" 
+        action="https://formspree.io/f/xpwzlwbl" 
+        method="POST" 
+        class="contact-form"
+        novalidate
+      >
+        <div class="form-group">
+          <label for="name">Your Name *</label>
+          <input 
+            type="text" 
+            id="name"
+            name="name" 
+            required 
+            maxlength="100"
+            autocomplete="name"
+            aria-describedby="name-error"
+          />
+          <div id="name-error" class="error-message" role="alert"></div>
+        </div>
 
-  <button class="return-home-button" onclick="window.location.href='index.html';">Return to Home</button>
+        <div class="form-group">
+          <label for="email">Your Email *</label>
+          <input 
+            type="email" 
+            id="email"
+            name="email" 
+            required 
+            maxlength="254"
+            autocomplete="email"
+            aria-describedby="email-error"
+          />
+          <div id="email-error" class="error-message" role="alert"></div>
+        </div>
 
-  <footer>© 2024 @irie.ike</footer>
+        <div class="form-group">
+          <label for="subject">Subject</label>
+          <input 
+            type="text" 
+            id="subject"
+            name="subject" 
+            maxlength="200"
+            autocomplete="off"
+            aria-describedby="subject-counter"
+          />
+          <div id="subject-counter" class="char-counter">0/200 characters</div>
+        </div>
+
+        <div class="form-group">
+          <label for="message">Your Message *</label>
+          <textarea 
+            id="message"
+            name="message" 
+            rows="6" 
+            required 
+            maxlength="2000"
+            aria-describedby="message-error message-counter"
+          ></textarea>
+          <div id="message-counter" class="char-counter">0/2000 characters</div>
+          <div id="message-error" class="error-message" role="alert"></div>
+        </div>
+
+        <!-- Honeypot field for spam protection -->
+        <input type="text" name="_gotcha" style="display:none !important" tabindex="-1" />
+
+        <button type="submit" id="submitButton" class="submit-button" aria-describedby="form-status">
+          <span id="button-text">Send Message</span>
+        </button>
+
+        <div id="form-status" class="success-message" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <a href="index.html" class="return-home-button">
+      🏠 Return to Home
+    </a>
+  </main>
+
+  <footer>
+    <p>&copy; 2024 @irie.ike | All rights reserved</p>
+  </footer>
 
   <script>
-    // Starfield
-    const starField = document.querySelector('.stars');
-    for(let i=0; i<80; i++){
-      const s = document.createElement('span');
-      s.style.left = Math.random()*100 + 'vw';
-      s.style.top = Math.random()*100 + 'vh';
-      s.style.animationDelay = Math.random()*2 + 's';
-      starField.appendChild(s);
+    'use strict';
+
+    // Enhanced error handling and performance monitoring
+    window.addEventListener('error', (e) => {
+      console.error('Runtime error:', e.error);
+    });
+
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error('Unhandled promise rejection:', e.reason);
+    });
+
+    // Performance-optimized star field
+    class StarField {
+      constructor() {
+        this.container = document.querySelector('.stars');
+        this.stars = [];
+        this.init();
+      }
+
+      init() {
+        const fragment = document.createDocumentFragment();
+        const starCount = Math.min(window.innerWidth / 25, 80);
+        
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement('span');
+          star.style.left = `${Math.random() * 100}vw`;
+          star.style.top = `${Math.random() * 100}vh`;
+          star.style.animationDelay = `${Math.random() * 3}s`;
+          star.style.animationDuration = `${2 + Math.random() * 2}s`;
+          fragment.appendChild(star);
+          this.stars.push(star);
+        }
+        
+        this.container.appendChild(fragment);
+      }
+
+      destroy() {
+        this.container.innerHTML = '';
+        this.stars = [];
+      }
+
+      resize() {
+        this.destroy();
+        this.init();
+      }
     }
 
-    // Form submission
-    document.getElementById('contactForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-      const submitButton = document.getElementById('submitButton');
-      const originalText = submitButton.innerHTML;
-      
-      // Prevent multiple submissions
-      if (submitButton.disabled) {
-        return;
+    // Enhanced form validation controller
+    class FormValidator {
+      constructor() {
+        this.form = document.getElementById('contactForm');
+        this.submitButton = document.getElementById('submitButton');
+        this.buttonText = document.getElementById('button-text');
+        this.formStatus = document.getElementById('form-status');
+        this.isSubmitting = false;
+        
+        this.init();
       }
-      
-      submitButton.disabled = true;
-      submitButton.innerHTML = 'Sending...';
 
-      fetch('https://formspree.io/f/xpwzlwbl', {
-        method: 'POST',
-        body: new FormData(this),
-        headers: { 'Accept': 'application/json' }
-      })
-      .then((response) => {
-        if (response.ok) {
-          submitButton.innerHTML = 'Message Sent ✔️';
-          // Reset form after successful submission
-          this.reset();
-          // Re-enable button after delay
-          setTimeout(() => {
-            submitButton.disabled = false;
-            submitButton.innerHTML = originalText;
-          }, 3000);
-        } else {
-          throw new Error('Form submission error');
+      init() {
+        this.setupEventListeners();
+        this.setupCharacterCounters();
+      }
+
+      setupEventListeners() {
+        // Real-time validation
+        this.form.addEventListener('input', (e) => this.validateField(e.target));
+        this.form.addEventListener('blur', (e) => this.validateField(e.target), true);
+        
+        // Form submission
+        this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+        
+        // Prevent multiple submissions
+        this.submitButton.addEventListener('click', (e) => {
+          if (this.isSubmitting) {
+            e.preventDefault();
+            return false;
+          }
+        });
+      }
+
+      setupCharacterCounters() {
+        const subjectInput = document.getElementById('subject');
+        const messageInput = document.getElementById('message');
+        const subjectCounter = document.getElementById('subject-counter');
+        const messageCounter = document.getElementById('message-counter');
+
+        [
+          { input: subjectInput, counter: subjectCounter, max: 200 },
+          { input: messageInput, counter: messageCounter, max: 2000 }
+        ].forEach(({ input, counter, max }) => {
+          input.addEventListener('input', () => {
+            const length = input.value.length;
+            counter.textContent = `${length}/${max} characters`;
+            
+            // Update counter styling based on length
+            counter.className = 'char-counter';
+            if (length > max * 0.9) {
+              counter.classList.add('warning');
+            }
+            if (length >= max) {
+              counter.classList.add('error');
+            }
+          });
+        });
+      }
+
+      validateField(field) {
+        if (!field.name) return true;
+
+        const errorElement = document.getElementById(`${field.name}-error`);
+        let isValid = true;
+        let errorMessage = '';
+
+        // Clear previous errors
+        if (errorElement) {
+          errorElement.textContent = '';
+          errorElement.classList.remove('show');
         }
-      })
-      .catch((error) => {
-        console.error('Form submission error:', error);
-        submitButton.innerHTML = 'Error - Try Again 😞';
-        // Re-enable button after delay
+
+        // Required field validation
+        if (field.hasAttribute('required') && !field.value.trim()) {
+          isValid = false;
+          errorMessage = `${this.getFieldLabel(field)} is required`;
+        }
+        
+        // Email validation
+        else if (field.type === 'email' && field.value) {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(field.value)) {
+            isValid = false;
+            errorMessage = 'Please enter a valid email address';
+          }
+        }
+        
+        // Length validation
+        else if (field.maxLength && field.value.length > field.maxLength) {
+          isValid = false;
+          errorMessage = `${this.getFieldLabel(field)} is too long (max ${field.maxLength} characters)`;
+        }
+
+        // Show error if invalid
+        if (!isValid && errorElement) {
+          errorElement.textContent = errorMessage;
+          errorElement.classList.add('show');
+        }
+
+        return isValid;
+      }
+
+      getFieldLabel(field) {
+        const label = document.querySelector(`label[for="${field.id}"]`);
+        return label ? label.textContent.replace(' *', '') : field.name;
+      }
+
+      validateForm() {
+        const fields = this.form.querySelectorAll('input[required], textarea[required]');
+        let isValid = true;
+
+        fields.forEach(field => {
+          if (!this.validateField(field)) {
+            isValid = false;
+          }
+        });
+
+        return isValid;
+      }
+
+      async handleSubmit(e) {
+        e.preventDefault();
+
+        if (this.isSubmitting) return;
+
+        // Validate form
+        if (!this.validateForm()) {
+          this.showFormMessage('Please correct the errors above', 'error');
+          return;
+        }
+
+        this.isSubmitting = true;
+        this.setSubmissionState(true);
+
+        try {
+          const formData = new FormData(this.form);
+          
+          // Add additional metadata
+          formData.append('_subject', 'New Contact Form Submission');
+          formData.append('_replyto', formData.get('email'));
+
+          const response = await fetch(this.form.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'Accept': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            this.handleSuccess();
+          } else {
+            const data = await response.json();
+            throw new Error(data.error || 'Form submission failed');
+          }
+        } catch (error) {
+          console.error('Form submission error:', error);
+          this.handleError(error.message);
+        } finally {
+          this.isSubmitting = false;
+          this.setSubmissionState(false);
+        }
+      }
+
+      setSubmissionState(isSubmitting) {
+        this.submitButton.disabled = isSubmitting;
+        this.submitButton.classList.toggle('loading', isSubmitting);
+        
+        if (isSubmitting) {
+          this.buttonText.textContent = 'Sending...';
+        } else {
+          this.buttonText.textContent = 'Send Message';
+        }
+      }
+
+      handleSuccess() {
+        this.form.reset();
+        this.updateCharacterCounters();
+        this.showFormMessage('✅ Message sent successfully! We\'ll get back to you soon.', 'success');
+        
+        // Reset button after delay
         setTimeout(() => {
-          submitButton.disabled = false;
-          submitButton.innerHTML = originalText;
-        }, 3000);
-      });
+          this.buttonText.textContent = 'Send Another Message';
+        }, 2000);
+      }
+
+      handleError(message) {
+        this.showFormMessage(`❌ ${message || 'Something went wrong. Please try again.'}`, 'error');
+      }
+
+      showFormMessage(message, type) {
+        this.formStatus.textContent = message;
+        this.formStatus.className = type === 'success' ? 'success-message show' : 'error-message show';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          this.formStatus.classList.remove('show');
+        }, 5000);
+      }
+
+      updateCharacterCounters() {
+        // Reset character counters
+        document.getElementById('subject-counter').textContent = '0/200 characters';
+        document.getElementById('message-counter').textContent = '0/2000 characters';
+        
+        // Reset counter styling
+        document.querySelectorAll('.char-counter').forEach(counter => {
+          counter.className = 'char-counter';
+        });
+      }
+    }
+
+    // Enhanced contact app initialization
+    class ContactApp {
+      constructor() {
+        this.starField = null;
+        this.formValidator = null;
+        this.init();
+      }
+
+      async init() {
+        try {
+          // Detect keyboard navigation
+          this.setupKeyboardDetection();
+          
+          // Initialize components
+          await this.initializeComponents();
+          
+          // Setup performance monitoring
+          this.setupPerformanceMonitoring();
+          
+          console.log('Contact app initialized successfully');
+        } catch (error) {
+          console.error('Failed to initialize contact app:', error);
+        }
+      }
+
+      setupKeyboardDetection() {
+        document.addEventListener('keydown', () => {
+          document.body.classList.add('keyboard-user');
+        });
+        
+        document.addEventListener('mousedown', () => {
+          document.body.classList.remove('keyboard-user');
+        });
+      }
+
+      async initializeComponents() {
+        // Initialize star field
+        this.starField = new StarField();
+        
+        // Initialize form validator
+        this.formValidator = new FormValidator();
+        
+        // Setup resize handler for star field
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            this.starField.resize();
+          }, 250);
+        });
+
+        // Setup keyboard shortcuts
+        this.setupKeyboardShortcuts();
+      }
+
+      setupKeyboardShortcuts() {
+        document.addEventListener('keydown', (e) => {
+          // Home shortcut
+          if (e.ctrlKey && e.key === 'h') {
+            e.preventDefault();
+            window.location.href = 'index.html';
+          }
+          
+          // Focus first form field
+          if (e.ctrlKey && e.key === 'f') {
+            e.preventDefault();
+            document.getElementById('name').focus();
+          }
+        });
+      }
+
+      setupPerformanceMonitoring() {
+        // Monitor performance
+        if ('performance' in window) {
+          window.addEventListener('load', () => {
+            setTimeout(() => {
+              const perfData = performance.getEntriesByType('navigation')[0];
+              console.log(`Contact page load time: ${perfData.loadEventEnd - perfData.loadEventStart}ms`);
+            }, 0);
+          });
+        }
+      }
+    }
+
+    // Initialize app when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => new ContactApp());
+    } else {
+      new ContactApp();
+    }
+
+    // Global error recovery
+    window.addEventListener('beforeunload', () => {
+      console.log('Contact app cleanup initiated');
     });
   </script>
 </body>

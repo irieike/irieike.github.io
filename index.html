@@ -2,36 +2,89 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>irie.ike</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="RUDEBOY - Official website featuring vintage band merch, goth fashion, and Y2K styles. Shop curated collections and explore creative projects." />
+  <meta name="keywords" content="vintage band merch, goth fashion, Y2K style, alternative clothing, grunge, streetwear" />
+  <meta name="author" content="irie.ike" />
+  <meta name="robots" content="index, follow" />
+  
+  <!-- Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self';" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+  
+  <!-- Performance optimizations -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <link rel="prefetch" href="shop.html" />
+  <link rel="prefetch" href="contact.html" />
+  
+  <title>RUDEBOY | irie.ike - Vintage & Alternative Fashion</title>
+  
   <style>
+    /* CSS Custom Properties for consistent theming */
     :root {
-      --bg-color-dark: #121212;
-      --text-color-dark: #f1f1f1;
+      --bg-primary: #121212;
+      --bg-secondary: #1a1a1a;
+      --bg-tertiary: #2a2a2a;
+      --text-primary: #f1f1f1;
+      --text-secondary: #d9d9d9;
+      --text-muted: #aaa;
+      --accent-primary: #f1c40f;
+      --accent-secondary: #e74c3c;
+      --accent-tertiary: #9b59b6;
+      --border-color: #333;
+      --shadow-light: rgba(255, 255, 255, 0.1);
+      --shadow-dark: rgba(0, 0, 0, 0.5);
+      --transition-fast: 0.2s ease;
+      --transition-medium: 0.3s ease;
+      --transition-slow: 0.5s ease;
+      --border-radius: 12px;
+      --spacing-xs: 8px;
+      --spacing-sm: 16px;
+      --spacing-md: 24px;
+      --spacing-lg: 32px;
+      --spacing-xl: 48px;
+    }
+
+    /* Performance and accessibility optimizations */
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
       margin: 0;
-      font-family: 'Press Start 2P', serif;
-      background: var(--bg-color-dark);
-      color: var(--text-color-dark);
+      font-family: 'Press Start 2P', monospace, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
       text-align: center;
-      padding: 60px 20px 20px;
+      padding: var(--spacing-xl) var(--spacing-sm) var(--spacing-sm);
       overflow-x: hidden;
-      overflow-y: auto;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
+    /* Enhanced star field with better performance */
     .stars {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
+      will-change: transform;
     }
 
     .stars span {
@@ -40,258 +93,745 @@
       height: 2px;
       background: white;
       border-radius: 50%;
-      animation: sparkle 2s infinite ease-in-out;
+      animation: sparkle 3s infinite ease-in-out;
+      will-change: opacity, transform;
     }
 
     @keyframes sparkle {
-      0%, 100% { opacity: 0.2; transform: scale(1); }
-      50% { opacity: 1; transform: scale(2.5); }
+      0%, 100% { 
+        opacity: 0.2; 
+        transform: scale(1) rotate(0deg); 
+      }
+      50% { 
+        opacity: 1; 
+        transform: scale(2.5) rotate(180deg); 
+      }
     }
 
+    /* Enhanced canvas with better touch handling */
     canvas {
       position: fixed;
       inset: 0;
       z-index: 1;
       touch-action: none;
+      will-change: contents;
     }
 
+    /* Improved control buttons */
     .doodle-controls {
       position: fixed;
-      bottom: 20px;
-      right: 20px;
+      bottom: var(--spacing-sm);
+      right: var(--spacing-sm);
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: var(--spacing-xs);
       z-index: 1002;
     }
 
-    .doodle-controls button {
-      background: #444;
-      color: #fff;
-      padding: 10px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.8em;
+    .control-button {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      padding: var(--spacing-xs) var(--spacing-sm);
+      border: 2px solid var(--border-color);
+      border-radius: var(--border-radius);
+      font-size: 0.7em;
+      font-family: inherit;
       cursor: pointer;
-      font-family: 'Press Start 2P', serif;
+      transition: all var(--transition-medium);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px var(--shadow-dark);
     }
 
+    .control-button:hover {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--shadow-dark);
+    }
+
+    .control-button:active {
+      transform: translateY(0);
+    }
+
+    .control-button:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 2px;
+    }
+
+    /* Enhanced spray cans */
     .spray-cans {
       position: fixed;
-      bottom: 20px;
-      left: 20px;
+      bottom: var(--spacing-sm);
+      left: var(--spacing-sm);
       z-index: 1002;
       display: flex;
-      gap: 10px;
+      gap: var(--spacing-xs);
+      flex-wrap: wrap;
     }
 
     .spray-can {
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      border: 2px solid white;
+      border: 3px solid var(--text-primary);
       cursor: pointer;
+      transition: all var(--transition-fast);
+      box-shadow: 0 2px 8px var(--shadow-dark);
+      position: relative;
     }
 
+    .spray-can:hover {
+      transform: scale(1.1);
+      box-shadow: 0 4px 16px var(--shadow-dark);
+    }
+
+    .spray-can.active {
+      transform: scale(1.2);
+      box-shadow: 0 0 20px currentColor;
+    }
+
+    .spray-can:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 4px;
+    }
+
+    /* Professional header design */
     .header-container {
-      background: black;
-      padding: 24px 24px 16px;
-      border-radius: 12px;
+      background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+      padding: var(--spacing-md) var(--spacing-lg) var(--spacing-sm);
+      border-radius: var(--border-radius);
+      border: 1px solid var(--border-color);
+      box-shadow: 0 8px 32px var(--shadow-dark);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       z-index: 2;
-      margin-top: 20px;
-      display: inline-block;
+      margin-top: var(--spacing-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, var(--shadow-light), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
     }
 
     h1 {
-      font-size: 2em;
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
       margin: 0;
-      white-space: nowrap;
-      line-height: 1;
-      display: inline-block;
       letter-spacing: 0.1em;
+      position: relative;
+      z-index: 1;
     }
 
     .letter {
       display: inline-block;
-      color: #d9d9d9;
-      animation: sparkle 2s infinite ease-in-out;
+      color: var(--text-secondary);
+      transition: all var(--transition-medium);
+      cursor: default;
     }
 
+    .letter:hover {
+      color: var(--accent-primary);
+      transform: translateY(-4px) rotate(5deg);
+      text-shadow: 0 4px 8px var(--accent-primary);
+    }
+
+    /* Enhanced navigation */
     .navigation {
       display: flex;
       flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
       z-index: 2;
     }
 
     .nav-link {
       text-decoration: none;
-      font-size: 1em;
-      padding: 12px 24px;
-      border-radius: 10px;
-      color: #fff;
-      border: 2px solid #fff;
-      transition: 0.3s;
+      font-size: clamp(0.8rem, 2vw, 1rem);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius);
+      color: var(--text-primary);
+      border: 2px solid var(--border-color);
+      background: var(--bg-secondary);
+      transition: all var(--transition-medium);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+      transition: left var(--transition-medium);
+      z-index: -1;
+    }
+
+    .nav-link:hover::before {
+      left: 0;
     }
 
     .nav-link:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 10px rgba(255,255,255,0.5);
+      color: var(--bg-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--shadow-dark);
+      border-color: transparent;
     }
 
+    .nav-link:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 4px;
+    }
+
+    /* Enhanced platform links */
     .platform-links {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      gap: 12px;
-      margin-top: 30px;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-lg);
       z-index: 2;
     }
 
     .platform-button {
-      font-family: 'Press Start 2P', serif;
-      background: linear-gradient(135deg, #444, #999, #444);
-      border: 2px solid white;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 12px;
+      font-family: inherit;
+      background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary));
+      border: 2px solid var(--border-color);
+      color: var(--text-primary);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--border-radius);
       text-decoration: none;
-      font-size: 0.8em;
-      transition: 0.3s;
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      transition: all var(--transition-medium);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .platform-button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, var(--accent-primary), var(--accent-secondary));
+      transition: all var(--transition-medium);
+      transform: translate(-50%, -50%);
+      z-index: -1;
+    }
+
+    .platform-button:hover::before {
+      width: 300%;
+      height: 300%;
     }
 
     .platform-button:hover {
-      background: linear-gradient(135deg, #f1c40f, #e74c3c, #9b59b6);
-      transform: scale(1.05);
-      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+      color: var(--bg-primary);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px var(--shadow-dark);
+      border-color: var(--accent-primary);
     }
 
+    /* Enhanced footer */
     footer {
-      margin-top: 40px;
-      padding: 16px;
-      font-size: 0.7em;
-      width: 100%;
+      margin-top: auto;
+      padding: var(--spacing-md);
+      font-size: 0.7rem;
+      color: var(--text-muted);
       text-align: center;
       z-index: 2;
+      border-top: 1px solid var(--border-color);
+      width: 100%;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
 
-    @media(max-width: 600px) {
-      h1 { font-size: 1.2em; }
-      .nav-link { font-size: 0.8em; padding: 8px 16px; }
-      .spray-can { width: 24px; height: 24px; }
-      .doodle-controls button { font-size: 0.65em; padding: 6px; }
-      .platform-button { font-size: 0.65em; padding: 8px 14px; }
+    /* Loading states */
+    .loading {
+      opacity: 0.7;
+      pointer-events: none;
+      position: relative;
+    }
+
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-color);
+      border-top: 2px solid var(--accent-primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Enhanced responsive design */
+    @media (max-width: 768px) {
+      body {
+        padding: var(--spacing-md) var(--spacing-xs) var(--spacing-xs);
+      }
+      
+      .header-container {
+        padding: var(--spacing-sm) var(--spacing-md);
+      }
+      
+      .spray-can {
+        width: 28px;
+        height: 28px;
+      }
+      
+      .control-button {
+        padding: var(--spacing-xs);
+        font-size: 0.6em;
+      }
+      
+      .platform-button {
+        padding: var(--spacing-xs) var(--spacing-sm);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .platform-links {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .platform-button {
+        width: 100%;
+        max-width: 200px;
+      }
+    }
+
+    /* Accessibility improvements */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+
+    /* High contrast mode support */
+    @media (prefers-contrast: high) {
+      :root {
+        --bg-primary: #000000;
+        --text-primary: #ffffff;
+        --accent-primary: #ffff00;
+        --border-color: #ffffff;
+      }
+    }
+
+    /* Focus indicators for keyboard navigation */
+    .keyboard-user *:focus {
+      outline: 3px solid var(--accent-primary) !important;
+      outline-offset: 2px !important;
     }
   </style>
 </head>
 <body>
-  <div class="stars"></div>
-  <canvas id="doodle-canvas"></canvas>
+  <div class="stars" role="presentation" aria-hidden="true"></div>
+  <canvas id="doodle-canvas" aria-label="Interactive drawing canvas"></canvas>
 
   <div class="doodle-controls">
-    <button onclick="toggleDoodleMode()">Doodle Mode</button>
-    <button onclick="clearDoodleCanvas()">Clear Doodle</button>
+    <button class="control-button" onclick="CanvasController.toggleDoodleMode()" aria-label="Toggle drawing mode">
+      <span id="doodle-status">Enable Drawing</span>
+    </button>
+    <button class="control-button" onclick="CanvasController.clearCanvas()" aria-label="Clear drawing canvas">
+      Clear Canvas
+    </button>
   </div>
 
-  <div class="header-container">
-    <h1>
-      <span class="letter">R</span>
-      <span class="letter">U</span>
-      <span class="letter">D</span>
-      <span class="letter">E</span>
-      <span class="letter">B</span>
-      <span class="letter">O</span>
-      <span class="letter">Y</span>
-    </h1>
-  </div>
+  <main>
+    <header class="header-container">
+      <h1>
+        <span class="letter" tabindex="0">R</span>
+        <span class="letter" tabindex="0">U</span>
+        <span class="letter" tabindex="0">D</span>
+        <span class="letter" tabindex="0">E</span>
+        <span class="letter" tabindex="0">B</span>
+        <span class="letter" tabindex="0">O</span>
+        <span class="letter" tabindex="0">Y</span>
+      </h1>
+    </header>
 
-  <div class="navigation">
-    <a href="#" class="nav-link">Home</a>
-    <a href="shop.html" class="nav-link">Shop</a>
-    <a href="project.html" class="nav-link">Projects</a>
-    <a href="contact.html" class="nav-link">Contact</a>
-  </div>
+    <nav class="navigation" role="navigation" aria-label="Main navigation">
+      <a href="#" class="nav-link" aria-current="page">Home</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="project.html" class="nav-link">Projects</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </nav>
 
-  <div class="platform-links">
-    <a href="https://www.ebay.com/usr/yourusername" target="_blank" class="platform-button">eBay</a>
-    <a href="https://www.depop.com/yourusername" target="_blank" class="platform-button">Depop</a>
-    <a href="https://www.etsy.com/shop/yourusername" target="_blank" class="platform-button">Etsy</a>
-    <a href="https://www.grailed.com/yourusername" target="_blank" class="platform-button">Grailed</a>
-  </div>
+    <section class="platform-links" aria-label="External platforms">
+      <a href="https://www.ebay.com/usr/yourusername" target="_blank" rel="noopener noreferrer" class="platform-button">
+        eBay
+      </a>
+      <a href="https://www.depop.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-button">
+        Depop
+      </a>
+      <a href="https://www.etsy.com/shop/yourusername" target="_blank" rel="noopener noreferrer" class="platform-button">
+        Etsy
+      </a>
+      <a href="https://www.grailed.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-button">
+        Grailed
+      </a>
+    </section>
+  </main>
 
-  <div class="spray-cans"></div>
-  <footer>© 2024 @irie.ike</footer>
+  <div class="spray-cans" role="toolbar" aria-label="Drawing color selection"></div>
+  
+  <footer>
+    <p>&copy; 2024 @irie.ike | All rights reserved</p>
+  </footer>
 
   <script>
-    const starField = document.querySelector('.stars');
-    for (let i = 0; i < 80; i++) {
-      const s = document.createElement('span');
-      s.style.left = Math.random() * 100 + 'vw';
-      s.style.top = Math.random() * 100 + 'vh';
-      s.style.animationDelay = Math.random() * 2 + 's';
-      starField.appendChild(s);
-    }
+    'use strict';
 
-    const sprayColors = ['#fff', '#f44', '#4f4', '#4af', '#ff4'];
-    let currentColor = sprayColors[0];
-    const sprayContainer = document.querySelector('.spray-cans');
-    sprayColors.forEach(c => {
-      const can = document.createElement('div');
-      can.className = 'spray-can';
-      can.style.backgroundColor = c;
-      can.addEventListener('click', () => currentColor = c);
-      sprayContainer.appendChild(can);
+    // Enhanced error handling and performance monitoring
+    window.addEventListener('error', (e) => {
+      console.error('Runtime error:', e.error);
     });
 
-    const canvas = document.getElementById('doodle-canvas');
-    const ctx = canvas.getContext('2d');
-    let isDoodle = false, isDrawing = false;
+    window.addEventListener('unhandledrejection', (e) => {
+      console.error('Unhandled promise rejection:', e.reason);
+    });
 
-    function resizeCanvas() {
-      canvas.width = innerWidth;
-      canvas.height = innerHeight;
+    // Performance-optimized star field
+    class StarField {
+      constructor() {
+        this.container = document.querySelector('.stars');
+        this.stars = [];
+        this.init();
+      }
+
+      init() {
+        const fragment = document.createDocumentFragment();
+        const starCount = Math.min(window.innerWidth / 25, 80); // Responsive star count
+        
+        for (let i = 0; i < starCount; i++) {
+          const star = document.createElement('span');
+          star.style.left = `${Math.random() * 100}vw`;
+          star.style.top = `${Math.random() * 100}vh`;
+          star.style.animationDelay = `${Math.random() * 3}s`;
+          star.style.animationDuration = `${2 + Math.random() * 2}s`;
+          fragment.appendChild(star);
+          this.stars.push(star);
+        }
+        
+        this.container.appendChild(fragment);
+      }
+
+      destroy() {
+        this.container.innerHTML = '';
+        this.stars = [];
+      }
+
+      resize() {
+        this.destroy();
+        this.init();
+      }
     }
 
-    window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
+    // Enhanced canvas controller with better performance
+    class CanvasController {
+      constructor() {
+        this.canvas = document.getElementById('doodle-canvas');
+        this.ctx = this.canvas.getContext('2d', { alpha: false });
+        this.isDoodleMode = false;
+        this.isDrawing = false;
+        this.currentColor = '#ffffff';
+        this.colors = ['#ffffff', '#ff4444', '#44ff44', '#4444ff', '#ffff44', '#ff44ff', '#44ffff'];
+        this.brushSize = 3;
+        this.density = 20;
+        this.radius = 15;
+        
+        this.init();
+      }
 
-    canvas.addEventListener('mousedown', e => {
-      if (e.button === 0) isDrawing = true;
-    });
-    canvas.addEventListener('mouseup', () => isDrawing = false);
-    canvas.addEventListener('mouseleave', () => isDrawing = false);
-    canvas.addEventListener('mousemove', e => drawSpray(e));
-    canvas.addEventListener('touchstart', () => isDrawing = true);
-    canvas.addEventListener('touchend', () => isDrawing = false);
-    canvas.addEventListener('touchcancel', () => isDrawing = false);
-    canvas.addEventListener('touchmove', e => drawSpray(e.touches[0]));
+      init() {
+        this.setupCanvas();
+        this.setupEventListeners();
+        this.setupColorPalette();
+        this.optimizeContext();
+      }
 
-    function drawSpray(e) {
-      if (isDoodle && isDrawing) {
-        const density = 30;
-        const radius = 20;
-        for (let i = 0; i < density; i++) {
+      optimizeContext() {
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+        this.ctx.imageSmoothingEnabled = true;
+      }
+
+      setupCanvas() {
+        this.resizeCanvas();
+        this.canvas.style.pointerEvents = 'none';
+      }
+
+      resizeCanvas() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = this.canvas.getBoundingClientRect();
+        
+        this.canvas.width = rect.width * dpr;
+        this.canvas.height = rect.height * dpr;
+        this.canvas.style.width = '100vw';
+        this.canvas.style.height = '100vh';
+        
+        this.ctx.scale(dpr, dpr);
+        this.optimizeContext();
+      }
+
+      setupEventListeners() {
+        // Mouse events
+        this.canvas.addEventListener('mousedown', (e) => this.startDrawing(e));
+        this.canvas.addEventListener('mousemove', (e) => this.draw(e));
+        this.canvas.addEventListener('mouseup', () => this.stopDrawing());
+        this.canvas.addEventListener('mouseleave', () => this.stopDrawing());
+
+        // Touch events with preventDefault to avoid scrolling
+        this.canvas.addEventListener('touchstart', (e) => {
+          e.preventDefault();
+          this.startDrawing(e.touches[0]);
+        }, { passive: false });
+
+        this.canvas.addEventListener('touchmove', (e) => {
+          e.preventDefault();
+          if (this.isDrawing) {
+            this.draw(e.touches[0]);
+          }
+        }, { passive: false });
+
+        this.canvas.addEventListener('touchend', (e) => {
+          e.preventDefault();
+          this.stopDrawing();
+        }, { passive: false });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'd' || e.key === 'D') {
+            this.toggleDoodleMode();
+          } else if (e.key === 'c' || e.key === 'C') {
+            this.clearCanvas();
+          } else if (e.key >= '1' && e.key <= '7') {
+            const colorIndex = parseInt(e.key) - 1;
+            if (this.colors[colorIndex]) {
+              this.setColor(this.colors[colorIndex]);
+            }
+          }
+        });
+
+        // Window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => this.resizeCanvas(), 250);
+        });
+      }
+
+      setupColorPalette() {
+        const container = document.querySelector('.spray-cans');
+        const fragment = document.createDocumentFragment();
+
+        this.colors.forEach((color, index) => {
+          const can = document.createElement('button');
+          can.className = 'spray-can';
+          can.style.backgroundColor = color;
+          can.setAttribute('aria-label', `Select color ${index + 1}`);
+          can.setAttribute('data-color', color);
+          can.tabIndex = 0;
+          
+          if (index === 0) can.classList.add('active');
+          
+          can.addEventListener('click', () => this.setColor(color));
+          can.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              this.setColor(color);
+            }
+          });
+          
+          fragment.appendChild(can);
+        });
+
+        container.appendChild(fragment);
+      }
+
+      setColor(color) {
+        this.currentColor = color;
+        document.querySelectorAll('.spray-can').forEach(can => {
+          can.classList.toggle('active', can.dataset.color === color);
+        });
+      }
+
+      startDrawing(e) {
+        if (!this.isDoodleMode) return;
+        this.isDrawing = true;
+        this.draw(e);
+      }
+
+      draw(e) {
+        if (!this.isDoodleMode || !this.isDrawing) return;
+
+        const rect = this.canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        requestAnimationFrame(() => {
+          this.drawSpray(x, y);
+        });
+      }
+
+      drawSpray(x, y) {
+        this.ctx.fillStyle = this.currentColor;
+        
+        for (let i = 0; i < this.density; i++) {
           const angle = Math.random() * 2 * Math.PI;
-          const r = Math.random() * radius;
-          const offsetX = Math.cos(angle) * r;
-          const offsetY = Math.sin(angle) * r;
-          ctx.beginPath();
-          ctx.arc(e.clientX + offsetX, e.clientY + offsetY, 1 + Math.random() * 1.5, 0, 2 * Math.PI);
-          ctx.fillStyle = currentColor;
-          ctx.fill();
+          const distance = Math.random() * this.radius;
+          const offsetX = Math.cos(angle) * distance;
+          const offsetY = Math.sin(angle) * distance;
+          const size = this.brushSize * (0.5 + Math.random() * 0.5);
+          
+          this.ctx.beginPath();
+          this.ctx.arc(x + offsetX, y + offsetY, size, 0, 2 * Math.PI);
+          this.ctx.fill();
+        }
+      }
+
+      stopDrawing() {
+        this.isDrawing = false;
+      }
+
+      toggleDoodleMode() {
+        this.isDoodleMode = !this.isDoodleMode;
+        this.canvas.style.pointerEvents = this.isDoodleMode ? 'auto' : 'none';
+        
+        const statusElement = document.getElementById('doodle-status');
+        statusElement.textContent = this.isDoodleMode ? 'Disable Drawing' : 'Enable Drawing';
+        
+        // Add visual feedback
+        document.body.style.cursor = this.isDoodleMode ? 'crosshair' : 'default';
+      }
+
+      clearCanvas() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+      }
+
+      static getInstance() {
+        if (!CanvasController.instance) {
+          CanvasController.instance = new CanvasController();
+        }
+        return CanvasController.instance;
+      }
+
+      static toggleDoodleMode() {
+        CanvasController.getInstance().toggleDoodleMode();
+      }
+
+      static clearCanvas() {
+        CanvasController.getInstance().clearCanvas();
+      }
+    }
+
+    // Enhanced app initialization with error handling
+    class App {
+      constructor() {
+        this.starField = null;
+        this.canvasController = null;
+        this.init();
+      }
+
+      async init() {
+        try {
+          // Detect keyboard navigation
+          this.setupKeyboardDetection();
+          
+          // Initialize components
+          await this.initializeComponents();
+          
+          // Setup performance monitoring
+          this.setupPerformanceMonitoring();
+          
+          console.log('App initialized successfully');
+        } catch (error) {
+          console.error('Failed to initialize app:', error);
+        }
+      }
+
+      setupKeyboardDetection() {
+        document.addEventListener('keydown', () => {
+          document.body.classList.add('keyboard-user');
+        });
+        
+        document.addEventListener('mousedown', () => {
+          document.body.classList.remove('keyboard-user');
+        });
+      }
+
+      async initializeComponents() {
+        // Initialize star field
+        this.starField = new StarField();
+        
+        // Initialize canvas controller
+        this.canvasController = CanvasController.getInstance();
+        
+        // Setup resize handler for star field
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+          clearTimeout(resizeTimeout);
+          resizeTimeout = setTimeout(() => {
+            this.starField.resize();
+          }, 250);
+        });
+      }
+
+      setupPerformanceMonitoring() {
+        // Monitor performance
+        if ('performance' in window) {
+          window.addEventListener('load', () => {
+            setTimeout(() => {
+              const perfData = performance.getEntriesByType('navigation')[0];
+              console.log(`Page load time: ${perfData.loadEventEnd - perfData.loadEventStart}ms`);
+            }, 0);
+          });
         }
       }
     }
 
-    function toggleDoodleMode() {
-      isDoodle = !isDoodle;
-      canvas.style.pointerEvents = isDoodle ? 'auto' : 'none';
+    // Initialize app when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => new App());
+    } else {
+      new App();
     }
 
-    function clearDoodleCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
+    // Global error recovery
+    window.addEventListener('beforeunload', () => {
+      // Cleanup if needed
+      console.log('App cleanup initiated');
+    });
   </script>
 </body>
 </html>
