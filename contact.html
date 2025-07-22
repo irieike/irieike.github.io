@@ -196,7 +196,15 @@
     document.getElementById('contactForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const submitButton = document.getElementById('submitButton');
-      submitButton.innerHTML = '😊';
+      const originalText = submitButton.innerHTML;
+      
+      // Prevent multiple submissions
+      if (submitButton.disabled) {
+        return;
+      }
+      
+      submitButton.disabled = true;
+      submitButton.innerHTML = 'Sending...';
 
       fetch('https://formspree.io/f/xpwzlwbl', {
         method: 'POST',
@@ -205,13 +213,26 @@
       })
       .then((response) => {
         if (response.ok) {
-          submitButton.innerHTML = '✔️';
+          submitButton.innerHTML = 'Message Sent ✔️';
+          // Reset form after successful submission
+          this.reset();
+          // Re-enable button after delay
+          setTimeout(() => {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+          }, 3000);
         } else {
           throw new Error('Form submission error');
         }
       })
-      .catch(() => {
-        submitButton.innerHTML = '😞';
+      .catch((error) => {
+        console.error('Form submission error:', error);
+        submitButton.innerHTML = 'Error - Try Again 😞';
+        // Re-enable button after delay
+        setTimeout(() => {
+          submitButton.disabled = false;
+          submitButton.innerHTML = originalText;
+        }, 3000);
       });
     });
   </script>

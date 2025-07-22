@@ -75,9 +75,11 @@
     document.getElementById('genreTitle').textContent = genreMap[collectionId] || 'Collection';
 
     if (collectionId) {
+      // TODO: Move credentials to environment variables or server-side proxy
+      // For now, using placeholder values - replace with actual secure implementation
       const client = ShopifyBuy.buildClient({
-        domain: 'lootsaac.myshopify.com',
-        storefrontAccessToken: '4a16403160160e06dc63c84b1498b579',
+        domain: process.env.SHOPIFY_DOMAIN || 'your-shop.myshopify.com',
+        storefrontAccessToken: process.env.SHOPIFY_ACCESS_TOKEN || 'your-access-token',
       });
 
       ShopifyBuy.UI.onReady(client).then(function (ui) {
