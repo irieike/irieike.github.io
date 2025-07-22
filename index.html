@@ -2,11 +2,16 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <meta name="description" content="RUDEBOY - Official website featuring vintage band merch, goth fashion, and Y2K styles. Shop curated collections and explore creative projects." />
   <meta name="keywords" content="vintage band merch, goth fashion, Y2K style, alternative clothing, grunge, streetwear" />
   <meta name="author" content="irie.ike" />
   <meta name="robots" content="index, follow" />
+  
+  <!-- iOS specific meta tags -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
   
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self';" />
@@ -41,12 +46,25 @@
       --transition-fast: 0.2s ease;
       --transition-medium: 0.3s ease;
       --transition-slow: 0.5s ease;
-      --border-radius: 12px;
-      --spacing-xs: 8px;
-      --spacing-sm: 16px;
-      --spacing-md: 24px;
-      --spacing-lg: 32px;
-      --spacing-xl: 48px;
+      --border-radius: 8px;
+      --spacing-xs: 4px;
+      --spacing-sm: 8px;
+      --spacing-md: 16px;
+      --spacing-lg: 24px;
+      --spacing-xl: 32px;
+      --spacing-xxl: 48px;
+    }
+
+    /* iOS specific adjustments */
+    @supports (-webkit-touch-callout: none) {
+      :root {
+        --border-radius: 12px;
+        --spacing-xs: 6px;
+        --spacing-sm: 12px;
+        --spacing-md: 20px;
+        --spacing-lg: 28px;
+        --spacing-xl: 40px;
+      }
     }
 
     /* Performance and accessibility optimizations */
@@ -54,10 +72,13 @@
     *::before,
     *::after {
       box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
     }
 
     html {
       scroll-behavior: smooth;
+      -webkit-text-size-adjust: 100%;
+      height: 100%;
     }
 
     body {
@@ -65,17 +86,19 @@
       font-family: 'Press Start 2P', monospace, sans-serif;
       background: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.6;
+      line-height: 1.4;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       min-height: 100vh;
+      min-height: -webkit-fill-available;
       text-align: center;
-      padding: var(--spacing-xl) var(--spacing-sm) var(--spacing-sm);
+      padding: var(--spacing-xl) var(--spacing-md) var(--spacing-md);
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
+      position: relative;
     }
 
     /* Enhanced star field with better performance */
@@ -117,30 +140,37 @@
       will-change: contents;
     }
 
-    /* Improved control buttons */
+    /* Mobile-optimized control buttons */
     .doodle-controls {
       position: fixed;
-      bottom: var(--spacing-sm);
-      right: var(--spacing-sm);
+      bottom: var(--spacing-md);
+      right: var(--spacing-md);
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-xs);
+      gap: var(--spacing-sm);
       z-index: 1002;
     }
 
     .control-button {
       background: var(--bg-tertiary);
       color: var(--text-primary);
-      padding: var(--spacing-xs) var(--spacing-sm);
+      padding: var(--spacing-md);
       border: 2px solid var(--border-color);
       border-radius: var(--border-radius);
-      font-size: 0.7em;
+      font-size: 0.6rem;
       font-family: inherit;
       cursor: pointer;
       transition: all var(--transition-medium);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 4px 12px var(--shadow-dark);
+      min-height: 44px;
+      min-width: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      white-space: nowrap;
     }
 
     .control-button:hover {
@@ -159,20 +189,21 @@
       outline-offset: 2px;
     }
 
-    /* Enhanced spray cans */
+    /* Mobile-optimized spray cans */
     .spray-cans {
       position: fixed;
-      bottom: var(--spacing-sm);
-      left: var(--spacing-sm);
+      bottom: var(--spacing-md);
+      left: var(--spacing-md);
       z-index: 1002;
       display: flex;
-      gap: var(--spacing-xs);
+      gap: var(--spacing-sm);
       flex-wrap: wrap;
+      max-width: 200px;
     }
 
     .spray-can {
-      width: 32px;
-      height: 32px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       border: 3px solid var(--text-primary);
       cursor: pointer;
@@ -196,19 +227,21 @@
       outline-offset: 4px;
     }
 
-    /* Professional header design */
+    /* Professional header design - mobile optimized */
     .header-container {
       background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
-      padding: var(--spacing-md) var(--spacing-lg) var(--spacing-sm);
+      padding: var(--spacing-lg);
       border-radius: var(--border-radius);
       border: 1px solid var(--border-color);
       box-shadow: 0 8px 32px var(--shadow-dark);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       z-index: 2;
-      margin-top: var(--spacing-sm);
+      margin-top: var(--spacing-md);
       position: relative;
       overflow: hidden;
+      width: 100%;
+      max-width: 600px;
     }
 
     .header-container::before {
@@ -228,11 +261,12 @@
     }
 
     h1 {
-      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      font-size: clamp(1.2rem, 6vw, 2.5rem);
       margin: 0;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.05em;
       position: relative;
       z-index: 1;
+      word-spacing: 0.1em;
     }
 
     .letter {
@@ -240,27 +274,30 @@
       color: var(--text-secondary);
       transition: all var(--transition-medium);
       cursor: default;
+      margin: 0 1px;
     }
 
     .letter:hover {
       color: var(--accent-primary);
-      transform: translateY(-4px) rotate(5deg);
-      text-shadow: 0 4px 8px var(--accent-primary);
+      transform: translateY(-2px) rotate(2deg);
+      text-shadow: 0 2px 4px var(--accent-primary);
     }
 
-    /* Enhanced navigation */
+    /* Enhanced navigation - mobile optimized */
     .navigation {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-sm);
-      margin-top: var(--spacing-md);
+      gap: var(--spacing-md);
+      margin-top: var(--spacing-lg);
       z-index: 2;
+      width: 100%;
+      max-width: 400px;
     }
 
     .nav-link {
       text-decoration: none;
-      font-size: clamp(0.8rem, 2vw, 1rem);
-      padding: var(--spacing-sm) var(--spacing-md);
+      font-size: clamp(0.7rem, 3vw, 1rem);
+      padding: var(--spacing-md) var(--spacing-lg);
       border-radius: var(--border-radius);
       color: var(--text-primary);
       border: 2px solid var(--border-color);
@@ -268,6 +305,10 @@
       transition: all var(--transition-medium);
       position: relative;
       overflow: hidden;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .nav-link::before {
@@ -298,14 +339,15 @@
       outline-offset: 4px;
     }
 
-    /* Enhanced platform links */
+    /* Enhanced platform links - mobile optimized */
     .platform-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: var(--spacing-sm);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: var(--spacing-md);
       margin-top: var(--spacing-lg);
       z-index: 2;
+      width: 100%;
+      max-width: 500px;
     }
 
     .platform-button {
@@ -313,13 +355,17 @@
       background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary));
       border: 2px solid var(--border-color);
       color: var(--text-primary);
-      padding: var(--spacing-sm) var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-lg);
       border-radius: var(--border-radius);
       text-decoration: none;
-      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      font-size: clamp(0.6rem, 2.5vw, 0.9rem);
       transition: all var(--transition-medium);
       position: relative;
       overflow: hidden;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .platform-button::before {
@@ -350,8 +396,8 @@
     /* Enhanced footer */
     footer {
       margin-top: auto;
-      padding: var(--spacing-md);
-      font-size: 0.7rem;
+      padding: var(--spacing-lg);
+      font-size: 0.6rem;
       color: var(--text-muted);
       text-align: center;
       z-index: 2;
@@ -388,40 +434,106 @@
       100% { transform: translate(-50%, -50%) rotate(360deg); }
     }
 
-    /* Enhanced responsive design */
-    @media (max-width: 768px) {
+    /* Mobile-first responsive design */
+    @media (max-width: 480px) {
       body {
-        padding: var(--spacing-md) var(--spacing-xs) var(--spacing-xs);
+        padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
       }
       
       .header-container {
+        padding: var(--spacing-md);
+        margin-top: var(--spacing-sm);
+      }
+      
+      h1 {
+        font-size: clamp(1rem, 8vw, 1.8rem);
+        letter-spacing: 0.02em;
+      }
+      
+      .navigation {
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
+      }
+      
+      .nav-link {
         padding: var(--spacing-sm) var(--spacing-md);
+        min-height: 44px;
+        font-size: clamp(0.6rem, 4vw, 0.8rem);
+      }
+      
+      .platform-links {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+        margin-top: var(--spacing-md);
+      }
+      
+      .platform-button {
+        padding: var(--spacing-sm) var(--spacing-md);
+        min-height: 44px;
+        font-size: clamp(0.6rem, 3.5vw, 0.8rem);
       }
       
       .spray-can {
-        width: 28px;
-        height: 28px;
+        width: 36px;
+        height: 36px;
       }
       
       .control-button {
-        padding: var(--spacing-xs);
-        font-size: 0.6em;
+        padding: var(--spacing-sm);
+        font-size: 0.5rem;
+        min-height: 40px;
+        min-width: 80px;
       }
       
-      .platform-button {
-        padding: var(--spacing-xs) var(--spacing-sm);
+      .doodle-controls {
+        bottom: var(--spacing-sm);
+        right: var(--spacing-sm);
+      }
+      
+      .spray-cans {
+        bottom: var(--spacing-sm);
+        left: var(--spacing-sm);
+        max-width: 150px;
+      }
+      
+      footer {
+        padding: var(--spacing-md);
+        font-size: 0.5rem;
       }
     }
 
-    @media (max-width: 480px) {
+    /* Tablet adjustments */
+    @media (min-width: 481px) and (max-width: 768px) {
       .platform-links {
-        flex-direction: column;
-        align-items: center;
+        grid-template-columns: repeat(2, 1fr);
       }
       
-      .platform-button {
-        width: 100%;
-        max-width: 200px;
+      h1 {
+        font-size: clamp(1.4rem, 5vw, 2rem);
+      }
+    }
+
+    /* Desktop optimizations */
+    @media (min-width: 769px) {
+      body {
+        padding: var(--spacing-xxl) var(--spacing-lg) var(--spacing-lg);
+      }
+      
+      .platform-links {
+        grid-template-columns: repeat(4, 1fr);
+        max-width: 600px;
+      }
+      
+      .navigation {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: 600px;
+      }
+      
+      .nav-link {
+        flex: 1;
+        min-width: 120px;
       }
     }
 
@@ -451,6 +563,45 @@
     .keyboard-user *:focus {
       outline: 3px solid var(--accent-primary) !important;
       outline-offset: 2px !important;
+    }
+
+    /* iOS safe area support */
+    @supports (padding: max(0px)) {
+      body {
+        padding-left: max(var(--spacing-md), env(safe-area-inset-left));
+        padding-right: max(var(--spacing-md), env(safe-area-inset-right));
+        padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+      }
+      
+      .doodle-controls {
+        bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+        right: max(var(--spacing-md), env(safe-area-inset-right));
+      }
+      
+      .spray-cans {
+        bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+        left: max(var(--spacing-md), env(safe-area-inset-left));
+      }
+    }
+
+    /* Prevent zoom on iOS */
+    input[type="color"],
+    input[type="date"],
+    input[type="datetime"],
+    input[type="datetime-local"],
+    input[type="email"],
+    input[type="month"],
+    input[type="number"],
+    input[type="password"],
+    input[type="search"],
+    input[type="tel"],
+    input[type="text"],
+    input[type="time"],
+    input[type="url"],
+    input[type="week"],
+    select:focus,
+    textarea {
+      font-size: 16px !important;
     }
   </style>
 </head>
@@ -531,7 +682,9 @@
 
       init() {
         const fragment = document.createDocumentFragment();
-        const starCount = Math.min(window.innerWidth / 25, 80); // Responsive star count
+        // Responsive star count based on device
+        const isMobile = window.innerWidth <= 768;
+        const starCount = Math.min(isMobile ? 40 : 80, window.innerWidth / 25);
         
         for (let i = 0; i < starCount; i++) {
           const star = document.createElement('span');
@@ -557,7 +710,7 @@
       }
     }
 
-    // Enhanced canvas controller with better performance
+    // Enhanced canvas controller with better mobile support
     class CanvasController {
       constructor() {
         this.canvas = document.getElementById('doodle-canvas');
@@ -566,9 +719,9 @@
         this.isDrawing = false;
         this.currentColor = '#ffffff';
         this.colors = ['#ffffff', '#ff4444', '#44ff44', '#4444ff', '#ffff44', '#ff44ff', '#44ffff'];
-        this.brushSize = 3;
-        this.density = 20;
-        this.radius = 15;
+        this.brushSize = window.innerWidth <= 768 ? 2 : 3;
+        this.density = window.innerWidth <= 768 ? 15 : 20;
+        this.radius = window.innerWidth <= 768 ? 12 : 15;
         
         this.init();
       }
@@ -611,7 +764,7 @@
         this.canvas.addEventListener('mouseup', () => this.stopDrawing());
         this.canvas.addEventListener('mouseleave', () => this.stopDrawing());
 
-        // Touch events with preventDefault to avoid scrolling
+        // Touch events with better iOS support
         this.canvas.addEventListener('touchstart', (e) => {
           e.preventDefault();
           this.startDrawing(e.touches[0]);
@@ -643,11 +796,18 @@
           }
         });
 
-        // Window resize
+        // Window resize with throttling
         let resizeTimeout;
         window.addEventListener('resize', () => {
           clearTimeout(resizeTimeout);
-          resizeTimeout = setTimeout(() => this.resizeCanvas(), 250);
+          resizeTimeout = setTimeout(() => {
+            this.resizeCanvas();
+            // Update mobile-specific settings
+            const isMobile = window.innerWidth <= 768;
+            this.brushSize = isMobile ? 2 : 3;
+            this.density = isMobile ? 15 : 20;
+            this.radius = isMobile ? 12 : 15;
+          }, 250);
         });
       }
 
@@ -755,7 +915,7 @@
       }
     }
 
-    // Enhanced app initialization with error handling
+    // Enhanced app initialization with mobile optimizations
     class App {
       constructor() {
         this.starField = null;
@@ -773,6 +933,9 @@
           
           // Setup performance monitoring
           this.setupPerformanceMonitoring();
+          
+          // iOS specific optimizations
+          this.setupIOSOptimizations();
           
           console.log('App initialized successfully');
         } catch (error) {
@@ -807,6 +970,32 @@
         });
       }
 
+      setupIOSOptimizations() {
+        // Prevent bounce scrolling on iOS
+        document.addEventListener('touchmove', (e) => {
+          if (e.touches.length > 1) {
+            e.preventDefault();
+          }
+        }, { passive: false });
+
+        // Handle orientation changes
+        window.addEventListener('orientationchange', () => {
+          setTimeout(() => {
+            this.canvasController.resizeCanvas();
+            this.starField.resize();
+          }, 500);
+        });
+
+        // Fix iOS viewport height issues
+        const setVH = () => {
+          const vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+
+        setVH();
+        window.addEventListener('resize', setVH);
+      }
+
       setupPerformanceMonitoring() {
         // Monitor performance
         if ('performance' in window) {
@@ -829,7 +1018,6 @@
 
     // Global error recovery
     window.addEventListener('beforeunload', () => {
-      // Cleanup if needed
       console.log('App cleanup initiated');
     });
   </script>
