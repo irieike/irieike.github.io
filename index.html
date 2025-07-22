@@ -210,16 +210,15 @@
       image-rendering: -webkit-optimize-contrast;
     }
 
-    /* Animated entrance effects */
+    /* Animated entrance effects - DISABLED FOR STABILITY */
     .fade-in-up {
-      opacity: 0;
-      transform: translateY(30px);
-      animation: fadeInUp 0.8s ease forwards;
+      opacity: 1; /* Always visible */
+      transform: translateY(0); /* No transform */
     }
 
-    .fade-in-up.delay-1 { animation-delay: 0.2s; }
-    .fade-in-up.delay-2 { animation-delay: 0.4s; }
-    .fade-in-up.delay-3 { animation-delay: 0.6s; }
+    .fade-in-up.delay-1 { animation-delay: 0s; }
+    .fade-in-up.delay-2 { animation-delay: 0s; }
+    .fade-in-up.delay-3 { animation-delay: 0s; }
 
     @keyframes fadeInUp {
       to {
@@ -231,8 +230,8 @@
     /* Stagger animation for letters */
     .letter-animate {
       display: inline-block;
-      opacity: 1; /* Start visible */
-      transform: translateY(20px) rotateX(90deg);
+      opacity: 1; /* Always visible */
+      transform: translateY(0); /* Start in normal position */
       animation: letterDrop 0.6s ease forwards;
     }
 
@@ -247,11 +246,11 @@
     @keyframes letterDrop {
       0% {
         opacity: 1;
-        transform: translateY(20px) rotateX(90deg);
+        transform: translateY(-10px) scale(0.8);
       }
       to {
         opacity: 1;
-        transform: translateY(0) rotateX(0deg);
+        transform: translateY(0) scale(1);
       }
     }
 
@@ -842,6 +841,11 @@
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
+      
+      .letter-animate {
+        transform: none !important;
+        opacity: 1 !important;
+      }
     }
 
     /* Mobile-first responsive design */
@@ -1040,7 +1044,7 @@
 </head>
 <body>
   <!-- Loading Screen -->
-  <div class="loading-screen" id="loadingScreen">
+  <div class="loading-screen" id="loadingScreen" style="display: none;">
     <div class="loading-animation">
       <div class="loading-dot"></div>
       <div class="loading-dot"></div>
@@ -1075,28 +1079,28 @@
   <div class="color-palette" id="colorPalette" role="toolbar" aria-label="Drawing color selection"></div>
 
   <main>
-    <header class="header-container fade-in-up">
+    <header class="header-container">
       <h1>
-        <span class="letter letter-animate" tabindex="0">R</span>
-        <span class="letter letter-animate" tabindex="0">U</span>
-        <span class="letter letter-animate" tabindex="0">D</span>
-        <span class="letter letter-animate" tabindex="0">E</span>
-        <span class="letter letter-animate" tabindex="0">B</span>
-        <span class="letter letter-animate" tabindex="0">O</span>
-        <span class="letter letter-animate" tabindex="0">Y</span>
+        <span class="letter" tabindex="0">R</span>
+        <span class="letter" tabindex="0">U</span>
+        <span class="letter" tabindex="0">D</span>
+        <span class="letter" tabindex="0">E</span>
+        <span class="letter" tabindex="0">B</span>
+        <span class="letter" tabindex="0">O</span>
+        <span class="letter" tabindex="0">Y</span>
       </h1>
     </header>
 
-    <nav class="navigation fade-in-up delay-1" role="navigation" aria-label="Main navigation">
-      <a href="#" class="nav-link animate-on-scroll" aria-current="page">Home</a>
-      <a href="shop.html" class="nav-link animate-on-scroll">Shop</a>
-      <a href="project.html" class="nav-link animate-on-scroll">Projects</a>
-      <a href="contact.html" class="nav-link animate-on-scroll">Contact</a>
+    <nav class="navigation" role="navigation" aria-label="Main navigation">
+      <a href="#" class="nav-link" aria-current="page">Home</a>
+      <a href="shop.html" class="nav-link">Shop</a>
+      <a href="project.html" class="nav-link">Projects</a>
+      <a href="contact.html" class="nav-link">Contact</a>
     </nav>
   </main>
 
   <!-- Platform dock with wave animations -->
-  <div class="platform-dock fade-in-up delay-3" aria-label="External platforms">
+  <div class="platform-dock" aria-label="External platforms">
     <a href="https://www.ebay.com/usr/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit eBay store" style="--index: 0">
       eBay
     </a>
@@ -1111,7 +1115,7 @@
     </a>
   </div>
   
-  <footer class="fade-in-up delay-2">
+  <footer>
     <p>&copy; 2024 @irie.ike</p>
   </footer>
 
