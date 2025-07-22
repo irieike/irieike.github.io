@@ -140,21 +140,15 @@
       will-change: contents;
     }
 
-    /* Floating Drawing Toggle - appears on double tap or hover */
+    /* Static Drawing Toggle - always visible in top-right */
     .drawing-toggle {
       position: fixed;
-      top: 50%;
-      left: var(--spacing-md);
-      transform: translateY(-50%);
+      top: var(--spacing-md);
+      right: var(--spacing-md);
       z-index: 1003;
-      opacity: 0;
-      pointer-events: none;
-      transition: all var(--transition-medium);
-    }
-
-    .drawing-toggle.visible {
       opacity: 1;
       pointer-events: auto;
+      transition: all var(--transition-medium);
     }
 
     .drawing-fab {
@@ -674,7 +668,8 @@
       }
       
       .drawing-toggle {
-        left: var(--spacing-sm);
+        top: var(--spacing-sm);
+        right: var(--spacing-sm);
       }
       
       .drawing-fab {
@@ -751,7 +746,8 @@
       }
       
       .drawing-toggle {
-        left: var(--spacing-lg);
+        top: var(--spacing-lg);
+        right: var(--spacing-lg);
       }
       
       .drawing-fab {
@@ -761,17 +757,7 @@
       }
     }
 
-    /* Show drawing toggle on hover for desktop */
-    @media (hover: hover) {
-      body:hover .drawing-toggle {
-        opacity: 0.7;
-        pointer-events: auto;
-      }
-      
-      .drawing-toggle:hover {
-        opacity: 1;
-      }
-    }
+
 
     /* Accessibility improvements */
     @media (prefers-reduced-motion: reduce) {
@@ -814,7 +800,8 @@
       }
       
       .drawing-toggle {
-        left: max(var(--spacing-md), env(safe-area-inset-left));
+        top: max(var(--spacing-md), env(safe-area-inset-top));
+        right: max(var(--spacing-md), env(safe-area-inset-right));
       }
       
       .canvas-controls {
@@ -982,7 +969,6 @@
         this.setupCanvas();
         this.setupEventListeners();
         this.setupColorPalette();
-        this.setupDrawingToggle();
         this.optimizeContext();
       }
 
@@ -1010,51 +996,7 @@
         this.optimizeContext();
       }
 
-      setupDrawingToggle() {
-        const isMobile = 'ontouchstart' in window;
-        
-        if (isMobile) {
-          // On mobile: show toggle on double tap anywhere
-          let lastTap = 0;
-          document.addEventListener('touchend', (e) => {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
-            if (tapLength < 500 && tapLength > 0) {
-              this.showDrawingToggle();
-            }
-            lastTap = currentTime;
-          });
-        } else {
-          // On desktop: show on idle mouse movement
-          let mouseTimeout;
-          document.addEventListener('mousemove', () => {
-            this.showDrawingToggle();
-            clearTimeout(mouseTimeout);
-            mouseTimeout = setTimeout(() => {
-              this.hideDrawingToggle();
-            }, 3000);
-          });
-        }
-      }
 
-      showDrawingToggle() {
-        const toggle = document.getElementById('drawingToggle');
-        toggle.classList.add('visible');
-        
-        clearTimeout(this.drawingToggleTimeout);
-        this.drawingToggleTimeout = setTimeout(() => {
-          if (!this.isDrawingMode) {
-            this.hideDrawingToggle();
-          }
-        }, 4000);
-      }
-
-      hideDrawingToggle() {
-        if (!this.isDrawingMode) {
-          const toggle = document.getElementById('drawingToggle');
-          toggle.classList.remove('visible');
-        }
-      }
 
       setupEventListeners() {
         // Mouse events
@@ -1195,7 +1137,6 @@
         if (this.isDrawingMode) {
           controls.classList.add('visible');
           palette.classList.add('visible');
-          toggle.classList.add('visible');
           document.body.style.cursor = 'crosshair';
           
           // Update button appearance
@@ -1211,9 +1152,6 @@
           const fab = toggle.querySelector('.drawing-fab');
           fab.textContent = '✏️';
           fab.setAttribute('aria-label', 'Enter drawing mode');
-          
-          // Hide toggle after delay
-          setTimeout(() => this.hideDrawingToggle(), 1000);
         }
       }
 
