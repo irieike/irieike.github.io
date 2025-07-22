@@ -94,7 +94,7 @@
       min-height: 100vh;
       min-height: -webkit-fill-available;
       text-align: center;
-      padding: var(--spacing-xl) var(--spacing-md) var(--spacing-md);
+      padding: var(--spacing-lg) var(--spacing-md) 80px;
       overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -140,8 +140,52 @@
       will-change: contents;
     }
 
-    /* Mobile-optimized control buttons */
-    .doodle-controls {
+    /* Floating Drawing Toggle - appears on double tap or hover */
+    .drawing-toggle {
+      position: fixed;
+      top: 50%;
+      left: var(--spacing-md);
+      transform: translateY(-50%);
+      z-index: 1003;
+      opacity: 0;
+      pointer-events: none;
+      transition: all var(--transition-medium);
+    }
+
+    .drawing-toggle.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .drawing-fab {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--accent-primary), var(--accent-secondary));
+      border: none;
+      color: var(--bg-primary);
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 16px var(--shadow-dark);
+      transition: all var(--transition-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .drawing-fab:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 24px var(--shadow-dark);
+    }
+
+    .drawing-fab:active {
+      transform: scale(0.95);
+    }
+
+    /* Canvas controls - only visible in drawing mode */
+    .canvas-controls {
       position: fixed;
       bottom: var(--spacing-md);
       right: var(--spacing-md);
@@ -149,23 +193,31 @@
       flex-direction: column;
       gap: var(--spacing-sm);
       z-index: 1002;
+      opacity: 0;
+      pointer-events: none;
+      transition: all var(--transition-medium);
+    }
+
+    .canvas-controls.visible {
+      opacity: 1;
+      pointer-events: auto;
     }
 
     .control-button {
       background: var(--bg-tertiary);
       color: var(--text-primary);
-      padding: var(--spacing-md);
+      padding: var(--spacing-sm) var(--spacing-md);
       border: 2px solid var(--border-color);
       border-radius: var(--border-radius);
-      font-size: 0.6rem;
+      font-size: 0.5rem;
       font-family: inherit;
       cursor: pointer;
       transition: all var(--transition-medium);
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
       box-shadow: 0 4px 12px var(--shadow-dark);
-      min-height: 44px;
-      min-width: 100px;
+      min-height: 40px;
+      min-width: 70px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -189,21 +241,29 @@
       outline-offset: 2px;
     }
 
-    /* Mobile-optimized spray cans */
-    .spray-cans {
+    /* Color palette - only visible in drawing mode */
+    .color-palette {
       position: fixed;
       bottom: var(--spacing-md);
       left: var(--spacing-md);
       z-index: 1002;
       display: flex;
-      gap: var(--spacing-sm);
+      gap: var(--spacing-xs);
       flex-wrap: wrap;
-      max-width: 200px;
+      max-width: 160px;
+      opacity: 0;
+      pointer-events: none;
+      transition: all var(--transition-medium);
     }
 
-    .spray-can {
-      width: 40px;
-      height: 40px;
+    .color-palette.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .color-swatch {
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
       border: 3px solid var(--text-primary);
       cursor: pointer;
@@ -212,17 +272,17 @@
       position: relative;
     }
 
-    .spray-can:hover {
+    .color-swatch:hover {
       transform: scale(1.1);
       box-shadow: 0 4px 16px var(--shadow-dark);
     }
 
-    .spray-can.active {
+    .color-swatch.active {
       transform: scale(1.2);
       box-shadow: 0 0 20px currentColor;
     }
 
-    .spray-can:focus {
+    .color-swatch:focus {
       outline: 2px solid var(--accent-primary);
       outline-offset: 4px;
     }
@@ -230,18 +290,18 @@
     /* Professional header design - mobile optimized */
     .header-container {
       background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
-      padding: var(--spacing-lg);
+      padding: var(--spacing-md) var(--spacing-lg);
       border-radius: var(--border-radius);
       border: 1px solid var(--border-color);
       box-shadow: 0 8px 32px var(--shadow-dark);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       z-index: 2;
-      margin-top: var(--spacing-md);
+      margin-top: var(--spacing-sm);
       position: relative;
       overflow: hidden;
       width: 100%;
-      max-width: 600px;
+      max-width: 90vw;
     }
 
     .header-container::before {
@@ -261,12 +321,13 @@
     }
 
     h1 {
-      font-size: clamp(1.2rem, 6vw, 2.5rem);
+      font-size: clamp(0.9rem, 8vw, 2.5rem);
       margin: 0;
-      letter-spacing: 0.05em;
+      letter-spacing: clamp(-0.02em, 0.5vw, 0.05em);
       position: relative;
       z-index: 1;
-      word-spacing: 0.1em;
+      word-spacing: 0.05em;
+      line-height: 1.2;
     }
 
     .letter {
@@ -274,7 +335,7 @@
       color: var(--text-secondary);
       transition: all var(--transition-medium);
       cursor: default;
-      margin: 0 1px;
+      margin: 0 clamp(0px, 0.5vw, 2px);
     }
 
     .letter:hover {
@@ -287,17 +348,17 @@
     .navigation {
       display: flex;
       flex-direction: column;
-      gap: var(--spacing-md);
-      margin-top: var(--spacing-lg);
+      gap: var(--spacing-sm);
+      margin: var(--spacing-md) 0;
       z-index: 2;
       width: 100%;
-      max-width: 400px;
+      max-width: 300px;
     }
 
     .nav-link {
       text-decoration: none;
-      font-size: clamp(0.7rem, 3vw, 1rem);
-      padding: var(--spacing-md) var(--spacing-lg);
+      font-size: clamp(0.6rem, 3vw, 0.9rem);
+      padding: var(--spacing-sm) var(--spacing-md);
       border-radius: var(--border-radius);
       color: var(--text-primary);
       border: 2px solid var(--border-color);
@@ -305,7 +366,7 @@
       transition: all var(--transition-medium);
       position: relative;
       overflow: hidden;
-      min-height: 50px;
+      min-height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -339,36 +400,47 @@
       outline-offset: 4px;
     }
 
-    /* Enhanced platform links - mobile optimized */
-    .platform-links {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: var(--spacing-md);
-      margin-top: var(--spacing-lg);
-      z-index: 2;
-      width: 100%;
-      max-width: 500px;
+    /* Circular platform buttons at bottom */
+    .platform-dock {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
+      border-radius: var(--border-radius) var(--border-radius) 0 0;
+      border: 1px solid var(--border-color);
+      border-bottom: none;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1001;
+      box-shadow: 0 -4px 20px var(--shadow-dark);
     }
 
-    .platform-button {
-      font-family: inherit;
+    .platform-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
       background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary));
       border: 2px solid var(--border-color);
       color: var(--text-primary);
-      padding: var(--spacing-md) var(--spacing-lg);
-      border-radius: var(--border-radius);
       text-decoration: none;
-      font-size: clamp(0.6rem, 2.5vw, 0.9rem);
-      transition: all var(--transition-medium);
-      position: relative;
-      overflow: hidden;
-      min-height: 50px;
+      font-size: 0.5rem;
+      font-family: inherit;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: all var(--transition-medium);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      line-height: 1.1;
     }
 
-    .platform-button::before {
+    .platform-circle::before {
       content: '';
       position: absolute;
       top: 50%;
@@ -381,31 +453,32 @@
       z-index: -1;
     }
 
-    .platform-button:hover::before {
-      width: 300%;
-      height: 300%;
+    .platform-circle:hover::before {
+      width: 200%;
+      height: 200%;
     }
 
-    .platform-button:hover {
+    .platform-circle:hover {
       color: var(--bg-primary);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 30px var(--shadow-dark);
+      transform: translateY(-4px) scale(1.1);
+      box-shadow: 0 8px 24px var(--shadow-dark);
       border-color: var(--accent-primary);
+    }
+
+    .platform-circle:focus {
+      outline: 2px solid var(--accent-primary);
+      outline-offset: 4px;
     }
 
     /* Enhanced footer */
     footer {
       margin-top: auto;
-      padding: var(--spacing-lg);
-      font-size: 0.6rem;
+      padding: var(--spacing-md) var(--spacing-md) 80px;
+      font-size: 0.5rem;
       color: var(--text-muted);
       text-align: center;
       z-index: 2;
-      border-top: 1px solid var(--border-color);
       width: 100%;
-      background: var(--bg-secondary);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
     }
 
     /* Loading states */
@@ -437,103 +510,140 @@
     /* Mobile-first responsive design */
     @media (max-width: 480px) {
       body {
-        padding: var(--spacing-lg) var(--spacing-md) var(--spacing-md);
+        padding: var(--spacing-md) var(--spacing-sm) 70px;
       }
       
       .header-container {
-        padding: var(--spacing-md);
-        margin-top: var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        margin-top: var(--spacing-xs);
+        max-width: 95vw;
       }
       
       h1 {
-        font-size: clamp(1rem, 8vw, 1.8rem);
-        letter-spacing: 0.02em;
+        font-size: clamp(0.8rem, 10vw, 1.6rem);
+        letter-spacing: clamp(-0.03em, 0.3vw, 0.02em);
+      }
+      
+      .letter {
+        margin: 0 clamp(-1px, 0.2vw, 1px);
       }
       
       .navigation {
-        gap: var(--spacing-sm);
-        margin-top: var(--spacing-md);
+        gap: var(--spacing-xs);
+        margin: var(--spacing-sm) 0;
+        max-width: 280px;
       }
       
       .nav-link {
-        padding: var(--spacing-sm) var(--spacing-md);
-        min-height: 44px;
-        font-size: clamp(0.6rem, 4vw, 0.8rem);
-      }
-      
-      .platform-links {
-        grid-template-columns: 1fr;
-        gap: var(--spacing-sm);
-        margin-top: var(--spacing-md);
-      }
-      
-      .platform-button {
-        padding: var(--spacing-sm) var(--spacing-md);
-        min-height: 44px;
-        font-size: clamp(0.6rem, 3.5vw, 0.8rem);
-      }
-      
-      .spray-can {
-        width: 36px;
-        height: 36px;
-      }
-      
-      .control-button {
-        padding: var(--spacing-sm);
-        font-size: 0.5rem;
+        padding: var(--spacing-xs) var(--spacing-sm);
         min-height: 40px;
-        min-width: 80px;
+        font-size: clamp(0.5rem, 4vw, 0.7rem);
       }
       
-      .doodle-controls {
+      .platform-circle {
+        width: 44px;
+        height: 44px;
+        font-size: 0.45rem;
+      }
+      
+      .platform-dock {
+        gap: var(--spacing-xs);
+        padding: var(--spacing-xs) var(--spacing-sm);
+      }
+      
+      .drawing-toggle {
+        left: var(--spacing-sm);
+      }
+      
+      .drawing-fab {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+      }
+      
+      .canvas-controls {
         bottom: var(--spacing-sm);
         right: var(--spacing-sm);
       }
       
-      .spray-cans {
+      .color-palette {
         bottom: var(--spacing-sm);
         left: var(--spacing-sm);
-        max-width: 150px;
+        max-width: 140px;
+      }
+      
+      .color-swatch {
+        width: 28px;
+        height: 28px;
       }
       
       footer {
-        padding: var(--spacing-md);
-        font-size: 0.5rem;
+        padding: var(--spacing-sm) var(--spacing-sm) 70px;
+        font-size: 0.45rem;
       }
     }
 
     /* Tablet adjustments */
     @media (min-width: 481px) and (max-width: 768px) {
-      .platform-links {
-        grid-template-columns: repeat(2, 1fr);
+      h1 {
+        font-size: clamp(1.2rem, 6vw, 2rem);
       }
       
-      h1 {
-        font-size: clamp(1.4rem, 5vw, 2rem);
+      .navigation {
+        max-width: 350px;
+      }
+      
+      .platform-circle {
+        width: 52px;
+        height: 52px;
       }
     }
 
     /* Desktop optimizations */
     @media (min-width: 769px) {
       body {
-        padding: var(--spacing-xxl) var(--spacing-lg) var(--spacing-lg);
-      }
-      
-      .platform-links {
-        grid-template-columns: repeat(4, 1fr);
-        max-width: 600px;
+        padding: var(--spacing-xxl) var(--spacing-lg) 80px;
       }
       
       .navigation {
         flex-direction: row;
         flex-wrap: wrap;
         justify-content: center;
-        max-width: 600px;
+        max-width: 500px;
+        gap: var(--spacing-md);
       }
       
       .nav-link {
         flex: 1;
-        min-width: 120px;
+        min-width: 100px;
+      }
+      
+      .platform-circle {
+        width: 60px;
+        height: 60px;
+        font-size: 0.6rem;
+      }
+      
+      .drawing-toggle {
+        left: var(--spacing-lg);
+      }
+      
+      .drawing-fab {
+        width: 64px;
+        height: 64px;
+        font-size: 1.4rem;
+      }
+    }
+
+    /* Show drawing toggle on hover for desktop */
+    @media (hover: hover) {
+      body:hover .drawing-toggle {
+        opacity: 0.7;
+        pointer-events: auto;
+      }
+      
+      .drawing-toggle:hover {
+        opacity: 1;
       }
     }
 
@@ -570,15 +680,23 @@
       body {
         padding-left: max(var(--spacing-md), env(safe-area-inset-left));
         padding-right: max(var(--spacing-md), env(safe-area-inset-right));
-        padding-bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
+        padding-bottom: max(80px, env(safe-area-inset-bottom) + 80px);
       }
       
-      .doodle-controls {
+      .platform-dock {
+        bottom: max(0px, env(safe-area-inset-bottom));
+      }
+      
+      .drawing-toggle {
+        left: max(var(--spacing-md), env(safe-area-inset-left));
+      }
+      
+      .canvas-controls {
         bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
         right: max(var(--spacing-md), env(safe-area-inset-right));
       }
       
-      .spray-cans {
+      .color-palette {
         bottom: max(var(--spacing-md), env(safe-area-inset-bottom));
         left: max(var(--spacing-md), env(safe-area-inset-left));
       }
@@ -609,14 +727,22 @@
   <div class="stars" role="presentation" aria-hidden="true"></div>
   <canvas id="doodle-canvas" aria-label="Interactive drawing canvas"></canvas>
 
-  <div class="doodle-controls">
-    <button class="control-button" onclick="CanvasController.toggleDoodleMode()" aria-label="Toggle drawing mode">
-      <span id="doodle-status">Enable Drawing</span>
-    </button>
-    <button class="control-button" onclick="CanvasController.clearCanvas()" aria-label="Clear drawing canvas">
-      Clear Canvas
+  <!-- Floating drawing toggle -->
+  <div class="drawing-toggle" id="drawingToggle">
+    <button class="drawing-fab" onclick="CanvasController.toggleDrawingMode()" aria-label="Toggle drawing mode">
+      ✏️
     </button>
   </div>
+
+  <!-- Canvas controls - only visible when drawing -->
+  <div class="canvas-controls" id="canvasControls">
+    <button class="control-button" onclick="CanvasController.clearCanvas()" aria-label="Clear drawing canvas">
+      Clear
+    </button>
+  </div>
+
+  <!-- Color palette - only visible when drawing -->
+  <div class="color-palette" id="colorPalette" role="toolbar" aria-label="Drawing color selection"></div>
 
   <main>
     <header class="header-container">
@@ -637,24 +763,23 @@
       <a href="project.html" class="nav-link">Projects</a>
       <a href="contact.html" class="nav-link">Contact</a>
     </nav>
-
-    <section class="platform-links" aria-label="External platforms">
-      <a href="https://www.ebay.com/usr/yourusername" target="_blank" rel="noopener noreferrer" class="platform-button">
-        eBay
-      </a>
-      <a href="https://www.depop.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-button">
-        Depop
-      </a>
-      <a href="https://www.etsy.com/shop/yourusername" target="_blank" rel="noopener noreferrer" class="platform-button">
-        Etsy
-      </a>
-      <a href="https://www.grailed.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-button">
-        Grailed
-      </a>
-    </section>
   </main>
 
-  <div class="spray-cans" role="toolbar" aria-label="Drawing color selection"></div>
+  <!-- Platform dock at bottom -->
+  <div class="platform-dock" aria-label="External platforms">
+    <a href="https://www.ebay.com/usr/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit eBay store">
+      eBay
+    </a>
+    <a href="https://www.depop.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Depop profile">
+      Depop
+    </a>
+    <a href="https://www.etsy.com/shop/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Etsy shop">
+      Etsy
+    </a>
+    <a href="https://www.grailed.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Grailed profile">
+      Grailed
+    </a>
+  </div>
   
   <footer>
     <p>&copy; 2024 @irie.ike | All rights reserved</p>
@@ -684,7 +809,7 @@
         const fragment = document.createDocumentFragment();
         // Responsive star count based on device
         const isMobile = window.innerWidth <= 768;
-        const starCount = Math.min(isMobile ? 40 : 80, window.innerWidth / 25);
+        const starCount = Math.min(isMobile ? 30 : 60, window.innerWidth / 30);
         
         for (let i = 0; i < starCount; i++) {
           const star = document.createElement('span');
@@ -710,18 +835,19 @@
       }
     }
 
-    // Enhanced canvas controller with better mobile support
+    // Enhanced canvas controller with clever drawing toggle
     class CanvasController {
       constructor() {
         this.canvas = document.getElementById('doodle-canvas');
         this.ctx = this.canvas.getContext('2d', { alpha: false });
-        this.isDoodleMode = false;
+        this.isDrawingMode = false;
         this.isDrawing = false;
         this.currentColor = '#ffffff';
         this.colors = ['#ffffff', '#ff4444', '#44ff44', '#4444ff', '#ffff44', '#ff44ff', '#44ffff'];
         this.brushSize = window.innerWidth <= 768 ? 2 : 3;
         this.density = window.innerWidth <= 768 ? 15 : 20;
         this.radius = window.innerWidth <= 768 ? 12 : 15;
+        this.drawingToggleTimeout = null;
         
         this.init();
       }
@@ -730,6 +856,7 @@
         this.setupCanvas();
         this.setupEventListeners();
         this.setupColorPalette();
+        this.setupDrawingToggle();
         this.optimizeContext();
       }
 
@@ -755,6 +882,52 @@
         
         this.ctx.scale(dpr, dpr);
         this.optimizeContext();
+      }
+
+      setupDrawingToggle() {
+        const isMobile = 'ontouchstart' in window;
+        
+        if (isMobile) {
+          // On mobile: show toggle on double tap anywhere
+          let lastTap = 0;
+          document.addEventListener('touchend', (e) => {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 500 && tapLength > 0) {
+              this.showDrawingToggle();
+            }
+            lastTap = currentTime;
+          });
+        } else {
+          // On desktop: show on idle mouse movement
+          let mouseTimeout;
+          document.addEventListener('mousemove', () => {
+            this.showDrawingToggle();
+            clearTimeout(mouseTimeout);
+            mouseTimeout = setTimeout(() => {
+              this.hideDrawingToggle();
+            }, 3000);
+          });
+        }
+      }
+
+      showDrawingToggle() {
+        const toggle = document.getElementById('drawingToggle');
+        toggle.classList.add('visible');
+        
+        clearTimeout(this.drawingToggleTimeout);
+        this.drawingToggleTimeout = setTimeout(() => {
+          if (!this.isDrawingMode) {
+            this.hideDrawingToggle();
+          }
+        }, 4000);
+      }
+
+      hideDrawingToggle() {
+        if (!this.isDrawingMode) {
+          const toggle = document.getElementById('drawingToggle');
+          toggle.classList.remove('visible');
+        }
       }
 
       setupEventListeners() {
@@ -785,7 +958,7 @@
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
           if (e.key === 'd' || e.key === 'D') {
-            this.toggleDoodleMode();
+            this.toggleDrawingMode();
           } else if (e.key === 'c' || e.key === 'C') {
             this.clearCanvas();
           } else if (e.key >= '1' && e.key <= '7') {
@@ -812,28 +985,28 @@
       }
 
       setupColorPalette() {
-        const container = document.querySelector('.spray-cans');
+        const container = document.getElementById('colorPalette');
         const fragment = document.createDocumentFragment();
 
         this.colors.forEach((color, index) => {
-          const can = document.createElement('button');
-          can.className = 'spray-can';
-          can.style.backgroundColor = color;
-          can.setAttribute('aria-label', `Select color ${index + 1}`);
-          can.setAttribute('data-color', color);
-          can.tabIndex = 0;
+          const swatch = document.createElement('button');
+          swatch.className = 'color-swatch';
+          swatch.style.backgroundColor = color;
+          swatch.setAttribute('aria-label', `Select color ${index + 1}`);
+          swatch.setAttribute('data-color', color);
+          swatch.tabIndex = 0;
           
-          if (index === 0) can.classList.add('active');
+          if (index === 0) swatch.classList.add('active');
           
-          can.addEventListener('click', () => this.setColor(color));
-          can.addEventListener('keydown', (e) => {
+          swatch.addEventListener('click', () => this.setColor(color));
+          swatch.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
               e.preventDefault();
               this.setColor(color);
             }
           });
           
-          fragment.appendChild(can);
+          fragment.appendChild(swatch);
         });
 
         container.appendChild(fragment);
@@ -841,19 +1014,19 @@
 
       setColor(color) {
         this.currentColor = color;
-        document.querySelectorAll('.spray-can').forEach(can => {
-          can.classList.toggle('active', can.dataset.color === color);
+        document.querySelectorAll('.color-swatch').forEach(swatch => {
+          swatch.classList.toggle('active', swatch.dataset.color === color);
         });
       }
 
       startDrawing(e) {
-        if (!this.isDoodleMode) return;
+        if (!this.isDrawingMode) return;
         this.isDrawing = true;
         this.draw(e);
       }
 
       draw(e) {
-        if (!this.isDoodleMode || !this.isDrawing) return;
+        if (!this.isDrawingMode || !this.isDrawing) return;
 
         const rect = this.canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -884,15 +1057,38 @@
         this.isDrawing = false;
       }
 
-      toggleDoodleMode() {
-        this.isDoodleMode = !this.isDoodleMode;
-        this.canvas.style.pointerEvents = this.isDoodleMode ? 'auto' : 'none';
+      toggleDrawingMode() {
+        this.isDrawingMode = !this.isDrawingMode;
+        this.canvas.style.pointerEvents = this.isDrawingMode ? 'auto' : 'none';
         
-        const statusElement = document.getElementById('doodle-status');
-        statusElement.textContent = this.isDoodleMode ? 'Disable Drawing' : 'Enable Drawing';
+        // Show/hide drawing controls
+        const controls = document.getElementById('canvasControls');
+        const palette = document.getElementById('colorPalette');
+        const toggle = document.getElementById('drawingToggle');
         
-        // Add visual feedback
-        document.body.style.cursor = this.isDoodleMode ? 'crosshair' : 'default';
+        if (this.isDrawingMode) {
+          controls.classList.add('visible');
+          palette.classList.add('visible');
+          toggle.classList.add('visible');
+          document.body.style.cursor = 'crosshair';
+          
+          // Update button appearance
+          const fab = toggle.querySelector('.drawing-fab');
+          fab.textContent = '❌';
+          fab.setAttribute('aria-label', 'Exit drawing mode');
+        } else {
+          controls.classList.remove('visible');
+          palette.classList.remove('visible');
+          document.body.style.cursor = 'default';
+          
+          // Update button appearance
+          const fab = toggle.querySelector('.drawing-fab');
+          fab.textContent = '✏️';
+          fab.setAttribute('aria-label', 'Enter drawing mode');
+          
+          // Hide toggle after delay
+          setTimeout(() => this.hideDrawingToggle(), 1000);
+        }
       }
 
       clearCanvas() {
@@ -906,8 +1102,8 @@
         return CanvasController.instance;
       }
 
-      static toggleDoodleMode() {
-        CanvasController.getInstance().toggleDoodleMode();
+      static toggleDrawingMode() {
+        CanvasController.getInstance().toggleDrawingMode();
       }
 
       static clearCanvas() {
