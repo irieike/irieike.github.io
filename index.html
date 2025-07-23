@@ -119,7 +119,79 @@
       opacity: 0.3;
     }
 
+    /* Simple Loading Screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: var(--bg-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      transition: opacity 0.5s ease-out;
+    }
 
+    .loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-content {
+      text-align: center;
+    }
+
+    .loading-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(1.5rem, 8vw, 3.5rem);
+      margin: 0 0 2rem 0;
+      display: flex;
+      gap: 0.2em;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .loading-letter {
+      display: inline-block;
+      color: var(--accent-primary);
+      opacity: 0;
+      transform: translateY(-50px);
+      animation: dropIn 0.6s ease-out forwards;
+      animation-delay: var(--delay);
+      text-shadow: 0 0 10px var(--accent-primary);
+    }
+
+    @keyframes dropIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .loading-progress {
+      width: 300px;
+      height: 4px;
+      background: var(--bg-tertiary);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    .progress-bar {
+      height: 100%;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Random gradient options */
+    .gradient-1 { background: linear-gradient(90deg, #ff6b6b, #4ecdc4); }
+    .gradient-2 { background: linear-gradient(90deg, #667eea, #764ba2); }
+    .gradient-3 { background: linear-gradient(90deg, #ffeaa7, #fd79a8); }
+    .gradient-4 { background: linear-gradient(90deg, #00b894, #0984e3); }
+    .gradient-5 { background: linear-gradient(90deg, #fdcb6e, #d63031); }
 
     /* Cursor Trail System */
     .cursor-trail {
@@ -1377,7 +1449,23 @@
   <!-- Performance: Preload critical images -->
   <div class="preload-image" aria-hidden="true"></div>
   
-
+  <!-- Simple Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-content">
+      <h1 class="loading-title">
+        <span class="loading-letter" style="--delay: 0s">R</span>
+        <span class="loading-letter" style="--delay: 0.1s">U</span>
+        <span class="loading-letter" style="--delay: 0.2s">D</span>
+        <span class="loading-letter" style="--delay: 0.3s">E</span>
+        <span class="loading-letter" style="--delay: 0.4s">B</span>
+        <span class="loading-letter" style="--delay: 0.5s">O</span>
+        <span class="loading-letter" style="--delay: 0.6s">Y</span>
+      </h1>
+      <div class="loading-progress">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+    </div>
+  </div>
 
   <div class="stars" role="presentation" aria-hidden="true"></div>
   <canvas id="doodle-canvas" aria-label="Interactive drawing canvas"></canvas>
@@ -2297,7 +2385,8 @@
           // Start performance monitoring
           this.performanceMetrics.startTime = performance.now();
           
-          // Loading manager temporarily disabled
+          // Simple loading screen
+          this.initSimpleLoader();
           
           // Initialize theme management
           this.themeManager = new ThemeManager();
@@ -2343,6 +2432,43 @@
         document.addEventListener('mousedown', () => {
           document.body.classList.remove('keyboard-user');
         });
+      }
+
+      initSimpleLoader() {
+        const loadingScreen = document.getElementById('loadingScreen');
+        const progressBar = document.getElementById('progressBar');
+        
+        if (!loadingScreen || !progressBar) return;
+
+        // Add random gradient
+        const gradients = ['gradient-1', 'gradient-2', 'gradient-3', 'gradient-4', 'gradient-5'];
+        const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+        progressBar.classList.add(randomGradient);
+        console.log(`🌈 Random gradient: ${randomGradient}`);
+
+        let progress = 0;
+        const duration = 2000; // 2 seconds
+        const interval = 50; // Update every 50ms
+        const increment = (100 / (duration / interval));
+
+        const updateProgress = () => {
+          progress += increment;
+          progressBar.style.width = `${Math.min(progress, 100)}%`;
+          
+          if (progress >= 100) {
+            setTimeout(() => {
+              loadingScreen.classList.add('hidden');
+              setTimeout(() => {
+                loadingScreen.style.display = 'none';
+              }, 500);
+            }, 300);
+          } else {
+            setTimeout(updateProgress, interval);
+          }
+        };
+
+        // Start progress after letters finish animating
+        setTimeout(updateProgress, 800);
       }
 
       async initializeComponents() {
