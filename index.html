@@ -119,24 +119,18 @@
       opacity: 0.3;
     }
 
-    /* Simple Loading Screen */
+    /* Bouncing RUDEBOY Loading Screen */
     .loading-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: var(--bg-primary);
+      background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
       display: flex;
       align-items: center;
       justify-content: center;
       z-index: 10000;
-      transition: opacity 0.5s ease-out;
-    }
-
-    .loading-screen.hidden {
-      opacity: 0;
-      pointer-events: none;
     }
 
     .loading-content {
@@ -145,7 +139,7 @@
 
     .loading-title {
       font-family: 'Press Start 2P', monospace;
-      font-size: clamp(1.5rem, 8vw, 3.5rem);
+      font-size: clamp(1.5rem, 8vw, 4rem);
       margin: 0 0 2rem 0;
       display: flex;
       gap: 0.2em;
@@ -153,45 +147,69 @@
       flex-wrap: wrap;
     }
 
-    .loading-letter {
+    .bounce-letter {
       display: inline-block;
       color: var(--accent-primary);
       opacity: 0;
-      transform: translateY(-50px);
-      animation: dropIn 0.6s ease-out forwards;
+      transform: translateY(-100px) scale(0.3);
+      animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
       animation-delay: var(--delay);
-      text-shadow: 0 0 10px var(--accent-primary);
+      text-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.5),
+        0 0 20px var(--accent-primary);
     }
 
-    @keyframes dropIn {
-      to {
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0.3) rotate(-10deg);
+      }
+      50% {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(10px) scale(1.05) rotate(2deg);
+      }
+      70% {
+        transform: translateY(-5px) scale(0.98) rotate(-1deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
       }
     }
 
     .loading-progress {
       width: 300px;
-      height: 4px;
+      height: 6px;
       background: var(--bg-tertiary);
-      border-radius: 2px;
+      border-radius: 3px;
       overflow: hidden;
       margin: 0 auto;
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(255, 255, 255, 0.1);
     }
 
     .progress-bar {
       height: 100%;
-      border-radius: 2px;
+      background: linear-gradient(90deg, 
+        var(--accent-primary), 
+        var(--accent-secondary), 
+        var(--accent-tertiary));
+      border-radius: 3px;
       width: 0%;
-      transition: width 0.3s ease;
+      animation: progressFill 2s ease-out 0.7s forwards;
+      box-shadow: 
+        0 0 10px var(--accent-primary),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
     }
 
-    /* Random gradient options */
-    .gradient-1 { background: linear-gradient(90deg, #ff6b6b, #4ecdc4); }
-    .gradient-2 { background: linear-gradient(90deg, #667eea, #764ba2); }
-    .gradient-3 { background: linear-gradient(90deg, #ffeaa7, #fd79a8); }
-    .gradient-4 { background: linear-gradient(90deg, #00b894, #0984e3); }
-    .gradient-5 { background: linear-gradient(90deg, #fdcb6e, #d63031); }
+    @keyframes progressFill {
+      0% { width: 0%; }
+      25% { width: 30%; }
+      50% { width: 60%; }
+      75% { width: 85%; }
+      100% { width: 100%; }
+    }
 
     /* Cursor Trail System */
     .cursor-trail {
@@ -1449,22 +1467,21 @@
   <!-- Performance: Preload critical images -->
   <div class="preload-image" aria-hidden="true"></div>
   
-  <!-- Simple Loading Screen -->
-  <div id="loadingScreen" class="loading-screen" onclick="this.style.display='none'">
+  <!-- Bouncing RUDEBOY Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
     <div class="loading-content">
       <h1 class="loading-title">
-        <span class="loading-letter" style="--delay: 0s">R</span>
-        <span class="loading-letter" style="--delay: 0.1s">U</span>
-        <span class="loading-letter" style="--delay: 0.2s">D</span>
-        <span class="loading-letter" style="--delay: 0.3s">E</span>
-        <span class="loading-letter" style="--delay: 0.4s">B</span>
-        <span class="loading-letter" style="--delay: 0.5s">O</span>
-        <span class="loading-letter" style="--delay: 0.6s">Y</span>
+        <span class="bounce-letter" style="--delay: 0s">R</span>
+        <span class="bounce-letter" style="--delay: 0.1s">U</span>
+        <span class="bounce-letter" style="--delay: 0.2s">D</span>
+        <span class="bounce-letter" style="--delay: 0.3s">E</span>
+        <span class="bounce-letter" style="--delay: 0.4s">B</span>
+        <span class="bounce-letter" style="--delay: 0.5s">O</span>
+        <span class="bounce-letter" style="--delay: 0.6s">Y</span>
       </h1>
       <div class="loading-progress">
-        <div class="progress-bar" id="progressBar"></div>
+        <div class="progress-bar"></div>
       </div>
-      <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">Click anywhere to skip</p>
     </div>
   </div>
 
@@ -2386,17 +2403,17 @@
           // Start performance monitoring
           this.performanceMetrics.startTime = performance.now();
           
-          // Simple loading screen
-          this.initSimpleLoader();
-          
-          // Fallback: Remove loading screen after 5 seconds no matter what
+          // Auto-hide loading screen after animations complete
           setTimeout(() => {
             const loadingScreen = document.getElementById('loadingScreen');
-            if (loadingScreen && loadingScreen.style.display !== 'none') {
-              console.log('⚠️ Fallback: Force removing loading screen');
-              loadingScreen.style.display = 'none';
+            if (loadingScreen) {
+              loadingScreen.style.opacity = '0';
+              loadingScreen.style.transition = 'opacity 0.5s ease-out';
+              setTimeout(() => {
+                loadingScreen.style.display = 'none';
+              }, 500);
             }
-          }, 5000);
+          }, 3000); // Hide after 3 seconds total
           
           // Initialize theme management
           this.themeManager = new ThemeManager();
@@ -2444,52 +2461,7 @@
         });
       }
 
-      initSimpleLoader() {
-        const loadingScreen = document.getElementById('loadingScreen');
-        const progressBar = document.getElementById('progressBar');
-        
-        console.log('🔍 Loading screen elements:', { loadingScreen, progressBar });
-        
-        if (!loadingScreen || !progressBar) {
-          console.log('❌ Loading screen elements not found, skipping...');
-          return;
-        }
 
-        // Add random gradient
-        const gradients = ['gradient-1', 'gradient-2', 'gradient-3', 'gradient-4', 'gradient-5'];
-        const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
-        progressBar.classList.add(randomGradient);
-        console.log(`🌈 Random gradient: ${randomGradient}`);
-
-        let progress = 0;
-        const duration = 1500; // Shorter duration
-        const interval = 50; // Update every 50ms
-        const increment = (100 / (duration / interval));
-
-        const updateProgress = () => {
-          progress += increment;
-          progressBar.style.width = `${Math.min(progress, 100)}%`;
-          console.log(`📊 Progress: ${progress.toFixed(1)}%`);
-          
-          if (progress >= 100) {
-            console.log('✅ Loading complete, hiding screen...');
-            setTimeout(() => {
-              loadingScreen.classList.add('hidden');
-              console.log('🎭 Added hidden class');
-              setTimeout(() => {
-                loadingScreen.style.display = 'none';
-                console.log('👻 Loading screen hidden completely');
-              }, 500);
-            }, 200);
-          } else {
-            setTimeout(updateProgress, interval);
-          }
-        };
-
-        // Start progress immediately to test
-        console.log('🚀 Starting progress bar...');
-        setTimeout(updateProgress, 100);
-      }
 
       async initializeComponents() {
         // Initialize star field with performance considerations
