@@ -90,6 +90,35 @@
       --shadow-dark: rgba(0, 0, 0, 0.15);
     }
 
+    /* Light mode specific overrides for readability */
+    :root[data-theme="light"] .platform-circle {
+      color: #ffffff !important;
+      text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.9),
+        0 1px 2px rgba(0, 0, 0, 0.8),
+        0 0 6px rgba(0, 0, 0, 0.7) !important;
+    }
+
+    :root[data-theme="light"] .nav-link {
+      color: var(--text-primary);
+      background: linear-gradient(145deg, #f8f9fa, #e9ecef);
+      text-shadow: none;
+      box-shadow: 
+        0 6px 12px rgba(0, 0, 0, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+    }
+
+    :root[data-theme="light"] .nav-link::before {
+      background: linear-gradient(145deg, #dee2e6, #ced4da);
+    }
+
+    :root[data-theme="light"] .stars span {
+      background: #333;
+      opacity: 0.3;
+    }
+
     /* Cursor Trail System */
     .cursor-trail {
       position: fixed;
@@ -813,38 +842,76 @@
       outline-offset: 4px;
     }
 
-    /* Enhanced platform dock with wave animation */
+    /* Enhanced platform dock with holographic theme */
     .platform-dock {
       position: fixed;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: var(--spacing-sm);
-      padding: var(--spacing-sm) var(--spacing-md);
-      background: linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
-      border-radius: var(--border-radius) var(--border-radius) 0 0;
-      border: 1px solid var(--border-color);
+      gap: var(--spacing-md);
+      padding: var(--spacing-md) var(--spacing-lg);
+      background: 
+        linear-gradient(135deg, rgba(18, 18, 18, 0.95), rgba(26, 26, 26, 0.95)),
+        radial-gradient(circle at 30% 30%, rgba(241, 196, 15, 0.1), transparent 50%);
+      border-radius: 20px 20px 0 0;
+      border: 2px solid;
+      border-image: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary)) 1;
       border-bottom: none;
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       z-index: 1001;
-      box-shadow: 0 -4px 20px var(--shadow-dark);
-      animation: dockFloat 6s ease-in-out infinite;
+      box-shadow: 
+        0 -8px 32px rgba(241, 196, 15, 0.2),
+        0 -4px 16px var(--shadow-dark),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1);
+      animation: dockPulse 4s ease-in-out infinite;
+      position: relative;
+      overflow: visible;
     }
 
-    @keyframes dockFloat {
-      0%, 100% { transform: translateX(-50%) translateY(0px); }
-      50% { transform: translateX(-50%) translateY(-2px); }
+    .platform-dock::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+      border-radius: 20px 20px 0 0;
+      z-index: -1;
+      animation: borderGlow 3s linear infinite;
+    }
+
+    @keyframes dockPulse {
+      0%, 100% { 
+        transform: translateX(-50%) translateY(0px);
+        box-shadow: 
+          0 -8px 32px rgba(241, 196, 15, 0.2),
+          0 -4px 16px var(--shadow-dark),
+          inset 0 2px 4px rgba(255, 255, 255, 0.1);
+      }
+      50% { 
+        transform: translateX(-50%) translateY(-4px);
+        box-shadow: 
+          0 -12px 40px rgba(241, 196, 15, 0.3),
+          0 -6px 20px var(--shadow-dark),
+          inset 0 2px 4px rgba(255, 255, 255, 0.15);
+      }
+    }
+
+    @keyframes borderGlow {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
     }
 
     .platform-circle {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      color: #ffffff;
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      color: var(--text-primary);
       text-decoration: none;
-      font-size: 0.42rem;
+      font-size: 0.4rem;
       font-family: inherit;
       font-weight: 900;
       display: flex;
@@ -856,172 +923,167 @@
       overflow: visible;
       text-align: center;
       line-height: 1;
-      animation: balloonFloat 6s ease-in-out infinite;
-      animation-delay: calc(var(--index) * -1.5s);
-      transform-style: preserve-3d;
-      filter: saturate(1.2) brightness(1.1);
       text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    /* Individual balloon colors with enhanced readability */
-    .platform-circle:nth-child(1) {
+      letter-spacing: 1px;
       background: 
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 25%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 30%),
-        linear-gradient(145deg, #ff6b6b, #ff5252, #e53935);
+        linear-gradient(135deg, rgba(26, 26, 26, 0.9), rgba(42, 42, 42, 0.9)),
+        radial-gradient(circle at 30% 30%, rgba(241, 196, 15, 0.2), transparent 70%);
+      border: 2px solid transparent;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       box-shadow: 
-        0 8px 16px rgba(229, 57, 53, 0.4),
-        0 4px 8px rgba(229, 57, 53, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+        0 8px 20px rgba(0, 0, 0, 0.4),
+        0 4px 10px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.1),
         inset 0 -2px 4px rgba(0, 0, 0, 0.2);
       text-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.9),
-        0 1px 2px rgba(0, 0, 0, 0.8),
-        0 0 4px rgba(255, 255, 255, 0.3);
-      color: #ffffff;
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 8px var(--accent-primary);
+      animation: hologramFloat 4s ease-in-out infinite;
+      animation-delay: calc(var(--index) * -1s);
+      transform-style: preserve-3d;
     }
 
-    .platform-circle:nth-child(2) {
-      background: 
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 25%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 30%),
-        linear-gradient(145deg, #4fc3f7, #29b6f6, #0288d1);
-      box-shadow: 
-        0 8px 16px rgba(2, 136, 209, 0.4),
-        0 4px 8px rgba(2, 136, 209, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.4),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-      text-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.9),
-        0 1px 2px rgba(0, 0, 0, 0.8),
-        0 0 4px rgba(255, 255, 255, 0.3);
-      color: #ffffff;
-    }
-
-    .platform-circle:nth-child(3) {
-      background: 
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 25%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 30%),
-        linear-gradient(145deg, #81c784, #66bb6a, #43a047);
-      box-shadow: 
-        0 8px 16px rgba(67, 160, 71, 0.4),
-        0 4px 8px rgba(67, 160, 71, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.4),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-      text-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.9),
-        0 1px 2px rgba(0, 0, 0, 0.8),
-        0 0 4px rgba(255, 255, 255, 0.3);
-      color: #ffffff;
-    }
-
-    .platform-circle:nth-child(4) {
-      background: 
-        radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 25%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 30%),
-        linear-gradient(145deg, #ffb74d, #ffa726, #fb8c00);
-      box-shadow: 
-        0 8px 16px rgba(251, 140, 0, 0.4),
-        0 4px 8px rgba(251, 140, 0, 0.3),
-        inset 0 2px 4px rgba(255, 255, 255, 0.4),
-        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-      text-shadow: 
-        0 2px 4px rgba(0, 0, 0, 0.9),
-        0 1px 2px rgba(0, 0, 0, 0.8),
-        0 0 4px rgba(255, 255, 255, 0.3);
-      color: #ffffff;
-    }
-
-    @keyframes balloonFloat {
-      0%, 100% { 
-        transform: translateY(0px) rotate(0deg) scale(1);
-      }
-      25% { 
-        transform: translateY(-8px) rotate(2deg) scale(1.02);
-      }
-      50% { 
-        transform: translateY(-12px) rotate(0deg) scale(1.05);
-      }
-      75% { 
-        transform: translateY(-6px) rotate(-2deg) scale(1.02);
-      }
-    }
-
+    /* Holographic border effect */
     .platform-circle::before {
       content: '';
       position: absolute;
-      top: 15%;
-      left: 20%;
-      width: 25%;
-      height: 25%;
-      background: 
-        radial-gradient(ellipse 80% 60% at 40% 40%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 40%, transparent 80%);
-      border-radius: 50%;
+      inset: -2px;
+      border-radius: 14px;
+      background: linear-gradient(45deg, 
+        var(--accent-primary), 
+        var(--accent-secondary), 
+        var(--accent-tertiary), 
+        var(--accent-primary));
+      z-index: -1;
+      animation: hologramBorder 3s linear infinite;
       opacity: 0.8;
-      animation: balloonShine 3s ease-in-out infinite;
-      animation-delay: calc(var(--index) * -0.5s);
-      filter: blur(0.3px);
     }
 
-    @keyframes balloonShine {
-      0%, 100% { 
-        transform: scale(1);
-        opacity: 0.8;
-      }
-      50% { 
-        transform: scale(1.2);
-        opacity: 1;
-      }
-    }
-
+    /* Inner glow effect */
     .platform-circle::after {
       content: '';
       position: absolute;
-      inset: -1px;
-      border-radius: 50%;
-      background: 
-        radial-gradient(circle, transparent 60%, rgba(255, 255, 255, 0.2) 70%, transparent 80%);
-      animation: balloonGlow 4s ease-in-out infinite;
-      animation-delay: calc(var(--index) * -1s);
-      z-index: -1;
-      opacity: 0.5;
+      inset: 4px;
+      border-radius: 8px;
+      background: radial-gradient(circle at center, 
+        rgba(241, 196, 15, 0.1) 0%, 
+        transparent 60%);
+      animation: innerPulse 2s ease-in-out infinite;
+      animation-delay: calc(var(--index) * -0.5s);
     }
 
-    @keyframes balloonGlow {
+    @keyframes hologramFloat {
       0%, 100% { 
-        transform: scale(1);
-        opacity: 0.5;
+        transform: translateY(0px) rotateX(0deg);
+      }
+      25% { 
+        transform: translateY(-4px) rotateX(2deg);
       }
       50% { 
+        transform: translateY(-8px) rotateX(0deg);
+      }
+      75% { 
+        transform: translateY(-4px) rotateX(-2deg);
+      }
+    }
+
+    @keyframes hologramBorder {
+      0% { 
+        background: linear-gradient(45deg, 
+          var(--accent-primary), 
+          var(--accent-secondary), 
+          var(--accent-tertiary), 
+          var(--accent-primary));
+        transform: rotate(0deg);
+      }
+      25% {
+        background: linear-gradient(45deg, 
+          var(--accent-secondary), 
+          var(--accent-tertiary), 
+          var(--accent-primary), 
+          var(--accent-secondary));
+        transform: rotate(90deg);
+      }
+      50% {
+        background: linear-gradient(45deg, 
+          var(--accent-tertiary), 
+          var(--accent-primary), 
+          var(--accent-secondary), 
+          var(--accent-tertiary));
+        transform: rotate(180deg);
+      }
+      75% {
+        background: linear-gradient(45deg, 
+          var(--accent-primary), 
+          var(--accent-secondary), 
+          var(--accent-tertiary), 
+          var(--accent-primary));
+        transform: rotate(270deg);
+      }
+      100% { 
+        background: linear-gradient(45deg, 
+          var(--accent-primary), 
+          var(--accent-secondary), 
+          var(--accent-tertiary), 
+          var(--accent-primary));
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes innerPulse {
+      0%, 100% { 
+        opacity: 0.3;
+        transform: scale(1);
+      }
+      50% { 
+        opacity: 0.6;
         transform: scale(1.1);
-        opacity: 0.8;
       }
     }
 
     .platform-circle:hover {
-      color: var(--text-primary);
-      transform: translateY(-15px) scale(1.15);
+      transform: translateY(-12px) scale(1.1) rotateX(5deg);
+      box-shadow: 
+        0 16px 32px rgba(0, 0, 0, 0.5),
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        0 0 24px var(--accent-primary),
+        inset 0 4px 8px rgba(255, 255, 255, 0.2),
+        inset 0 -4px 8px rgba(0, 0, 0, 0.3);
+      text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 12px var(--accent-primary),
+        0 0 20px var(--accent-secondary);
       animation-play-state: paused;
-      filter: saturate(1.4) brightness(1.2) contrast(1.1);
-      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
 
     .platform-circle:hover::before {
       opacity: 1;
-      transform: scale(1.5);
-      filter: blur(0.2px);
+      animation-play-state: paused;
+      background: linear-gradient(45deg, 
+        var(--accent-primary), 
+        var(--accent-secondary), 
+        var(--accent-tertiary), 
+        var(--accent-primary)) !important;
+      box-shadow: 0 0 20px var(--accent-primary);
     }
 
     .platform-circle:hover::after {
-      opacity: 1;
-      transform: scale(1.2);
-      animation-play-state: paused;
+      opacity: 0.8;
+      transform: scale(1.3);
+      background: radial-gradient(circle at center, 
+        rgba(241, 196, 15, 0.3) 0%, 
+        transparent 50%);
     }
 
     .platform-circle:active {
-      transform: translateY(-8px) scale(1.05);
-      filter: saturate(1.2) brightness(1.1);
+      transform: translateY(-6px) scale(1.05) rotateX(2deg);
+      box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        0 0 16px var(--accent-primary),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 -2px 4px rgba(255, 255, 255, 0.2);
     }
 
     .platform-circle:focus {
@@ -1161,9 +1223,9 @@
       }
       
             .platform-circle {
-        width: 48px;
-        height: 48px;
-        font-size: 0.38rem;
+        width: 56px;
+        height: 56px;
+        font-size: 0.35rem;
         font-weight: 900;
       }
 
@@ -1218,9 +1280,9 @@
       }
       
       .platform-circle {
-        width: 52px;
-        height: 52px;
-        font-size: 0.4rem;
+        width: 60px;
+        height: 60px;
+        font-size: 0.38rem;
         font-weight: 900;
       }
     }
@@ -1248,9 +1310,9 @@
       }
       
       .platform-circle {
-        width: 60px;
-        height: 60px;
-        font-size: 0.46rem;
+        width: 68px;
+        height: 68px;
+        font-size: 0.42rem;
         font-weight: 900;
       }
       
@@ -1676,26 +1738,55 @@
       }
 
       playLetterSound(index) {
-        // Create audio context for letter sounds
+        // Create deep 808 bass drum tones
         if ('AudioContext' in window || 'webkitAudioContext' in window) {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
           const audioContext = new AudioContext();
           
+          // Create main oscillator for 808 bass
           const oscillator = audioContext.createOscillator();
           const gainNode = audioContext.createGain();
+          const filter = audioContext.createBiquadFilter();
           
-          // Different frequencies for each letter
-          const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];
-          oscillator.frequency.setValueAtTime(frequencies[index], audioContext.currentTime);
+          // Deep bass frequencies for each letter (sub-bass range)
+          const bassFrequencies = [55, 65.4, 73.4, 82.4, 98, 110, 123.5]; // Deep 808 tones
+          const baseFreq = bassFrequencies[index];
           
-          oscillator.connect(gainNode);
+          // Configure 808-style oscillator
+          oscillator.type = 'sine';
+          oscillator.frequency.setValueAtTime(baseFreq * 2, audioContext.currentTime);
+          oscillator.frequency.exponentialRampToValueAtTime(baseFreq, audioContext.currentTime + 0.1);
+          
+          // Low-pass filter for that deep 808 sound
+          filter.type = 'lowpass';
+          filter.frequency.setValueAtTime(200, audioContext.currentTime);
+          filter.Q.setValueAtTime(15, audioContext.currentTime);
+          
+          // Connect the chain
+          oscillator.connect(filter);
+          filter.connect(gainNode);
           gainNode.connect(audioContext.destination);
           
-          gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+          // 808-style envelope (quick attack, sustained decay)
+          gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+          gainNode.gain.linearRampToValueAtTime(0.3, audioContext.currentTime + 0.01);
+          gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.8);
           
+          // Add some harmonic content for punch
+          const subOsc = audioContext.createOscillator();
+          const subGain = audioContext.createGain();
+          subOsc.type = 'triangle';
+          subOsc.frequency.setValueAtTime(baseFreq / 2, audioContext.currentTime);
+          subOsc.connect(subGain);
+          subGain.connect(audioContext.destination);
+          subGain.gain.setValueAtTime(0.1, audioContext.currentTime);
+          subGain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.6);
+          
+          // Start both oscillators
           oscillator.start(audioContext.currentTime);
-          oscillator.stop(audioContext.currentTime + 0.3);
+          oscillator.stop(audioContext.currentTime + 0.8);
+          subOsc.start(audioContext.currentTime);
+          subOsc.stop(audioContext.currentTime + 0.6);
         }
       }
     }
