@@ -9,7 +9,7 @@
   <meta name="robots" content="index, follow" />
   
   <!-- PWA Meta Tags -->
-  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="RUDEBOY" />
   <meta name="format-detection" content="telephone=no" />
@@ -23,7 +23,7 @@
   <!-- Security Headers -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self';" />
   <meta http-equiv="X-Content-Type-Options" content="nosniff" />
-  <meta http-equiv="X-Frame-Options" content="DENY" />
+
   <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
   
   <!-- Performance optimizations -->
@@ -2020,41 +2020,7 @@
       console.error('Unhandled promise rejection:', e.reason);
     });
 
-    // Advanced Loading Manager
-    class LoadingManager {
-      constructor() {
-        this.loadingScreen = document.getElementById('loadingScreen');
-        this.loadStartTime = performance.now();
-        this.minLoadTime = 1000; // Minimum loading time for UX
-        this.init();
-      }
 
-      init() {
-        // Hide loading screen after minimum time and when content is ready
-        window.addEventListener('load', () => {
-          const loadTime = performance.now() - this.loadStartTime;
-          const remainingTime = Math.max(0, this.minLoadTime - loadTime);
-          
-          setTimeout(() => {
-            this.hideLoadingScreen();
-          }, remainingTime);
-        });
-      }
-
-      hideLoadingScreen() {
-        this.loadingScreen.classList.add('hidden');
-        // Start entrance animations
-        this.triggerEntranceAnimations();
-      }
-
-      triggerEntranceAnimations() {
-        // Add stagger delays to elements
-        const animatedElements = document.querySelectorAll('.fade-in-up');
-        animatedElements.forEach((el, index) => {
-          el.style.animationDelay = `${index * 0.1}s`;
-        });
-      }
-    }
 
     // Intersection Observer for scroll animations
     class ScrollAnimations {
