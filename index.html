@@ -1625,36 +1625,44 @@
         this.isLoading = true;
         this.minLoadTime = 1800; // Shorter loading time
         this.startTime = performance.now();
-        this.setRandomGradient();
       }
 
       setRandomGradient() {
-        // Fun gradient names for each option
-        const gradientNames = [
-          'Ocean Breeze', 'Cosmic Purple', 'Sunset Vibes', 'Electric Teal',
-          'Fire Storm', 'Candy Pop', 'Mint Fresh', 'Rose Gold',
-          'Tropical Heat', 'Mystic Dream'
-        ];
-        
-        // Select random gradient from 10 options
-        const gradientNumber = Math.floor(Math.random() * 10) + 1;
-        const gradientName = gradientNames[gradientNumber - 1];
-        const progressBar = document.querySelector('.progress-bar');
-        
-        if (progressBar) {
-          // Remove any existing gradient classes
-          for (let i = 1; i <= 10; i++) {
-            progressBar.classList.remove(`progress-gradient-${i}`);
+        try {
+          // Fun gradient names for each option
+          const gradientNames = [
+            'Ocean Breeze', 'Cosmic Purple', 'Sunset Vibes', 'Electric Teal',
+            'Fire Storm', 'Candy Pop', 'Mint Fresh', 'Rose Gold',
+            'Tropical Heat', 'Mystic Dream'
+          ];
+          
+          // Select random gradient from 10 options
+          const gradientNumber = Math.floor(Math.random() * 10) + 1;
+          const gradientName = gradientNames[gradientNumber - 1];
+          const progressBar = document.querySelector('.progress-bar');
+          
+          if (progressBar) {
+            // Remove any existing gradient classes
+            for (let i = 1; i <= 10; i++) {
+              progressBar.classList.remove(`progress-gradient-${i}`);
+            }
+            
+            // Add the randomly selected gradient
+            progressBar.classList.add(`progress-gradient-${gradientNumber}`);
+            
+            console.log(`🌈 Loading bar gradient: "${gradientName}" (#${gradientNumber}) selected!`);
+          } else {
+            console.log('⚠️ Progress bar not found, using default gradient');
           }
-          
-          // Add the randomly selected gradient
-          progressBar.classList.add(`progress-gradient-${gradientNumber}`);
-          
-          console.log(`🌈 Loading bar gradient: "${gradientName}" (#${gradientNumber}) selected!`);
+        } catch (error) {
+          console.log('⚠️ Error setting gradient, continuing with default:', error);
         }
       }
 
       async initialize() {
+        // Set random gradient first
+        this.setRandomGradient();
+        
         // Simulate loading processes
         await this.simulateLoading();
         
@@ -2447,9 +2455,13 @@
           // Start performance monitoring
           this.performanceMetrics.startTime = performance.now();
           
-          // Initialize loading manager and start loading sequence (non-blocking)
-          this.loadingManager = new LoadingManager();
-          setTimeout(() => this.loadingManager.initialize(), 100);
+          // Initialize loading manager and start loading sequence
+          try {
+            this.loadingManager = new LoadingManager();
+            this.loadingManager.initialize();
+          } catch (error) {
+            console.log('Loading manager failed, continuing without loading screen:', error);
+          }
           
           // Initialize theme management
           this.themeManager = new ThemeManager();
