@@ -119,149 +119,7 @@
       opacity: 0.3;
     }
 
-    /* Loading Screen Styles */
-    .loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 10000;
-      opacity: 1;
-      transition: opacity 0.5s ease-out;
-    }
 
-    .loading-screen.fade-out {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .loading-content {
-      text-align: center;
-      position: relative;
-    }
-
-    .loading-title {
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(1.5rem, 8vw, 4rem);
-      margin: 0 0 2rem 0;
-      display: flex;
-      gap: 0.2em;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .loading-letter {
-      display: inline-block;
-      color: var(--accent-primary);
-      animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      animation-delay: calc(var(--index) * 0.1s);
-      opacity: 0;
-      transform: translateY(-100px) scale(0.3);
-      text-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.5),
-        0 0 20px var(--accent-primary);
-    }
-
-    .loading-progress {
-      width: 300px;
-      height: 6px;
-      background: var(--bg-tertiary);
-      border-radius: 3px;
-      overflow: hidden;
-      margin: 0 auto;
-      box-shadow: 
-        inset 0 2px 4px rgba(0, 0, 0, 0.3),
-        0 1px 2px rgba(255, 255, 255, 0.1);
-    }
-
-    .progress-bar {
-      height: 100%;
-      border-radius: 3px;
-      width: 0%;
-      animation: progressLoad 1.5s ease-out forwards;
-    }
-
-    /* Dynamic gradient options - will be randomly selected */
-    .progress-gradient-1 {
-      background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
-      box-shadow: 0 0 10px #ff6b6b, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-2 {
-      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #f5576c);
-      box-shadow: 0 0 10px #667eea, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-3 {
-      background: linear-gradient(90deg, #ffeaa7, #fab1a0, #fd79a8, #e84393);
-      box-shadow: 0 0 10px #ffeaa7, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-4 {
-      background: linear-gradient(90deg, #00b894, #00cec9, #0984e3, #6c5ce7);
-      box-shadow: 0 0 10px #00b894, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-5 {
-      background: linear-gradient(90deg, #fdcb6e, #e17055, #d63031, #74b9ff);
-      box-shadow: 0 0 10px #fdcb6e, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-6 {
-      background: linear-gradient(90deg, #a29bfe, #fd79a8, #fdcb6e, #55a3ff);
-      box-shadow: 0 0 10px #a29bfe, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-7 {
-      background: linear-gradient(90deg, #00b894, #55efc4, #81ecec, #74b9ff);
-      box-shadow: 0 0 10px #00b894, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-8 {
-      background: linear-gradient(90deg, #ff7675, #fd79a8, #e84393, #a29bfe);
-      box-shadow: 0 0 10px #ff7675, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-9 {
-      background: linear-gradient(90deg, #fdcb6e, #e17055, #00b894, #00cec9);
-      box-shadow: 0 0 10px #fdcb6e, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    .progress-gradient-10 {
-      background: linear-gradient(90deg, #6c5ce7, #a29bfe, #fd79a8, #fdcb6e);
-      box-shadow: 0 0 10px #6c5ce7, inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    @keyframes bounceIn {
-      0% {
-        opacity: 0;
-        transform: translateY(-100px) scale(0.3) rotate(-10deg);
-      }
-      50% {
-        opacity: 1;
-        transform: translateY(10px) scale(1.05) rotate(2deg);
-      }
-      70% {
-        transform: translateY(-5px) scale(0.98) rotate(-1deg);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1) rotate(0deg);
-      }
-    }
-
-    @keyframes progressLoad {
-      0% { width: 0%; }
-      25% { width: 30%; }
-      50% { width: 60%; }
-      75% { width: 85%; }
-      100% { width: 100%; }
-    }
 
     /* Cursor Trail System */
     .cursor-trail {
@@ -1519,23 +1377,7 @@
   <!-- Performance: Preload critical images -->
   <div class="preload-image" aria-hidden="true"></div>
   
-  <!-- Loading Screen -->
-  <div id="loadingScreen" class="loading-screen">
-    <div class="loading-content">
-      <h1 class="loading-title">
-        <span class="loading-letter" style="--index: 0">R</span>
-        <span class="loading-letter" style="--index: 1">U</span>
-        <span class="loading-letter" style="--index: 2">D</span>
-        <span class="loading-letter" style="--index: 3">E</span>
-        <span class="loading-letter" style="--index: 4">B</span>
-        <span class="loading-letter" style="--index: 5">O</span>
-        <span class="loading-letter" style="--index: 6">Y</span>
-      </h1>
-      <div class="loading-progress">
-        <div class="progress-bar"></div>
-      </div>
-    </div>
-  </div>
+
 
   <div class="stars" role="presentation" aria-hidden="true"></div>
   <canvas id="doodle-canvas" aria-label="Interactive drawing canvas"></canvas>
@@ -2455,13 +2297,7 @@
           // Start performance monitoring
           this.performanceMetrics.startTime = performance.now();
           
-          // Initialize loading manager and start loading sequence
-          try {
-            this.loadingManager = new LoadingManager();
-            this.loadingManager.initialize();
-          } catch (error) {
-            console.log('Loading manager failed, continuing without loading screen:', error);
-          }
+          // Loading manager temporarily disabled
           
           // Initialize theme management
           this.themeManager = new ThemeManager();
