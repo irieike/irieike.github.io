@@ -1064,6 +1064,7 @@
   <div class="preload-image" aria-hidden="true"></div>
   
   <div class="stars" role="presentation" aria-hidden="true"></div>
+  <canvas id="background-canvas" aria-hidden="true" tabindex="-1"></canvas>
   <canvas id="doodle-canvas" aria-label="Interactive drawing canvas"></canvas>
 
   <!-- Drawing toggle with floating animation -->
@@ -1121,8 +1122,55 @@
   </div>
   
   <footer>
-    <p>&copy; 2024 @irie.ike</p>
+    <div class="footer-content">
+      <span class="footer-icon" aria-hidden="true">&#x1F916;</span>
+      <span class="footer-text">&copy; 2024 <strong>@irie.ike</strong> &mdash; All rights reserved.</span>
+      <a href="https://instagram.com/irie.ike" target="_blank" rel="noopener noreferrer" class="footer-link" aria-label="Instagram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.5" y2="6.5"></line></svg>
+      </a>
+    </div>
   </footer>
+  <style>
+    .footer-content {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      font-size: 0.9em;
+      color: var(--text-muted);
+      background: linear-gradient(90deg, rgba(18,18,18,0.95) 60%, rgba(241,196,15,0.05) 100%);
+      border-radius: var(--border-radius);
+      box-shadow: 0 2px 8px var(--shadow-dark);
+      padding: 0.5em 1.5em;
+      animation: footerFadeIn 1.2s ease;
+    }
+    .footer-icon {
+      font-size: 1.2em;
+      animation: footerIconPulse 2.5s infinite;
+    }
+    .footer-link {
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      transition: color 0.2s;
+      margin-left: 0.5em;
+    }
+    .footer-link:hover {
+      color: var(--accent-secondary);
+    }
+    @keyframes footerFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes footerIconPulse {
+      0%, 100% { filter: brightness(1); transform: scale(1); }
+      50% { filter: brightness(1.3); transform: scale(1.2); }
+    }
+    @media (max-width: 600px) {
+      .footer-content { font-size: 0.7em; padding: 0.5em 0.5em; }
+      .footer-icon { font-size: 1em; }
+    }
+  </style>
 
   <script>
     'use strict';
@@ -1274,8 +1322,14 @@
     // Enhanced canvas controller with performance optimizations
     class CanvasController {
       constructor() {
-        this.canvas = document.getElementById('doodle-canvas');
-        this.ctx = this.canvas.getContext('2d', { 
+        this.doodleCanvas = document.getElementById('doodle-canvas');
+        this.doodleCtx = this.doodleCanvas.getContext('2d', { 
+          alpha: true,
+          desynchronized: true,
+          willReadFrequently: false
+        });
+        this.bgCanvas = document.getElementById('background-canvas');
+        this.bgCtx = this.bgCanvas.getContext('2d', {
           alpha: false,
           desynchronized: true,
           willReadFrequently: false
@@ -1301,50 +1355,56 @@
       }
 
       optimizeContext() {
-        this.ctx.lineCap = 'round';
-        this.ctx.lineJoin = 'round';
-        this.ctx.imageSmoothingEnabled = false; // Better performance
+        this.doodleCtx.lineCap = 'round';
+        this.doodleCtx.lineJoin = 'round';
+        this.doodleCtx.imageSmoothingEnabled = false; // Better performance
       }
 
       setupCanvas() {
         this.resizeCanvas();
-        this.canvas.style.pointerEvents = 'none';
+        this.doodleCanvas.style.pointerEvents = 'none';
       }
 
       resizeCanvas() {
         const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap DPR for performance
-        const rect = this.canvas.getBoundingClientRect();
-        
-        this.canvas.width = rect.width * dpr;
-        this.canvas.height = rect.height * dpr;
-        this.canvas.style.width = '100vw';
-        this.canvas.style.height = '100vh';
-        
-        this.ctx.scale(dpr, dpr);
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        // Resize both canvases
+        [this.doodleCanvas, this.bgCanvas].forEach(canvas => {
+          canvas.width = width * dpr;
+          canvas.height = height * dpr;
+          canvas.style.width = width + 'px';
+          canvas.style.height = height + 'px';
+        });
+        this.doodleCtx.setTransform(1, 0, 0, 1, 0, 0);
+        this.doodleCtx.scale(dpr, dpr);
+        this.bgCtx.setTransform(1, 0, 0, 1, 0, 0);
+        this.bgCtx.scale(dpr, dpr);
         this.optimizeContext();
+        // Optionally redraw background here if needed
       }
 
       setupEventListeners() {
         // Mouse events
-        this.canvas.addEventListener('mousedown', (e) => this.startDrawing(e));
-        this.canvas.addEventListener('mousemove', (e) => this.draw(e));
-        this.canvas.addEventListener('mouseup', () => this.stopDrawing());
-        this.canvas.addEventListener('mouseleave', () => this.stopDrawing());
+        this.doodleCanvas.addEventListener('mousedown', (e) => this.startDrawing(e));
+        this.doodleCanvas.addEventListener('mousemove', (e) => this.draw(e));
+        this.doodleCanvas.addEventListener('mouseup', () => this.stopDrawing());
+        this.doodleCanvas.addEventListener('mouseleave', () => this.stopDrawing());
 
         // Touch events with better iOS support
-        this.canvas.addEventListener('touchstart', (e) => {
+        this.doodleCanvas.addEventListener('touchstart', (e) => {
           e.preventDefault();
           this.startDrawing(e.touches[0]);
         }, { passive: false });
 
-        this.canvas.addEventListener('touchmove', (e) => {
+        this.doodleCanvas.addEventListener('touchmove', (e) => {
           e.preventDefault();
           if (this.isDrawing) {
             this.draw(e.touches[0]);
           }
         }, { passive: false });
 
-        this.canvas.addEventListener('touchend', (e) => {
+        this.doodleCanvas.addEventListener('touchend', (e) => {
           e.preventDefault();
           this.stopDrawing();
         }, { passive: false });
@@ -1428,7 +1488,7 @@
         if (now - this.lastDrawTime < this.drawThrottle) return;
         this.lastDrawTime = now;
 
-        const rect = this.canvas.getBoundingClientRect();
+        const rect = this.doodleCanvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
 
@@ -1438,10 +1498,10 @@
       }
 
       drawSpray(x, y) {
-        this.ctx.fillStyle = this.currentColor;
+        this.doodleCtx.fillStyle = this.currentColor;
         
         // Batch drawing operations for better performance
-        this.ctx.beginPath();
+        this.doodleCtx.beginPath();
         for (let i = 0; i < this.density; i++) {
           const angle = Math.random() * 2 * Math.PI;
           const distance = Math.random() * this.radius;
@@ -1449,10 +1509,10 @@
           const offsetY = Math.sin(angle) * distance;
           const size = this.brushSize * (0.5 + Math.random() * 0.5);
           
-          this.ctx.moveTo(x + offsetX + size, y + offsetY);
-          this.ctx.arc(x + offsetX, y + offsetY, size, 0, 2 * Math.PI);
+          this.doodleCtx.moveTo(x + offsetX + size, y + offsetY);
+          this.doodleCtx.arc(x + offsetX, y + offsetY, size, 0, 2 * Math.PI);
         }
-        this.ctx.fill();
+        this.doodleCtx.fill();
       }
 
       stopDrawing() {
@@ -1461,7 +1521,7 @@
 
       toggleDrawingMode() {
         this.isDrawingMode = !this.isDrawingMode;
-        this.canvas.style.pointerEvents = this.isDrawingMode ? 'auto' : 'none';
+        this.doodleCanvas.style.pointerEvents = this.isDrawingMode ? 'auto' : 'none';
         
         // Show/hide drawing controls with animations
         const controls = document.getElementById('canvasControls');
@@ -1489,7 +1549,8 @@
       }
 
       clearCanvas() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        // Only clear the doodle canvas, not the background
+        this.doodleCtx.clearRect(0, 0, this.doodleCanvas.width, this.doodleCanvas.height);
       }
 
       static getInstance() {
