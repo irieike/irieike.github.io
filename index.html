@@ -585,6 +585,47 @@
       filter: drop-shadow(0 4px 8px rgba(241, 196, 15, 0.4));
     }
 
+    /* Fun letter animations - SAFE VERSION */
+    .letter-fun {
+      animation: letterFloat 3s ease-in-out infinite;
+    }
+
+    .letter-fun:nth-child(1) { animation-delay: 0.1s; }
+    .letter-fun:nth-child(2) { animation-delay: 0.2s; }
+    .letter-fun:nth-child(3) { animation-delay: 0.3s; }
+    .letter-fun:nth-child(4) { animation-delay: 0.4s; }
+    .letter-fun:nth-child(5) { animation-delay: 0.5s; }
+    .letter-fun:nth-child(6) { animation-delay: 0.6s; }
+    .letter-fun:nth-child(7) { animation-delay: 0.7s; }
+
+    @keyframes letterFloat {
+      0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+      }
+      50% { 
+        transform: translateY(-5px) rotate(1deg); 
+      }
+    }
+
+    .letter-fun:hover {
+      animation: letterDance 0.6s ease-in-out;
+    }
+
+    @keyframes letterDance {
+      0%, 100% { 
+        transform: translateY(0px) rotate(0deg) scale(1); 
+      }
+      25% { 
+        transform: translateY(-8px) rotate(10deg) scale(1.2); 
+      }
+      50% { 
+        transform: translateY(-4px) rotate(-5deg) scale(1.15); 
+      }
+      75% { 
+        transform: translateY(-6px) rotate(5deg) scale(1.1); 
+      }
+    }
+
     /* Enhanced navigation with micro-interactions */
     .navigation {
       display: flex;
@@ -700,102 +741,221 @@
     }
 
     .platform-circle {
-      width: 48px;
-      height: 48px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
-      background: linear-gradient(145deg, #3a3a3a, #1a1a1a);
+      background: 
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+        linear-gradient(145deg, #4a4a4a, #2a2a2a, #1a1a1a);
       border: none;
       color: var(--text-primary);
       text-decoration: none;
-      font-size: 0.5rem;
+      font-size: 0.45rem;
       font-family: inherit;
+      font-weight: bold;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all var(--transition-medium);
       cursor: pointer;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       text-align: center;
-      line-height: 1.1;
+      line-height: 1;
       box-shadow: 
-        0 4px 8px rgba(0, 0, 0, 0.4),
-        0 2px 4px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.15),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-      animation: circleWave 4s ease-in-out infinite;
-      animation-delay: calc(var(--index) * 0.2s);
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.2),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+      animation: globeSpin 8s linear infinite;
+      animation-delay: calc(var(--index) * -2s);
+      transform-style: preserve-3d;
     }
 
-    @keyframes circleWave {
-      0%, 100% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-4px) scale(1.02); }
+    @keyframes globeSpin {
+      0% { 
+        transform: translateY(0px) rotateY(0deg) rotateX(0deg);
+        box-shadow: 
+          0 8px 16px rgba(0, 0, 0, 0.4),
+          0 4px 8px rgba(0, 0, 0, 0.3),
+          inset 0 2px 4px rgba(255, 255, 255, 0.2),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+      }
+      25% { 
+        transform: translateY(-2px) rotateY(90deg) rotateX(5deg);
+        box-shadow: 
+          0 10px 20px rgba(0, 0, 0, 0.5),
+          0 5px 10px rgba(0, 0, 0, 0.4),
+          inset 2px 0 4px rgba(255, 255, 255, 0.25),
+          inset -2px 0 4px rgba(0, 0, 0, 0.35);
+      }
+      50% { 
+        transform: translateY(-4px) rotateY(180deg) rotateX(0deg);
+        box-shadow: 
+          0 12px 24px rgba(0, 0, 0, 0.6),
+          0 6px 12px rgba(0, 0, 0, 0.5),
+          inset 0 -2px 4px rgba(255, 255, 255, 0.3),
+          inset 0 2px 4px rgba(0, 0, 0, 0.4);
+      }
+      75% { 
+        transform: translateY(-2px) rotateY(270deg) rotateX(-5deg);
+        box-shadow: 
+          0 10px 20px rgba(0, 0, 0, 0.5),
+          0 5px 10px rgba(0, 0, 0, 0.4),
+          inset -2px 0 4px rgba(255, 255, 255, 0.25),
+          inset 2px 0 4px rgba(0, 0, 0, 0.35);
+      }
+      100% { 
+        transform: translateY(0px) rotateY(360deg) rotateX(0deg);
+        box-shadow: 
+          0 8px 16px rgba(0, 0, 0, 0.4),
+          0 4px 8px rgba(0, 0, 0, 0.3),
+          inset 0 2px 4px rgba(255, 255, 255, 0.2),
+          inset 0 -2px 4px rgba(0, 0, 0, 0.3);
+      }
     }
 
     .platform-circle::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(145deg, #5a5a5a, #4a4a4a);
+      top: 10%;
+      left: 15%;
+      width: 30%;
+      height: 30%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
       border-radius: 50%;
-      opacity: 0;
-      transition: all var(--transition-medium);
-      z-index: -1;
+      opacity: 0.8;
+      animation: highlight 8s linear infinite;
+      animation-delay: calc(var(--index) * -2s);
     }
 
-    .platform-circle:hover::before {
-      opacity: 1;
+    @keyframes highlight {
+      0%, 100% { 
+        transform: translate(0, 0) scale(1);
+        opacity: 0.8;
+      }
+      25% { 
+        transform: translate(15px, 5px) scale(0.8);
+        opacity: 0.6;
+      }
+      50% { 
+        transform: translate(20px, 15px) scale(1.2);
+        opacity: 0.4;
+      }
+      75% { 
+        transform: translate(5px, 20px) scale(0.9);
+        opacity: 0.7;
+      }
+    }
+
+    .platform-circle::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        rgba(241, 196, 15, 0.3) 90deg,
+        transparent 180deg,
+        rgba(231, 76, 60, 0.3) 270deg,
+        transparent 360deg
+      );
+      animation: orbitGlow 6s linear infinite reverse;
+      animation-delay: calc(var(--index) * -1.5s);
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    @keyframes orbitGlow {
+      0% { 
+        transform: rotate(0deg) scale(1);
+        opacity: 0.6;
+      }
+      50% { 
+        transform: rotate(180deg) scale(1.1);
+        opacity: 0.8;
+      }
+      100% { 
+        transform: rotate(360deg) scale(1);
+        opacity: 0.6;
+      }
     }
 
     .platform-circle:hover {
       color: var(--text-primary);
-      transform: translateY(-6px) scale(1.15);
+      transform: translateY(-8px) scale(1.2);
       box-shadow: 
-        0 12px 24px rgba(0, 0, 0, 0.5),
-        0 4px 8px rgba(0, 0, 0, 0.4),
-        inset 0 2px 0 rgba(255, 255, 255, 0.3),
-        inset 0 -2px 0 rgba(0, 0, 0, 0.3);
+        0 16px 32px rgba(0, 0, 0, 0.6),
+        0 8px 16px rgba(0, 0, 0, 0.5),
+        inset 0 3px 6px rgba(255, 255, 255, 0.4),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.4);
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
-      animation: none;
+      animation-play-state: paused;
+    }
+
+    .platform-circle:hover::before {
+      opacity: 1;
+      transform: translate(10px, 10px) scale(1.5);
+    }
+
+    .platform-circle:hover::after {
+      opacity: 1;
+      animation-play-state: paused;
     }
 
     .platform-circle:active {
-      transform: translateY(-2px) scale(1.05);
+      transform: translateY(-4px) scale(1.1);
       box-shadow: 
-        0 6px 12px rgba(0, 0, 0, 0.3),
-        0 2px 4px rgba(0, 0, 0, 0.2),
-        inset 0 1px 0 rgba(0, 0, 0, 0.2),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 3px rgba(0, 0, 0, 0.3),
+        inset 0 -1px 3px rgba(255, 255, 255, 0.2);
     }
 
     .platform-circle:focus {
-      outline: 2px solid var(--accent-primary);
-      outline-offset: 4px;
+      outline: 3px solid var(--accent-primary);
+      outline-offset: 6px;
     }
 
-    /* Enhanced footer with typing animation */
+    /* Enhanced footer with typing animation - CENTERED UNDER PLATFORM DOCK */
     footer {
       position: fixed;
-      bottom: 80px;
+      bottom: 15px; /* Closer to platform dock */
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.5rem;
+      font-size: 0.45rem;
       color: var(--text-muted);
       text-align: center;
       z-index: 2;
-      white-space: nowrap; /* Keep single line */
-      max-width: 95vw; /* Prevent overflow */
-      overflow: hidden; /* Hide any overflow */
-      animation: floatGentle 8s ease-in-out infinite;
+      white-space: nowrap;
+      max-width: 95vw;
+      overflow: hidden;
+      animation: footerGlow 6s ease-in-out infinite;
+      background: rgba(18, 18, 18, 0.8);
+      padding: 4px 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @keyframes footerGlow {
+      0%, 100% { 
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        border-color: rgba(255, 255, 255, 0.1);
+      }
+      50% { 
+        box-shadow: 0 4px 16px rgba(241, 196, 15, 0.2);
+        border-color: rgba(241, 196, 15, 0.3);
+      }
     }
 
     footer p {
       margin: 0;
       padding: 0;
+      letter-spacing: 0.5px;
     }
 
     /* Loading states */
@@ -847,9 +1007,11 @@
         scroll-behavior: auto !important;
       }
       
-      .letter-animate {
+      .letter-animate,
+      .letter-fun {
         transform: none !important;
         opacity: 1 !important;
+        animation: none !important;
       }
     }
 
@@ -888,12 +1050,12 @@
         font-size: clamp(0.6rem, 4vw, 0.8rem);
       }
       
-      .platform-circle {
-        width: 44px;
-        height: 44px;
-        font-size: 0.45rem;
+            .platform-circle {
+        width: 48px;
+        height: 48px;
+        font-size: 0.4rem;
       }
-      
+
       .platform-dock {
         gap: var(--spacing-xs);
         padding: var(--spacing-xs) var(--spacing-sm);
@@ -927,10 +1089,10 @@
       }
       
       footer {
-        bottom: 70px;
-        font-size: 0.4rem;
-        max-width: 100vw; /* Full width on mobile */
-        padding: 0 var(--spacing-xs); /* Add padding instead */
+        bottom: 12px;
+        font-size: 0.35rem;
+        max-width: 100vw;
+        padding: 3px 8px;
       }
     }
 
@@ -945,9 +1107,9 @@
       }
       
       .platform-circle {
-        width: 50px;
-        height: 50px;
-        font-size: 0.5rem;
+        width: 52px;
+        height: 52px;
+        font-size: 0.42rem;
       }
     }
 
@@ -974,9 +1136,9 @@
       }
       
       .platform-circle {
-        width: 56px;
-        height: 56px;
-        font-size: 0.55rem;
+        width: 60px;
+        height: 60px;
+        font-size: 0.48rem;
       }
       
       .drawing-toggle {
@@ -1086,13 +1248,13 @@
   <main>
     <header class="header-container">
       <h1>
-        <span class="letter" tabindex="0">R</span>
-        <span class="letter" tabindex="0">U</span>
-        <span class="letter" tabindex="0">D</span>
-        <span class="letter" tabindex="0">E</span>
-        <span class="letter" tabindex="0">B</span>
-        <span class="letter" tabindex="0">O</span>
-        <span class="letter" tabindex="0">Y</span>
+        <span class="letter letter-fun" tabindex="0">R</span>
+        <span class="letter letter-fun" tabindex="0">U</span>
+        <span class="letter letter-fun" tabindex="0">D</span>
+        <span class="letter letter-fun" tabindex="0">E</span>
+        <span class="letter letter-fun" tabindex="0">B</span>
+        <span class="letter letter-fun" tabindex="0">O</span>
+        <span class="letter letter-fun" tabindex="0">Y</span>
       </h1>
     </header>
 
