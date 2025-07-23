@@ -1450,7 +1450,7 @@
   <div class="preload-image" aria-hidden="true"></div>
   
   <!-- Simple Loading Screen -->
-  <div id="loadingScreen" class="loading-screen">
+  <div id="loadingScreen" class="loading-screen" onclick="this.style.display='none'">
     <div class="loading-content">
       <h1 class="loading-title">
         <span class="loading-letter" style="--delay: 0s">R</span>
@@ -1464,6 +1464,7 @@
       <div class="loading-progress">
         <div class="progress-bar" id="progressBar"></div>
       </div>
+      <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">Click anywhere to skip</p>
     </div>
   </div>
 
@@ -2388,6 +2389,15 @@
           // Simple loading screen
           this.initSimpleLoader();
           
+          // Fallback: Remove loading screen after 5 seconds no matter what
+          setTimeout(() => {
+            const loadingScreen = document.getElementById('loadingScreen');
+            if (loadingScreen && loadingScreen.style.display !== 'none') {
+              console.log('⚠️ Fallback: Force removing loading screen');
+              loadingScreen.style.display = 'none';
+            }
+          }, 5000);
+          
           // Initialize theme management
           this.themeManager = new ThemeManager();
           
@@ -2438,7 +2448,12 @@
         const loadingScreen = document.getElementById('loadingScreen');
         const progressBar = document.getElementById('progressBar');
         
-        if (!loadingScreen || !progressBar) return;
+        console.log('🔍 Loading screen elements:', { loadingScreen, progressBar });
+        
+        if (!loadingScreen || !progressBar) {
+          console.log('❌ Loading screen elements not found, skipping...');
+          return;
+        }
 
         // Add random gradient
         const gradients = ['gradient-1', 'gradient-2', 'gradient-3', 'gradient-4', 'gradient-5'];
@@ -2447,28 +2462,33 @@
         console.log(`🌈 Random gradient: ${randomGradient}`);
 
         let progress = 0;
-        const duration = 2000; // 2 seconds
+        const duration = 1500; // Shorter duration
         const interval = 50; // Update every 50ms
         const increment = (100 / (duration / interval));
 
         const updateProgress = () => {
           progress += increment;
           progressBar.style.width = `${Math.min(progress, 100)}%`;
+          console.log(`📊 Progress: ${progress.toFixed(1)}%`);
           
           if (progress >= 100) {
+            console.log('✅ Loading complete, hiding screen...');
             setTimeout(() => {
               loadingScreen.classList.add('hidden');
+              console.log('🎭 Added hidden class');
               setTimeout(() => {
                 loadingScreen.style.display = 'none';
+                console.log('👻 Loading screen hidden completely');
               }, 500);
-            }, 300);
+            }, 200);
           } else {
             setTimeout(updateProgress, interval);
           }
         };
 
-        // Start progress after letters finish animating
-        setTimeout(updateProgress, 800);
+        // Start progress immediately to test
+        console.log('🚀 Starting progress bar...');
+        setTimeout(updateProgress, 100);
       }
 
       async initializeComponents() {
