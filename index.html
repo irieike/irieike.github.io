@@ -41,8 +41,17 @@
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
   
+  <!-- Enhanced Security Headers -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data: https: blob:; connect-src 'self' https: wss:; media-src 'self' blob:; worker-src 'self' blob:; child-src 'self' blob:;">
+  <meta http-equiv="Strict-Transport-Security" content="max-age=31536000; includeSubDomains; preload">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+  <meta http-equiv="Permissions-Policy" content="camera=(), microphone=(), geolocation=(), payment=()">
+  
   <style>
-    /* CSS Custom Properties for consistent theming */
+    /* CSS Custom Properties for dynamic theming */
     :root {
       --bg-primary: #121212;
       --bg-secondary: #1a1a1a;
@@ -66,6 +75,95 @@
       --spacing-lg: 24px;
       --spacing-xl: 32px;
       --spacing-xxl: 48px;
+    }
+
+    /* Light Mode Theme */
+    :root[data-theme="light"] {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f8f9fa;
+      --bg-tertiary: #e9ecef;
+      --text-primary: #212529;
+      --text-secondary: #495057;
+      --text-muted: #6c757d;
+      --border-color: #dee2e6;
+      --shadow-light: rgba(0, 0, 0, 0.1);
+      --shadow-dark: rgba(0, 0, 0, 0.15);
+    }
+
+    /* Cursor Trail System */
+    .cursor-trail {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--accent-primary);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.8;
+      animation: trailFade 0.8s ease-out forwards;
+    }
+
+    @keyframes trailFade {
+      0% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(0);
+        opacity: 0;
+      }
+    }
+
+    /* Interactive explosion particles */
+    .explosion-particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: var(--accent-primary);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      animation: explode 1s ease-out forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0) translate(var(--dx), var(--dy));
+        opacity: 0;
+      }
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle {
+      position: fixed;
+      top: var(--spacing-md);
+      left: var(--spacing-md);
+      z-index: 1004;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, var(--bg-tertiary), var(--bg-secondary));
+      border: 2px solid var(--border-color);
+      color: var(--text-primary);
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--transition-medium);
+      box-shadow: 0 4px 12px var(--shadow-dark);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 20px var(--shadow-dark);
+      background: linear-gradient(145deg, var(--accent-primary), var(--accent-secondary));
     }
 
     /* iOS specific adjustments */
@@ -1243,6 +1341,11 @@
   <div class="stars" role="presentation" aria-hidden="true"></div>
   <canvas id="doodle-canvas" aria-label="Interactive drawing canvas"></canvas>
 
+  <!-- Theme Toggle Button -->
+  <button class="theme-toggle" id="themeToggle" onclick="ThemeManager.toggle()" aria-label="Toggle dark/light mode">
+    🌙
+  </button>
+
   <!-- Drawing toggle with floating animation -->
   <div class="drawing-toggle" id="drawingToggle">
     <button class="drawing-fab float-animation" onclick="CanvasController.toggleDrawingMode()" aria-label="Toggle drawing mode">
@@ -1314,6 +1417,287 @@
             console.log('SW registration failed: ', registrationError);
           });
       });
+    }
+
+    // Theme Management System
+    class ThemeManager {
+      constructor() {
+        this.currentTheme = localStorage.getItem('theme') || 'dark';
+        this.themeToggle = document.getElementById('themeToggle');
+        this.init();
+      }
+
+      init() {
+        this.applyTheme(this.currentTheme);
+        this.setupSystemThemeDetection();
+      }
+
+      static toggle() {
+        const instance = new ThemeManager();
+        const newTheme = instance.currentTheme === 'dark' ? 'light' : 'dark';
+        instance.setTheme(newTheme);
+      }
+
+      setTheme(theme) {
+        this.currentTheme = theme;
+        localStorage.setItem('theme', theme);
+        this.applyTheme(theme);
+        this.updateToggleIcon();
+        this.announceThemeChange(theme);
+      }
+
+      applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        this.updateToggleIcon();
+      }
+
+      updateToggleIcon() {
+        if (this.themeToggle) {
+          this.themeToggle.textContent = this.currentTheme === 'dark' ? '☀️' : '🌙';
+          this.themeToggle.setAttribute('aria-label', 
+            `Switch to ${this.currentTheme === 'dark' ? 'light' : 'dark'} mode`);
+        }
+      }
+
+      setupSystemThemeDetection() {
+        if (window.matchMedia) {
+          const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+          mediaQuery.addEventListener('change', (e) => {
+            if (!localStorage.getItem('theme')) {
+              this.setTheme(e.matches ? 'dark' : 'light');
+            }
+          });
+        }
+      }
+
+      announceThemeChange(theme) {
+        // Create temporary announcement for screen readers
+        const announcement = document.createElement('div');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.style.position = 'absolute';
+        announcement.style.left = '-10000px';
+        announcement.textContent = `Switched to ${theme} mode`;
+        document.body.appendChild(announcement);
+        setTimeout(() => document.body.removeChild(announcement), 1000);
+      }
+    }
+
+    // Cursor Trail Effects System
+    class CursorEffects {
+      constructor() {
+        this.trails = [];
+        this.explosions = [];
+        this.isEnabled = true;
+        this.lastTrailTime = 0;
+        this.trailThrottle = 16; // ~60fps
+        this.init();
+      }
+
+      init() {
+        this.setupEventListeners();
+      }
+
+      setupEventListeners() {
+        // Mouse trail
+        document.addEventListener('mousemove', (e) => {
+          if (this.isEnabled) {
+            this.createTrail(e.clientX, e.clientY);
+          }
+        });
+
+        // Touch trail for mobile
+        document.addEventListener('touchmove', (e) => {
+          if (this.isEnabled && e.touches[0]) {
+            this.createTrail(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: true });
+
+        // Click explosions
+        document.addEventListener('click', (e) => {
+          if (this.isEnabled) {
+            this.createExplosion(e.clientX, e.clientY);
+          }
+        });
+
+        // Touch explosions
+        document.addEventListener('touchstart', (e) => {
+          if (this.isEnabled && e.touches[0]) {
+            this.createExplosion(e.touches[0].clientX, e.touches[0].clientY);
+          }
+        }, { passive: true });
+      }
+
+      createTrail(x, y) {
+        const now = performance.now();
+        if (now - this.lastTrailTime < this.trailThrottle) return;
+        this.lastTrailTime = now;
+
+        const trail = document.createElement('div');
+        trail.className = 'cursor-trail';
+        trail.style.left = x + 'px';
+        trail.style.top = y + 'px';
+        
+        document.body.appendChild(trail);
+        
+        setTimeout(() => {
+          if (trail.parentNode) {
+            trail.parentNode.removeChild(trail);
+          }
+        }, 800);
+      }
+
+      createExplosion(x, y) {
+        const particleCount = 8;
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.className = 'explosion-particle';
+          
+          const angle = (Math.PI * 2 * i) / particleCount;
+          const distance = 50 + Math.random() * 30;
+          const dx = Math.cos(angle) * distance;
+          const dy = Math.sin(angle) * distance;
+          
+          particle.style.left = x + 'px';
+          particle.style.top = y + 'px';
+          particle.style.setProperty('--dx', dx + 'px');
+          particle.style.setProperty('--dy', dy + 'px');
+          
+          document.body.appendChild(particle);
+          
+          setTimeout(() => {
+            if (particle.parentNode) {
+              particle.parentNode.removeChild(particle);
+            }
+          }, 1000);
+        }
+      }
+
+      toggle() {
+        this.isEnabled = !this.isEnabled;
+      }
+    }
+
+    // Interactive Letters System
+    class InteractiveLetters {
+      constructor() {
+        this.letters = document.querySelectorAll('.letter-fun');
+        this.colorThemes = [
+          { primary: '#ff6b6b', secondary: '#4ecdc4' }, // Red-Teal
+          { primary: '#4ecdc4', secondary: '#45b7d1' }, // Teal-Blue  
+          { primary: '#96ceb4', secondary: '#feca57' }, // Green-Yellow
+          { primary: '#feca57', secondary: '#ff9ff3' }, // Yellow-Pink
+          { primary: '#ff9ff3', secondary: '#54a0ff' }, // Pink-Blue
+          { primary: '#5f27cd', secondary: '#00d2d3' }, // Purple-Cyan
+          { primary: '#ff3838', secondary: '#ff9500' }  // Red-Orange
+        ];
+        this.init();
+      }
+
+      init() {
+        this.letters.forEach((letter, index) => {
+          letter.addEventListener('click', (e) => {
+            this.handleLetterClick(letter, index, e);
+          });
+          
+          letter.addEventListener('mouseenter', () => {
+            this.handleLetterHover(letter, index);
+          });
+        });
+      }
+
+      handleLetterClick(letter, index, event) {
+        const theme = this.colorThemes[index];
+        
+        // Change site accent color
+        document.documentElement.style.setProperty('--accent-primary', theme.primary);
+        document.documentElement.style.setProperty('--accent-secondary', theme.secondary);
+        
+        // Create color explosion
+        this.createColorExplosion(event.clientX, event.clientY, theme.primary);
+        
+        // Play sound effect (if available)
+        this.playLetterSound(index);
+        
+        // Animate letter
+        letter.style.transform = 'scale(1.3) rotate(360deg)';
+        letter.style.color = theme.primary;
+        
+        setTimeout(() => {
+          letter.style.transform = '';
+          letter.style.color = '';
+        }, 600);
+      }
+
+      handleLetterHover(letter, index) {
+        const theme = this.colorThemes[index];
+        letter.style.color = theme.primary;
+        letter.style.textShadow = `0 0 20px ${theme.primary}`;
+        
+        setTimeout(() => {
+          letter.style.color = '';
+          letter.style.textShadow = '';
+        }, 300);
+      }
+
+      createColorExplosion(x, y, color) {
+        const particleCount = 12;
+        for (let i = 0; i < particleCount; i++) {
+          const particle = document.createElement('div');
+          particle.style.position = 'fixed';
+          particle.style.left = x + 'px';
+          particle.style.top = y + 'px';
+          particle.style.width = '6px';
+          particle.style.height = '6px';
+          particle.style.background = color;
+          particle.style.borderRadius = '50%';
+          particle.style.pointerEvents = 'none';
+          particle.style.zIndex = '9999';
+          
+          const angle = (Math.PI * 2 * i) / particleCount;
+          const distance = 80 + Math.random() * 40;
+          const dx = Math.cos(angle) * distance;
+          const dy = Math.sin(angle) * distance;
+          
+          particle.animate([
+            { transform: 'scale(1) translate(0, 0)', opacity: 1 },
+            { transform: `scale(0) translate(${dx}px, ${dy}px)`, opacity: 0 }
+          ], {
+            duration: 800,
+            easing: 'ease-out'
+          }).onfinish = () => {
+            if (particle.parentNode) {
+              particle.parentNode.removeChild(particle);
+            }
+          };
+          
+          document.body.appendChild(particle);
+        }
+      }
+
+      playLetterSound(index) {
+        // Create audio context for letter sounds
+        if ('AudioContext' in window || 'webkitAudioContext' in window) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          const audioContext = new AudioContext();
+          
+          const oscillator = audioContext.createOscillator();
+          const gainNode = audioContext.createGain();
+          
+          // Different frequencies for each letter
+          const frequencies = [261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88];
+          oscillator.frequency.setValueAtTime(frequencies[index], audioContext.currentTime);
+          
+          oscillator.connect(gainNode);
+          gainNode.connect(audioContext.destination);
+          
+          gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+          gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+          
+          oscillator.start(audioContext.currentTime);
+          oscillator.stop(audioContext.currentTime + 0.3);
+        }
+      }
     }
 
     // Enhanced error handling and performance monitoring
@@ -1696,13 +2080,16 @@
       }
     }
 
-    // Enhanced app initialization with performance monitoring
+    // Enhanced app initialization with all premium features
     class App {
       constructor() {
         this.starField = null;
         this.canvasController = null;
         this.loadingManager = null;
         this.scrollAnimations = null;
+        this.themeManager = null;
+        this.cursorEffects = null;
+        this.interactiveLetters = null;
         this.performanceMetrics = {};
         this.init();
       }
@@ -1714,6 +2101,15 @@
           
           // Initialize loading manager
           this.loadingManager = new LoadingManager();
+          
+          // Initialize theme management
+          this.themeManager = new ThemeManager();
+          
+          // Initialize cursor effects
+          this.cursorEffects = new CursorEffects();
+          
+          // Initialize interactive letters
+          this.interactiveLetters = new InteractiveLetters();
           
           // Detect keyboard navigation
           this.setupKeyboardDetection();
@@ -1730,10 +2126,13 @@
           // iOS specific optimizations
           this.setupIOSOptimizations();
           
+          // Setup gesture controls
+          this.setupGestureControls();
+          
           // Log performance metrics
           this.logPerformanceMetrics();
           
-          console.log('Advanced app initialized successfully');
+          console.log('🚀 Premium app with all features initialized successfully');
         } catch (error) {
           console.error('Failed to initialize app:', error);
         }
@@ -1790,6 +2189,101 @@
 
         setVH();
         window.addEventListener('resize', setVH);
+      }
+
+      setupGestureControls() {
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchEndX = 0;
+        let touchEndY = 0;
+
+        // Swipe navigation
+        document.addEventListener('touchstart', (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+          touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          touchEndY = e.changedTouches[0].screenY;
+          this.handleSwipe();
+        }, { passive: true });
+
+        // Shake to clear canvas
+        if ('DeviceMotionEvent' in window) {
+          let lastShake = 0;
+          window.addEventListener('devicemotion', (e) => {
+            const acceleration = e.accelerationIncludingGravity;
+            const now = Date.now();
+            
+            if (acceleration && (now - lastShake) > 1000) {
+              const totalAcceleration = Math.abs(acceleration.x) + 
+                                      Math.abs(acceleration.y) + 
+                                      Math.abs(acceleration.z);
+              
+              if (totalAcceleration > 25) {
+                this.canvasController.clearCanvas();
+                lastShake = now;
+                console.log('🎲 Canvas cleared by shake gesture');
+              }
+            }
+          });
+        }
+
+        // Pinch to zoom (basic implementation)
+        let lastTouchDistance = 0;
+        document.addEventListener('touchmove', (e) => {
+          if (e.touches.length === 2) {
+            const touch1 = e.touches[0];
+            const touch2 = e.touches[1];
+            const distance = Math.sqrt(
+              Math.pow(touch2.clientX - touch1.clientX, 2) +
+              Math.pow(touch2.clientY - touch1.clientY, 2)
+            );
+            
+            if (lastTouchDistance > 0) {
+              const scale = distance / lastTouchDistance;
+              if (scale > 1.1) {
+                // Zoom in effect
+                document.body.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                  document.body.style.transform = '';
+                }, 200);
+              } else if (scale < 0.9) {
+                // Zoom out effect
+                document.body.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                  document.body.style.transform = '';
+                }, 200);
+              }
+            }
+            lastTouchDistance = distance;
+          }
+        }, { passive: true });
+      }
+
+      handleSwipe() {
+        const deltaX = touchEndX - touchStartX;
+        const deltaY = touchEndY - touchStartY;
+        const minSwipeDistance = 50;
+
+        if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > minSwipeDistance) {
+          if (deltaX > 0) {
+            // Swipe right - go to previous page or section
+            console.log('👉 Swipe right detected');
+          } else {
+            // Swipe left - go to next page or section
+            console.log('👈 Swipe left detected');
+          }
+        } else if (Math.abs(deltaY) > minSwipeDistance) {
+          if (deltaY > 0) {
+            // Swipe down
+            console.log('👇 Swipe down detected');
+          } else {
+            // Swipe up
+            console.log('👆 Swipe up detected');
+          }
+        }
       }
 
       setupPerformanceMonitoring() {
