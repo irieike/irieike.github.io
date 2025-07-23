@@ -744,11 +744,11 @@
       width: 56px;
       height: 56px;
       border-radius: 50%;
-      color: var(--text-primary);
+      color: #ffffff;
       text-decoration: none;
-      font-size: 0.45rem;
+      font-size: 0.42rem;
       font-family: inherit;
-      font-weight: bold;
+      font-weight: 900;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -762,59 +762,77 @@
       animation-delay: calc(var(--index) * -1.5s);
       transform-style: preserve-3d;
       filter: saturate(1.2) brightness(1.1);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
-    /* Individual balloon colors */
+    /* Individual balloon colors with enhanced readability */
     .platform-circle:nth-child(1) {
       background: 
         radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 25%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 30%),
         linear-gradient(145deg, #ff6b6b, #ff5252, #e53935);
       box-shadow: 
         0 8px 16px rgba(229, 57, 53, 0.4),
         0 4px 8px rgba(229, 57, 53, 0.3),
         inset 0 2px 4px rgba(255, 255, 255, 0.4),
         inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-      text-shadow: 0 1px 2px rgba(229, 57, 53, 0.8);
+      text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.9),
+        0 1px 2px rgba(0, 0, 0, 0.8),
+        0 0 4px rgba(255, 255, 255, 0.3);
+      color: #ffffff;
     }
 
     .platform-circle:nth-child(2) {
       background: 
         radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 25%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 30%),
         linear-gradient(145deg, #4fc3f7, #29b6f6, #0288d1);
       box-shadow: 
         0 8px 16px rgba(2, 136, 209, 0.4),
         0 4px 8px rgba(2, 136, 209, 0.3),
         inset 0 2px 4px rgba(255, 255, 255, 0.4),
         inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-      text-shadow: 0 1px 2px rgba(2, 136, 209, 0.8);
+      text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.9),
+        0 1px 2px rgba(0, 0, 0, 0.8),
+        0 0 4px rgba(255, 255, 255, 0.3);
+      color: #ffffff;
     }
 
     .platform-circle:nth-child(3) {
       background: 
         radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 25%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 30%),
         linear-gradient(145deg, #81c784, #66bb6a, #43a047);
       box-shadow: 
         0 8px 16px rgba(67, 160, 71, 0.4),
         0 4px 8px rgba(67, 160, 71, 0.3),
         inset 0 2px 4px rgba(255, 255, 255, 0.4),
         inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-      text-shadow: 0 1px 2px rgba(67, 160, 71, 0.8);
+      text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.9),
+        0 1px 2px rgba(0, 0, 0, 0.8),
+        0 0 4px rgba(255, 255, 255, 0.3);
+      color: #ffffff;
     }
 
     .platform-circle:nth-child(4) {
       background: 
         radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.3) 25%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.15) 0%, transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(0, 0, 0, 0.2) 0%, transparent 30%),
         linear-gradient(145deg, #ffb74d, #ffa726, #fb8c00);
       box-shadow: 
         0 8px 16px rgba(251, 140, 0, 0.4),
         0 4px 8px rgba(251, 140, 0, 0.3),
         inset 0 2px 4px rgba(255, 255, 255, 0.4),
         inset 0 -2px 4px rgba(0, 0, 0, 0.2);
-      text-shadow: 0 1px 2px rgba(251, 140, 0, 0.8);
+      text-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.9),
+        0 1px 2px rgba(0, 0, 0, 0.8),
+        0 0 4px rgba(255, 255, 255, 0.3);
+      color: #ffffff;
     }
 
     @keyframes balloonFloat {
@@ -1047,7 +1065,8 @@
             .platform-circle {
         width: 48px;
         height: 48px;
-        font-size: 0.4rem;
+        font-size: 0.38rem;
+        font-weight: 900;
       }
 
       .platform-dock {
@@ -1103,7 +1122,8 @@
       .platform-circle {
         width: 52px;
         height: 52px;
-        font-size: 0.42rem;
+        font-size: 0.4rem;
+        font-weight: 900;
       }
     }
 
@@ -1132,7 +1152,8 @@
       .platform-circle {
         width: 60px;
         height: 60px;
-        font-size: 0.48rem;
+        font-size: 0.46rem;
+        font-weight: 900;
       }
       
       .drawing-toggle {
@@ -1253,7 +1274,6 @@
     </header>
 
     <nav class="navigation" role="navigation" aria-label="Main navigation">
-      <a href="#" class="nav-link" aria-current="page">Home</a>
       <a href="shop.html" class="nav-link">Shop</a>
       <a href="project.html" class="nav-link">Projects</a>
       <a href="contact.html" class="nav-link">Contact</a>
