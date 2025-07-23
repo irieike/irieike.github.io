@@ -119,6 +119,107 @@
       opacity: 0.3;
     }
 
+    /* Loading Screen Styles */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .loading-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-content {
+      text-align: center;
+      position: relative;
+    }
+
+    .loading-title {
+      font-family: 'Press Start 2P', monospace;
+      font-size: clamp(1.5rem, 8vw, 4rem);
+      margin: 0 0 2rem 0;
+      display: flex;
+      gap: 0.2em;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .loading-letter {
+      display: inline-block;
+      color: var(--accent-primary);
+      animation: bounceIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation-delay: calc(var(--index) * 0.1s);
+      opacity: 0;
+      transform: translateY(-100px) scale(0.3);
+      text-shadow: 
+        0 4px 8px rgba(0, 0, 0, 0.5),
+        0 0 20px var(--accent-primary);
+    }
+
+    .loading-progress {
+      width: 300px;
+      height: 6px;
+      background: var(--bg-tertiary);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 0 auto;
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(255, 255, 255, 0.1);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, 
+        var(--accent-primary), 
+        var(--accent-secondary), 
+        var(--accent-tertiary));
+      border-radius: 3px;
+      width: 0%;
+      animation: progressLoad 2s ease-out forwards;
+      box-shadow: 
+        0 0 10px var(--accent-primary),
+        inset 0 1px 2px rgba(255, 255, 255, 0.3);
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: translateY(-100px) scale(0.3) rotate(-10deg);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(10px) scale(1.05) rotate(2deg);
+      }
+      70% {
+        transform: translateY(-5px) scale(0.98) rotate(-1deg);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+    }
+
+    @keyframes progressLoad {
+      0% { width: 0%; }
+      20% { width: 15%; }
+      40% { width: 40%; }
+      60% { width: 70%; }
+      80% { width: 90%; }
+      100% { width: 100%; }
+    }
+
     /* Cursor Trail System */
     .cursor-trail {
       position: fixed;
@@ -1375,6 +1476,24 @@
   <!-- Performance: Preload critical images -->
   <div class="preload-image" aria-hidden="true"></div>
   
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-content">
+      <h1 class="loading-title">
+        <span class="loading-letter" style="--index: 0">R</span>
+        <span class="loading-letter" style="--index: 1">U</span>
+        <span class="loading-letter" style="--index: 2">D</span>
+        <span class="loading-letter" style="--index: 3">E</span>
+        <span class="loading-letter" style="--index: 4">B</span>
+        <span class="loading-letter" style="--index: 5">O</span>
+        <span class="loading-letter" style="--index: 6">Y</span>
+      </h1>
+      <div class="loading-progress">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
+  </div>
+
   <div class="stars" role="presentation" aria-hidden="true"></div>
   <canvas id="doodle-canvas" aria-label="Interactive drawing canvas"></canvas>
 
@@ -1454,6 +1573,99 @@
             console.log('SW registration failed: ', registrationError);
           });
       });
+    }
+
+    // Loading Manager for smooth transitions
+    class LoadingManager {
+      constructor() {
+        this.loadingScreen = document.getElementById('loadingScreen');
+        this.isLoading = true;
+        this.minLoadTime = 2500; // Minimum loading time for animation
+        this.startTime = performance.now();
+      }
+
+      async initialize() {
+        // Simulate loading processes
+        await this.simulateLoading();
+        
+        // Wait for minimum load time
+        const elapsed = performance.now() - this.startTime;
+        if (elapsed < this.minLoadTime) {
+          await new Promise(resolve => setTimeout(resolve, this.minLoadTime - elapsed));
+        }
+        
+        // Trigger the transition to main content
+        this.transitionToMain();
+      }
+
+      async simulateLoading() {
+        // Simulate various loading tasks
+        const tasks = [
+          { name: 'Loading assets', delay: 300 },
+          { name: 'Initializing canvas', delay: 200 },
+          { name: 'Setting up animations', delay: 400 },
+          { name: 'Preparing effects', delay: 300 },
+          { name: 'Final setup', delay: 200 }
+        ];
+
+        for (const task of tasks) {
+          await new Promise(resolve => setTimeout(resolve, task.delay));
+        }
+      }
+
+      transitionToMain() {
+        // Position the loading letters to match the main title position
+        const loadingTitle = document.querySelector('.loading-title');
+        const mainTitle = document.querySelector('header h1');
+        
+        if (loadingTitle && mainTitle) {
+          // Calculate position difference
+          const loadingRect = loadingTitle.getBoundingClientRect();
+          const mainRect = mainTitle.getBoundingClientRect();
+          
+          // Apply transition positioning
+          loadingTitle.style.position = 'fixed';
+          loadingTitle.style.top = `${loadingRect.top}px`;
+          loadingTitle.style.left = `${loadingRect.left}px`;
+          loadingTitle.style.width = `${loadingRect.width}px`;
+          loadingTitle.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+          
+          // Animate to final position
+          requestAnimationFrame(() => {
+            loadingTitle.style.top = `${mainRect.top}px`;
+            loadingTitle.style.left = `${mainRect.left}px`;
+            loadingTitle.style.width = `${mainRect.width}px`;
+            loadingTitle.style.fontSize = getComputedStyle(mainTitle).fontSize;
+          });
+        }
+
+        // Fade out loading screen after transition
+        setTimeout(() => {
+          this.loadingScreen.classList.add('fade-out');
+          
+          // Remove loading screen after fade
+          setTimeout(() => {
+            this.loadingScreen.style.display = 'none';
+            this.isLoading = false;
+            
+            // Enable interactions
+            document.body.classList.add('loaded');
+            
+            // Initialize post-load features
+            this.initializePostLoadFeatures();
+          }, 500);
+        }, 800);
+      }
+
+      initializePostLoadFeatures() {
+        // Enable all interactive features after loading
+        const events = ['click', 'mouseover', 'touchstart'];
+        events.forEach(event => {
+          document.body.addEventListener(event, function enableInteractions() {
+            document.body.removeEventListener(event, enableInteractions);
+          }, { once: true });
+        });
+      }
     }
 
     // Theme Management System
@@ -2197,6 +2409,9 @@
           
           // Log performance metrics
           this.logPerformanceMetrics();
+          
+          // Start loading sequence
+          await this.loadingManager.initialize();
           
           console.log('🚀 Premium app with all features initialized successfully');
         } catch (error) {
