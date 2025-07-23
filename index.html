@@ -1615,6 +1615,14 @@
       }
 
       drawSpray(x, y) {
+        // Store drawing data for selective clearing
+        const drawingData = {
+          x, y, color: this.currentColor, 
+          size: this.brushSize, density: this.density, 
+          radius: this.radius, timestamp: Date.now()
+        };
+        this.drawnPaths.push(drawingData);
+        
         this.ctx.fillStyle = this.currentColor;
         
         // Batch drawing operations for better performance
@@ -1666,7 +1674,10 @@
       }
 
       clearCanvas() {
+        // Clear only the drawn content, preserve background
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.drawnPaths = []; // Clear tracking array
+        console.log('Doodle canvas cleared - background preserved');
       }
 
       static getInstance() {
