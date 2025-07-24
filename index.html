@@ -1011,74 +1011,32 @@
       outline-offset: 4px;
     }
 
-    /* RPG-style platform dock - PERFECTLY CENTERED */
+    /* Floating RPG Crystal Gems - No Background */
     .platform-dock {
       position: fixed !important;
-      bottom: 20px !important;
+      bottom: 30px !important;
       left: 50% !important;
       right: auto !important;
       transform: translateX(-50%) !important;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: var(--spacing-lg);
-      padding: var(--spacing-xl) var(--spacing-xxl);
-      background: 
-        linear-gradient(145deg, #2d1b13, #1a0e0a),
-        linear-gradient(90deg, transparent 0%, rgba(101, 67, 33, 0.4) 50%, transparent 100%);
-      border-radius: 20px;
-      border: 2px solid #8B6914;
-      border-bottom: 2px solid #8B6914;
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
+      gap: var(--spacing-xl);
+      padding: 0;
+      background: transparent;
+      border: none;
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
       z-index: 1001;
-      box-shadow: 
-        0 8px 32px rgba(101, 67, 33, 0.4),
-        0 4px 16px rgba(139, 105, 20, 0.3),
-        inset 0 2px 8px rgba(205, 133, 63, 0.2),
-        inset 0 -2px 8px rgba(0, 0, 0, 0.3);
-      animation: rpgGlow 6s ease-in-out infinite;
+      box-shadow: none;
+      animation: none;
       margin: 0 auto;
       width: fit-content;
     }
 
-    .platform-dock::before {
-      content: '';
-      position: absolute;
-      top: -5px;
-      left: -5px;
-      right: -5px;
-      bottom: -5px;
-      background: linear-gradient(45deg, #FFD700, #8B4513, #654321, #FFD700);
-      border-radius: 15px 15px 0 0;
-      z-index: -1;
-      animation: rpgBorderGlow 6s linear infinite;
-    }
+    /* Removed dock background pseudo-element */
 
-    @keyframes rpgGlow {
-      0%, 100% { 
-        box-shadow: 
-          0 8px 32px rgba(101, 67, 33, 0.4),
-          0 4px 16px rgba(139, 105, 20, 0.3),
-          inset 0 2px 8px rgba(205, 133, 63, 0.2),
-          inset 0 -2px 8px rgba(0, 0, 0, 0.3);
-      }
-      50% { 
-        box-shadow: 
-          0 12px 40px rgba(139, 105, 20, 0.6),
-          0 8px 24px rgba(205, 133, 63, 0.4),
-          inset 0 3px 10px rgba(255, 215, 0, 0.3),
-          inset 0 -3px 10px rgba(0, 0, 0, 0.4);
-      }
-    }
-
-    @keyframes rpgBorderGlow {
-      0% { background: linear-gradient(45deg, #D4AF37, #8B6914, #654321, #D4AF37); }
-      25% { background: linear-gradient(135deg, #8B6914, #D4AF37, #8B6914, #654321); }
-      50% { background: linear-gradient(225deg, #654321, #8B6914, #D4AF37, #8B6914); }
-      75% { background: linear-gradient(315deg, #D4AF37, #654321, #8B6914, #D4AF37); }
-      100% { background: linear-gradient(45deg, #D4AF37, #8B6914, #654321, #D4AF37); }
-    }
+    /* Removed unused dock glow animations */
 
     .platform-circle {
       width: 80px;
@@ -1228,10 +1186,10 @@
         inset 0 0 20px rgba(255, 215, 0, 0.3);
     }
 
-    /* Enhanced footer - POSITIONED ABOVE CENTERED PLATFORM DOCK */
+    /* Enhanced footer - POSITIONED ABOVE FLOATING GEMS */
     footer {
       position: fixed;
-      bottom: 140px; /* Above the centered platform dock */
+      bottom: 150px; /* Above the floating gems */
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.45rem;
@@ -1242,24 +1200,24 @@
       max-width: 95vw;
       overflow: hidden;
       animation: footerGlow 8s ease-in-out infinite;
-      background: rgba(45, 27, 19, 0.6);
+      background: rgba(0, 0, 0, 0.4);
       padding: 6px 16px;
       border-radius: 15px;
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     @keyframes footerGlow {
       0%, 100% { 
-        box-shadow: 0 3px 12px rgba(45, 27, 19, 0.4);
-        border-color: rgba(212, 175, 55, 0.2);
-        background: rgba(45, 27, 19, 0.6);
+        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+        border-color: rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.4);
       }
       50% { 
-        box-shadow: 0 5px 20px rgba(212, 175, 55, 0.3);
-        border-color: rgba(212, 175, 55, 0.4);
-        background: rgba(45, 27, 19, 0.7);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(0, 0, 0, 0.5);
       }
     }
 
@@ -1401,7 +1359,7 @@
       }
       
       footer {
-        bottom: 120px;
+        bottom: 130px;
         font-size: 0.35rem;
         max-width: 90vw;
         padding: 4px 10px;
@@ -1497,7 +1455,7 @@
       }
       
       .platform-dock {
-        bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+        bottom: max(30px, env(safe-area-inset-bottom) + 30px) !important;
         left: 50% !important;
         transform: translateX(-50%) !important;
       }
