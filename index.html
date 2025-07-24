@@ -95,6 +95,7 @@
       padding: var(--spacing-lg) var(--spacing-md) 140px;
       position: relative;
       contain: layout style paint;
+      cursor: none;
     }
 
     /* Optimized star field background */
@@ -201,7 +202,7 @@
       border-radius: var(--border-radius);
       padding: var(--spacing-sm);
       color: var(--text-secondary);
-      cursor: pointer;
+      cursor: none;
       transition: var(--transition-medium);
       z-index: 1000;
       font-family: inherit;
@@ -269,7 +270,7 @@
       display: inline-block;
       color: var(--text-secondary);
       transition: var(--transition-medium);
-      cursor: default;
+      cursor: none;
       position: relative;
       margin: 0 clamp(-8px, 0vw, -3px);
       will-change: transform;
@@ -367,7 +368,7 @@
       box-shadow: 0 4px 12px var(--shadow-light);
     }
 
-    /* RPG Platform Dock - Properly Centered */
+    /* Clean Platform Dock - No Background */
     .platform-dock {
       position: fixed;
       bottom: 0;
@@ -378,35 +379,20 @@
       align-items: center;
       gap: var(--spacing-lg);
       padding: var(--spacing-xl) var(--spacing-md);
-      background: rgba(45, 27, 19, 0.9);
-      border-radius: 25px 25px 0 0;
-      border: 2px solid #8B6914;
-      border-bottom: none;
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
       z-index: 1001;
-      box-shadow: 0 -8px 32px rgba(101, 67, 33, 0.6);
-      animation: rpgGlow 6s ease-in-out infinite;
       min-width: 100%;
       will-change: transform;
       contain: layout style paint;
     }
 
-    @keyframes rpgGlow {
-      0%, 100% {
-        box-shadow: 0 -8px 32px rgba(101, 67, 33, 0.6);
-      }
-      50% {
-        box-shadow: 0 -12px 40px rgba(139, 105, 20, 0.8);
-      }
-    }
 
-    /* Optimized platform buttons */
+
+    /* 3D Platform buttons with expand effect */
     .platform-circle {
       width: 80px;
       height: 80px;
-      border-radius: 18px;
-      color: #F5E6D3;
+      border-radius: 20px;
+      color: #ffffff;
       text-decoration: none;
       font-size: 0.5rem;
       font-family: inherit;
@@ -414,24 +400,31 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: var(--transition-medium);
-      border: 2px solid #8B6914;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border: none;
       text-transform: uppercase;
       letter-spacing: 1px;
       line-height: 1.1;
-      animation: rpgIdle 4s ease-in-out infinite;
+      animation: platformFloat 4s ease-in-out infinite;
       animation-delay: calc(var(--index) * -0.7s);
       will-change: transform;
       transform: translateZ(0);
       contain: layout style paint;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+      cursor: none;
+      box-shadow: 
+        0 8px 16px rgba(0, 0, 0, 0.3),
+        0 4px 8px rgba(0, 0, 0, 0.2),
+        inset 0 2px 4px rgba(255, 255, 255, 0.3),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    @keyframes rpgIdle {
+    @keyframes platformFloat {
       0%, 100% {
         transform: translateY(0px) translateZ(0);
       }
       50% {
-        transform: translateY(-2px) translateZ(0);
+        transform: translateY(-3px) translateZ(0);
       }
     }
 
@@ -462,55 +455,53 @@
     }
 
     .platform-circle:hover {
-      transform: translateY(-5px) scale(1.1) translateZ(0);
-      filter: brightness(1.3) saturate(1.2);
+      transform: translateY(-8px) scale(1.2) translateZ(0);
+      box-shadow: 
+        0 16px 32px rgba(0, 0, 0, 0.4),
+        0 8px 16px rgba(0, 0, 0, 0.3),
+        inset 0 3px 6px rgba(255, 255, 255, 0.4),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.3);
+      filter: brightness(1.2) saturate(1.1);
       z-index: 10;
     }
 
-    /* FF Cursor - Optimized */
+    /* White Hand Cursor - Always Visible */
     .ff-cursor {
       position: fixed;
       width: 32px;
       height: 32px;
       pointer-events: none;
       z-index: 10000;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      transform-origin: 8px 8px;
-      will-change: transform, opacity;
-    }
-
-    .ff-cursor.active {
       opacity: 1;
-      animation: rpgHandPulse 1.5s ease-in-out infinite;
+      transition: transform 0.1s ease;
+      transform-origin: 8px 8px;
+      will-change: transform;
     }
 
     .ff-cursor::before {
-      content: '👉';
+      content: '👋';
       position: absolute;
-      font-size: 20px;
-      filter: drop-shadow(0 0 8px #FFD700);
+      font-size: 24px;
+      filter: 
+        brightness(3) 
+        contrast(0) 
+        drop-shadow(0 0 0 white) 
+        drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
       transform: rotate(-15deg);
     }
 
-    .ff-cursor::after {
-      content: '✨';
-      position: absolute;
-      font-size: 12px;
-      left: 20px;
-      top: -2px;
-      animation: sparkle 1.5s infinite;
-      filter: drop-shadow(0 0 4px #FFD700);
+    .ff-cursor.active::before {
+      content: '👉';
+      animation: handPulse 0.8s ease-in-out infinite;
     }
 
-    @keyframes rpgHandPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-
-    @keyframes sparkle {
-      0%, 100% { opacity: 1; transform: scale(1) rotate(0deg); }
-      50% { opacity: 0.7; transform: scale(1.2) rotate(180deg); }
+    @keyframes handPulse {
+      0%, 100% { 
+        transform: rotate(-15deg) scale(1); 
+      }
+      50% { 
+        transform: rotate(-10deg) scale(1.1); 
+      }
     }
 
     /* Footer optimizations */
@@ -953,61 +944,54 @@
       }
     }
 
-         // Optimized FF cursor with smooth tracking
-     class FFCursor {
-       constructor() {
-         this.cursor = document.getElementById('ffCursor');
-         this.navLinks = document.querySelectorAll('.nav-link');
-         this.currentX = 0;
-         this.currentY = 0;
-         this.targetX = 0;
-         this.targetY = 0;
-         this.isActive = false;
-         this.init();
-       }
+                   // White hand cursor with smooth tracking
+      class FFCursor {
+        constructor() {
+          this.cursor = document.getElementById('ffCursor');
+          this.interactiveElements = document.querySelectorAll('.nav-link, .platform-circle, .theme-toggle, .letter-fun');
+          this.currentX = 0;
+          this.currentY = 0;
+          this.targetX = 0;
+          this.targetY = 0;
+          this.init();
+        }
 
-       init() {
-         // Smooth mouse tracking
-         document.addEventListener('mousemove', (e) => {
-           this.targetX = e.clientX;
-           this.targetY = e.clientY;
-         }, { passive: true });
+        init() {
+          // Smooth mouse tracking
+          document.addEventListener('mousemove', (e) => {
+            this.targetX = e.clientX - 16; // Center the cursor
+            this.targetY = e.clientY - 16;
+          }, { passive: true });
 
-         // Start animation loop
-         this.animate();
+          // Start animation loop
+          this.animate();
 
-         this.navLinks.forEach(link => {
-           link.addEventListener('mouseenter', () => {
-             this.cursor.classList.add('active');
-             this.isActive = true;
-           });
-           link.addEventListener('mouseleave', () => {
-             this.cursor.classList.remove('active');
-             this.isActive = false;
-           });
-         });
+          // Add active state for interactive elements
+          this.interactiveElements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+              this.cursor.classList.add('active');
+            });
+            element.addEventListener('mouseleave', () => {
+              this.cursor.classList.remove('active');
+            });
+          });
+          
+          perfMonitor.mark('cursor_init');
+        }
 
-         document.addEventListener('mouseleave', () => {
-           this.cursor.classList.remove('active');
-           this.isActive = false;
-         });
-         
-         perfMonitor.mark('cursor_init');
-       }
+        animate() {
+          // Smooth interpolation for cursor movement
+          const ease = 0.2;
+          this.currentX += (this.targetX - this.currentX) * ease;
+          this.currentY += (this.targetY - this.currentY) * ease;
 
-       animate() {
-         // Smooth interpolation for cursor movement
-         const ease = 0.15;
-         this.currentX += (this.targetX - this.currentX) * ease;
-         this.currentY += (this.targetY - this.currentY) * ease;
+          // Update cursor position
+          this.cursor.style.left = `${this.currentX}px`;
+          this.cursor.style.top = `${this.currentY}px`;
 
-         // Update cursor position
-         this.cursor.style.left = `${this.currentX}px`;
-         this.cursor.style.top = `${this.currentY}px`;
-
-         requestAnimationFrame(() => this.animate());
-       }
-     }
+          requestAnimationFrame(() => this.animate());
+        }
+      }
 
          // Lightweight interactive letters without audio
      class InteractiveLetters {
