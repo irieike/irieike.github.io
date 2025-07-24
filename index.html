@@ -1009,111 +1009,55 @@
        }
      }
 
-    // Optimized interactive letters with lazy audio loading
-    class InteractiveLetters {
-      constructor() {
-        this.letters = document.querySelectorAll('.letter-fun');
-        this.audioContext = null;
-        this.soundCache = new Map();
-        this.isAudioEnabled = false;
-        this.init();
-      }
+         // Lightweight interactive letters without audio
+     class InteractiveLetters {
+       constructor() {
+         this.letters = document.querySelectorAll('.letter-fun');
+         this.init();
+       }
 
-      init() {
-        // Lazy audio initialization
-        document.addEventListener('click', () => this.initAudio(), { once: true });
-        
-        this.letters.forEach((letter, index) => {
-          letter.addEventListener('click', (e) => this.handleLetterClick(letter, index, e));
-        });
-        
-        perfMonitor.mark('letters_init');
-      }
+       init() {
+         this.letters.forEach((letter, index) => {
+           letter.addEventListener('click', (e) => this.handleLetterClick(letter, index, e));
+         });
+         
+         perfMonitor.mark('letters_init');
+       }
 
-      async initAudio() {
-        if (this.audioContext || !window.AudioContext) return;
-        
-        try {
-          this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-          this.generateSounds();
-          this.isAudioEnabled = true;
-          console.log('🎵 Audio system initialized');
-        } catch (error) {
-          console.log('🔇 Audio not supported:', error);
-        }
-      }
+       handleLetterClick(letter, index, e) {
+         // Optimized visual feedback only
+         letter.style.animation = 'none';
+         letter.offsetHeight; // Force reflow (minimal)
+         letter.style.animation = 'letterDance 0.6s ease-in-out';
+         
+         // Optimized particle effect
+         this.createParticle(e.clientX, e.clientY);
+       }
 
-      generateSounds() {
-        const frequencies = [80, 85, 90, 95, 100, 105, 110]; // 808 bass frequencies
-        frequencies.forEach((freq, index) => {
-          this.soundCache.set(index, freq);
-        });
-      }
-
-      handleLetterClick(letter, index, e) {
-        // Optimized visual feedback
-        letter.style.animation = 'none';
-        letter.offsetHeight; // Force reflow (minimal)
-        letter.style.animation = 'letterDance 0.6s ease-in-out';
-        
-        // Audio feedback
-        if (this.isAudioEnabled) {
-          this.playSound(index);
-        }
-        
-        // Optimized particle effect
-        this.createParticle(e.clientX, e.clientY);
-      }
-
-      playSound(index) {
-        if (!this.audioContext) return;
-        
-        try {
-          const freq = this.soundCache.get(index) || 80;
-          const oscillator = this.audioContext.createOscillator();
-          const gainNode = this.audioContext.createGain();
-          
-          oscillator.connect(gainNode);
-          gainNode.connect(this.audioContext.destination);
-          
-          oscillator.frequency.setValueAtTime(freq, this.audioContext.currentTime);
-          oscillator.type = 'sawtooth';
-          
-          gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-          gainNode.gain.linearRampToValueAtTime(0.15, this.audioContext.currentTime + 0.01);
-          gainNode.gain.exponentialRampToValueAtTime(0.001, this.audioContext.currentTime + 0.3);
-          
-          oscillator.start(this.audioContext.currentTime);
-          oscillator.stop(this.audioContext.currentTime + 0.3);
-        } catch (error) {
-          console.log('🔊 Sound generation failed:', error);
-        }
-      }
-
-      createParticle(x, y) {
-        const particle = document.createElement('div');
-        const randomX = (Math.random() - 0.5) * 100;
-        const randomY = (Math.random() - 0.5) * 100;
-        
-        particle.style.cssText = `
-          position: fixed;
-          left: ${x}px;
-          top: ${y}px;
-          width: 3px;
-          height: 3px;
-          background: var(--accent-primary);
-          border-radius: 50%;
-          pointer-events: none;
-          z-index: 9999;
-          --random-x: ${randomX}px;
-          --random-y: ${randomY}px;
-          animation: particleBurst 0.5s ease-out forwards;
-        `;
-        
-        document.body.appendChild(particle);
-        setTimeout(() => particle.remove(), 500);
-      }
-    }
+       createParticle(x, y) {
+         const particle = document.createElement('div');
+         const randomX = (Math.random() - 0.5) * 100;
+         const randomY = (Math.random() - 0.5) * 100;
+         
+         particle.style.cssText = `
+           position: fixed;
+           left: ${x}px;
+           top: ${y}px;
+           width: 3px;
+           height: 3px;
+           background: var(--accent-primary);
+           border-radius: 50%;
+           pointer-events: none;
+           z-index: 9999;
+           --random-x: ${randomX}px;
+           --random-y: ${randomY}px;
+           animation: particleBurst 0.5s ease-out forwards;
+         `;
+         
+         document.body.appendChild(particle);
+         setTimeout(() => particle.remove(), 500);
+       }
+     }
 
     // Main app with optimized initialization
     class App {
