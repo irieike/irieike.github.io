@@ -92,7 +92,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: var(--spacing-lg) var(--spacing-md) 120px;
+      padding: var(--spacing-lg) var(--spacing-md) 140px;
       position: relative;
       contain: layout style paint;
     }
@@ -367,37 +367,37 @@
       box-shadow: 0 4px 12px var(--shadow-light);
     }
 
-    /* RPG Platform Dock - Optimized */
+    /* RPG Platform Dock - Properly Centered */
     .platform-dock {
       position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%) translateZ(0);
+      bottom: 0;
+      left: 0;
+      right: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: var(--spacing-lg);
-      padding: var(--spacing-xl) var(--spacing-xxl);
-      background: rgba(45, 27, 19, 0.8);
-      border-radius: 20px;
+      padding: var(--spacing-xl) var(--spacing-md);
+      background: rgba(45, 27, 19, 0.9);
+      border-radius: 25px 25px 0 0;
       border: 2px solid #8B6914;
+      border-bottom: none;
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
       z-index: 1001;
-      box-shadow: 0 8px 32px rgba(101, 67, 33, 0.4);
+      box-shadow: 0 -8px 32px rgba(101, 67, 33, 0.6);
       animation: rpgGlow 6s ease-in-out infinite;
-      position: relative;
-      min-width: fit-content;
+      min-width: 100%;
       will-change: transform;
       contain: layout style paint;
     }
 
     @keyframes rpgGlow {
       0%, 100% {
-        box-shadow: 0 8px 32px rgba(101, 67, 33, 0.4);
+        box-shadow: 0 -8px 32px rgba(101, 67, 33, 0.6);
       }
       50% {
-        box-shadow: 0 12px 40px rgba(139, 105, 20, 0.6);
+        box-shadow: 0 -12px 40px rgba(139, 105, 20, 0.8);
       }
     }
 
@@ -516,7 +516,7 @@
     /* Footer optimizations */
     footer {
       position: fixed;
-      bottom: 140px;
+      bottom: 120px;
       left: 50%;
       transform: translateX(-50%) translateZ(0);
       font-size: 0.45rem;
@@ -564,7 +564,7 @@
     /* Mobile optimizations */
     @media (max-width: 480px) {
       body {
-        padding: var(--spacing-md) var(--spacing-sm) 90px;
+        padding: var(--spacing-md) var(--spacing-sm) 110px;
         justify-content: center;
       }
       
@@ -602,12 +602,17 @@
         letter-spacing: 0.6px;
       }
       
-      footer {
-        bottom: 120px;
-        font-size: 0.35rem;
-        max-width: 90vw;
-        padding: 4px 10px;
-      }
+             .platform-dock {
+         padding: var(--spacing-md) var(--spacing-sm);
+         gap: var(--spacing-sm);
+       }
+       
+       footer {
+         bottom: 100px;
+         font-size: 0.35rem;
+         max-width: 90vw;
+         padding: 4px 10px;
+       }
     }
 
     /* Tablet optimizations */
@@ -881,24 +886,39 @@
         }
       }
 
-      animate() {
-        // Use fillRect for better performance than clearRect
-        this.ctx.fillStyle = '#0f0f0f';
-        this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-        
-        this.stars.forEach(star => {
-          // Optimized twinkling
-          star.opacity += (Math.random() - 0.5) * star.twinkleSpeed;
-          star.opacity = Math.max(0.1, Math.min(0.9, star.opacity));
-          
-          this.ctx.fillStyle = `rgba(241, 196, 15, ${star.opacity})`;
-          this.ctx.beginPath();
-          this.ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-          this.ctx.fill();
-        });
+             animate() {
+         // Use fillRect for better performance than clearRect
+         this.ctx.fillStyle = '#0f0f0f';
+         this.ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+         
+         this.stars.forEach(star => {
+           // Enhanced twinkling effect
+           star.opacity += (Math.random() - 0.5) * star.twinkleSpeed;
+           star.opacity = Math.max(0.1, Math.min(0.9, star.opacity));
+           
+           // Add sparkle effect for some stars
+           const sparkle = Math.random() > 0.98 ? 0.3 : 0;
+           const finalOpacity = Math.min(1, star.opacity + sparkle);
+           const finalSize = star.size + sparkle * 2;
+           
+           this.ctx.fillStyle = `rgba(241, 196, 15, ${finalOpacity})`;
+           this.ctx.beginPath();
+           this.ctx.arc(star.x, star.y, finalSize, 0, Math.PI * 2);
+           this.ctx.fill();
+           
+           // Add occasional twinkle glow
+           if (sparkle > 0) {
+             this.ctx.shadowColor = 'rgba(241, 196, 15, 0.8)';
+             this.ctx.shadowBlur = 10;
+             this.ctx.beginPath();
+             this.ctx.arc(star.x, star.y, finalSize, 0, Math.PI * 2);
+             this.ctx.fill();
+             this.ctx.shadowBlur = 0;
+           }
+         });
 
-        this.animationId = requestAnimationFrame(() => this.animate());
-      }
+         this.animationId = requestAnimationFrame(() => this.animate());
+       }
 
       destroy() {
         if (this.animationId) {
@@ -933,34 +953,61 @@
       }
     }
 
-    // Optimized FF cursor with throttling
-    class FFCursor {
-      constructor() {
-        this.cursor = document.getElementById('ffCursor');
-        this.navLinks = document.querySelectorAll('.nav-link');
-        this.isThrottled = false;
-        this.init();
-      }
+         // Optimized FF cursor with smooth tracking
+     class FFCursor {
+       constructor() {
+         this.cursor = document.getElementById('ffCursor');
+         this.navLinks = document.querySelectorAll('.nav-link');
+         this.currentX = 0;
+         this.currentY = 0;
+         this.targetX = 0;
+         this.targetY = 0;
+         this.isActive = false;
+         this.init();
+       }
 
-      init() {
-        // Throttled mouse movement for better performance
-        document.addEventListener('mousemove', (e) => {
-          if (!this.isThrottled) {
-            this.cursor.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
-            this.isThrottled = true;
-            setTimeout(() => this.isThrottled = false, 16); // ~60fps
-          }
-        }, { passive: true });
+       init() {
+         // Smooth mouse tracking
+         document.addEventListener('mousemove', (e) => {
+           this.targetX = e.clientX;
+           this.targetY = e.clientY;
+         }, { passive: true });
 
-        this.navLinks.forEach(link => {
-          link.addEventListener('mouseenter', () => this.cursor.classList.add('active'));
-          link.addEventListener('mouseleave', () => this.cursor.classList.remove('active'));
-        });
+         // Start animation loop
+         this.animate();
 
-        document.addEventListener('mouseleave', () => this.cursor.classList.remove('active'));
-        perfMonitor.mark('cursor_init');
-      }
-    }
+         this.navLinks.forEach(link => {
+           link.addEventListener('mouseenter', () => {
+             this.cursor.classList.add('active');
+             this.isActive = true;
+           });
+           link.addEventListener('mouseleave', () => {
+             this.cursor.classList.remove('active');
+             this.isActive = false;
+           });
+         });
+
+         document.addEventListener('mouseleave', () => {
+           this.cursor.classList.remove('active');
+           this.isActive = false;
+         });
+         
+         perfMonitor.mark('cursor_init');
+       }
+
+       animate() {
+         // Smooth interpolation for cursor movement
+         const ease = 0.15;
+         this.currentX += (this.targetX - this.currentX) * ease;
+         this.currentY += (this.targetY - this.currentY) * ease;
+
+         // Update cursor position
+         this.cursor.style.left = `${this.currentX}px`;
+         this.cursor.style.top = `${this.currentY}px`;
+
+         requestAnimationFrame(() => this.animate());
+       }
+     }
 
     // Optimized interactive letters with lazy audio loading
     class InteractiveLetters {
