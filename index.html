@@ -1011,12 +1011,13 @@
       outline-offset: 4px;
     }
 
-    /* RPG-style platform dock - CENTERED */
+    /* RPG-style platform dock - PERFECTLY CENTERED */
     .platform-dock {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
+      position: fixed !important;
+      bottom: 20px !important;
+      left: 50% !important;
+      right: auto !important;
+      transform: translateX(-50%) !important;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -1037,8 +1038,8 @@
         inset 0 2px 8px rgba(205, 133, 63, 0.2),
         inset 0 -2px 8px rgba(0, 0, 0, 0.3);
       animation: rpgGlow 6s ease-in-out infinite;
-      position: relative;
-      min-width: fit-content;
+      margin: 0 auto;
+      width: fit-content;
     }
 
     .platform-dock::before {
@@ -1496,7 +1497,9 @@
       }
       
       .platform-dock {
-        bottom: max(0px, env(safe-area-inset-bottom));
+        bottom: max(20px, env(safe-area-inset-bottom) + 20px) !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
       }
       
       .drawing-toggle {
@@ -1611,19 +1614,19 @@
     </nav>
   </main>
 
-  <!-- Platform dock with wave animations -->
+  <!-- Platform dock with RPG crystal buttons -->
   <div class="platform-dock" aria-label="External platforms">
-    <a href="https://www.ebay.com/usr/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit eBay store" style="--index: 0">
-      eBay
+    <a href="https://tiktok.com/@rudeboy.official" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit TikTok profile" style="--index: 0">
+      TikTok
     </a>
-    <a href="https://www.depop.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Depop profile" style="--index: 1">
-      Depop
+    <a href="https://instagram.com/rudeboy.official" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Instagram profile" style="--index: 1">
+      Instagram
     </a>
-    <a href="https://www.etsy.com/shop/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Etsy shop" style="--index: 2">
-      Etsy
+    <a href="https://youtube.com/@rudeboyofficial" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit YouTube channel" style="--index: 2">
+      YouTube
     </a>
-    <a href="https://www.grailed.com/yourusername" target="_blank" rel="noopener noreferrer" class="platform-circle" aria-label="Visit Grailed profile" style="--index: 3">
-      Grailed
+    <a href="mailto:hello@rudeboy.com" class="platform-circle" aria-label="Send email" style="--index: 3">
+      Email
     </a>
   </div>
   
