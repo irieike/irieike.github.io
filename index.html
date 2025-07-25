@@ -290,10 +290,15 @@
 
     /* Moon appearance for nighttime */
     .celestial-body.moon .celestial-surface {
-      background: radial-gradient(circle at 35% 35%, #F5F5DC, #E6E6FA, #D3D3D3, #C0C0C0);
+      background: 
+        radial-gradient(ellipse 40px 30px at 35% 35%, rgba(255, 255, 255, 0.4) 0%, transparent 70%),
+        radial-gradient(ellipse 60px 45px at 30% 30%, rgba(245, 245, 220, 0.3) 0%, transparent 100%),
+        radial-gradient(circle at 35% 35%, #F5F5DC, #E6E6FA, #D3D3D3, #C0C0C0, #A9A9A9);
       box-shadow: 
-        inset -15px -15px 30px rgba(0, 0, 0, 0.4),
-        inset 8px 8px 15px rgba(255, 255, 255, 0.3),
+        inset -25px -25px 50px rgba(0, 0, 0, 0.6),
+        inset -10px -10px 25px rgba(0, 0, 0, 0.4),
+        inset 15px 15px 30px rgba(255, 255, 255, 0.2),
+        inset 5px 5px 15px rgba(255, 255, 255, 0.1),
         0 0 60px rgba(245, 245, 220, 0.6),
         0 0 100px rgba(245, 245, 220, 0.3);
     }
@@ -307,7 +312,7 @@
       display: none; /* No rays for moon */
     }
 
-    /* Crater details for moon */
+    /* Enhanced crater details for moon */
     .celestial-body.moon .celestial-surface::before {
       content: '';
       position: absolute;
@@ -316,11 +321,35 @@
       width: 12px;
       height: 12px;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.2);
+      background: radial-gradient(circle at 30% 30%, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2));
       box-shadow: 
-        20px 15px 0 -2px rgba(0, 0, 0, 0.15),
-        -8px 25px 0 -4px rgba(0, 0, 0, 0.1),
-        15px -10px 0 -3px rgba(0, 0, 0, 0.12);
+        inset 2px 2px 4px rgba(0, 0, 0, 0.6),
+        20px 15px 0 -2px rgba(0, 0, 0, 0.2),
+        22px 17px 0 -2px rgba(0, 0, 0, 0.1),
+        -8px 25px 0 -4px rgba(0, 0, 0, 0.15),
+        -6px 27px 0 -4px rgba(0, 0, 0, 0.08),
+        15px -10px 0 -3px rgba(0, 0, 0, 0.18),
+        17px -8px 0 -3px rgba(0, 0, 0, 0.1),
+        35px 5px 0 -1px rgba(0, 0, 0, 0.12),
+        -15px 10px 0 -5px rgba(0, 0, 0, 0.1),
+        5px 35px 0 -2px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Additional moon surface details */
+    .celestial-body.moon .celestial-surface::after {
+      content: '';
+      position: absolute;
+      top: 60%;
+      left: 20%;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 40%, rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.1));
+      box-shadow: 
+        inset 1px 1px 2px rgba(0, 0, 0, 0.5),
+        25px -5px 0 -2px rgba(0, 0, 0, 0.15),
+        30px 10px 0 -3px rgba(0, 0, 0, 0.1),
+        -10px -15px 0 -2px rgba(0, 0, 0, 0.12);
     }
 
     @keyframes celestialRotate {
@@ -858,7 +887,7 @@
         /* iOS-optimized mobile layout that prevents text overflow */
     @media (max-width: 480px) {
       body {
-        padding: 5px 5px 90px;
+        padding: 2px 2px 75px;
         justify-content: flex-start;
         min-height: 100vh;
         min-height: -webkit-fill-available;
@@ -869,33 +898,33 @@
       }
       
       main {
-        max-width: calc(100vw - 10px);
-        width: calc(100vw - 10px);
-        gap: 8px;
+        max-width: calc(100vw - 4px);
+        width: calc(100vw - 4px);
+        gap: 4px;
         padding: 0;
         margin: 0;
         overflow: hidden;
       }
       
       .header-container {
-        padding: 8px;
+        padding: 4px;
         margin: 0;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        background: rgba(26, 26, 26, 0.8);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        background: rgba(26, 26, 26, 0.7);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        width: calc(100% - 2px);
-        border-radius: 8px;
+        width: 100%;
+        border-radius: 6px;
         overflow: hidden;
       }
       
       h1 {
-        font-size: clamp(0.7rem, 5.5vw, 1.2rem);
-        letter-spacing: clamp(-0.05em, -1vw, 0em);
+        font-size: clamp(0.65rem, 5vw, 1.1rem);
+        letter-spacing: clamp(-0.04em, -0.8vw, 0em);
         line-height: 1;
         text-align: center;
         margin: 0;
-        padding: 4px 0;
+        padding: 2px 0;
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
@@ -925,23 +954,23 @@
       }
       
       .navigation {
-        gap: 4px;
+        gap: 2px;
         flex-wrap: wrap;
         justify-content: center;
         width: 100%;
         padding: 0;
-        margin: 4px 0;
+        margin: 2px 0;
       }
       
       .nav-link {
-        font-size: 0.4rem;
-        padding: 6px 8px;
-        min-height: 32px;
-        min-width: 60px;
+        font-size: 0.35rem;
+        padding: 4px 6px;
+        min-height: 28px;
+        min-width: 50px;
         flex: 1;
-        max-width: calc(50% - 2px);
+        max-width: calc(50% - 1px);
         -webkit-tap-highlight-color: rgba(241, 196, 15, 0.2);
-        border-radius: 6px;
+        border-radius: 4px;
         line-height: 1;
         text-align: center;
         overflow: hidden;
@@ -957,17 +986,17 @@
       }
       
       .platform-circle {
-        width: 55px;
-        height: 55px;
-        font-size: 0.3rem;
-        letter-spacing: 0.2px;
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        width: 50px;
+        height: 50px;
+        font-size: 0.28rem;
+        letter-spacing: 0.1px;
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
         -webkit-tap-highlight-color: transparent;
-        border-radius: 12px;
+        border-radius: 10px;
         font-weight: 500;
         line-height: 1;
-        padding: 2px;
+        padding: 1px;
         text-align: center;
         display: flex;
         align-items: center;
@@ -985,14 +1014,14 @@
       }
       
       .platform-dock {
-        padding: 12px 4px;
-        gap: 6px;
+        padding: 8px 2px;
+        gap: 4px;
         bottom: 0;
         background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px 12px 0 0;
+        border-radius: 8px 8px 0 0;
         width: 100%;
         overflow: hidden;
       }
@@ -1058,14 +1087,14 @@
 
       /* iOS-specific theme toggle */
       .theme-toggle {
-        top: 5px;
-        right: 5px;
-        padding: 6px;
-        font-size: 0.4rem;
-        min-height: 28px;
-        min-width: 28px;
+        top: 2px;
+        right: 2px;
+        padding: 4px;
+        font-size: 0.35rem;
+        min-height: 24px;
+        min-width: 24px;
         animation: none;
-        border-radius: 6px;
+        border-radius: 4px;
       }
 
       @keyframes titleGlow {
@@ -1080,57 +1109,63 @@
 
     /* Extra small screens (iPhone SE, etc.) - iOS optimized */
     @media (max-width: 375px) {
+      body {
+        padding: 1px 1px 65px;
+      }
+
       .header-container {
-        padding: 6px;
+        padding: 3px;
       }
 
       h1 {
-        font-size: clamp(0.6rem, 4.5vw, 1rem);
-        letter-spacing: clamp(-0.03em, -0.8vw, 0em);
+        font-size: clamp(0.55rem, 4.2vw, 0.95rem);
+        letter-spacing: clamp(-0.03em, -0.7vw, 0em);
+        padding: 1px 0;
       }
 
       .letter {
-        margin: 0 clamp(-0.5px, -0.3vw, 0px);
+        margin: 0 clamp(-0.3px, -0.2vw, 0px);
       }
 
       .navigation {
-        gap: 3px;
+        gap: 1px;
+        margin: 1px 0;
       }
 
       .nav-link {
-        font-size: 0.35rem;
-        padding: 4px 6px;
-        min-width: 50px;
-        min-height: 28px;
-        max-width: calc(50% - 1.5px);
+        font-size: 0.3rem;
+        padding: 3px 4px;
+        min-width: 45px;
+        min-height: 24px;
+        max-width: calc(50% - 0.5px);
       }
 
       .platform-circle {
-        width: 48px;
-        height: 48px;
-        font-size: 0.25rem;
-        letter-spacing: 0.1px;
-        border-radius: 10px;
-        padding: 1px;
+        width: 42px;
+        height: 42px;
+        font-size: 0.22rem;
+        letter-spacing: 0.05px;
+        border-radius: 8px;
+        padding: 0.5px;
       }
 
       .platform-dock {
-        gap: 4px;
-        padding: 8px 2px;
+        gap: 2px;
+        padding: 6px 1px;
       }
 
       .theme-toggle {
-        top: 3px;
-        right: 3px;
-        padding: 4px;
-        font-size: 0.3rem;
-        min-height: 24px;
-        min-width: 24px;
+        top: 1px;
+        right: 1px;
+        padding: 3px;
+        font-size: 0.28rem;
+        min-height: 20px;
+        min-width: 20px;
       }
 
       footer {
-        font-size: 0.2rem;
-        padding: 1px 2px;
+        font-size: 0.18rem;
+        padding: 0.5px 1px;
       }
     }
 
