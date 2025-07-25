@@ -894,63 +894,70 @@
       }
     }
 
-        /* iOS-optimized mobile layout that prevents text overflow */
+    /* Completely rebuilt iOS mobile layout */
     @media (max-width: 480px) {
+      html {
+        height: 100%;
+        overflow-x: hidden;
+      }
+
       body {
-        padding: 10px 10px 90px;
-        justify-content: center;
+        padding: 20px 15px 120px;
+        justify-content: flex-start;
         min-height: 100vh;
         min-height: -webkit-fill-available;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: none;
         -webkit-text-size-adjust: 100%;
-        font-size: 16px; /* Prevent iOS zoom */
+        font-size: 16px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
       }
       
       main {
-        max-width: 100%;
         width: 100%;
-        gap: var(--spacing-md);
-        padding: 0;
-        margin: 0;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 15px;
+        flex: 1;
       }
       
       .header-container {
-        padding: 4px;
+        padding: 15px;
         margin: 0;
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
-        background: rgba(26, 26, 26, 0.7);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        background: rgba(26, 26, 26, 0.8);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        width: 100%;
-        border-radius: 6px;
-        overflow: hidden;
+        width: calc(100% - 30px);
+        border-radius: 12px;
+        text-align: center;
       }
       
       h1 {
-        font-size: clamp(0.65rem, 5vw, 1.1rem);
-        letter-spacing: clamp(-0.04em, -0.8vw, 0em);
-        line-height: 1;
+        font-size: clamp(1rem, 6vw, 1.5rem);
+        letter-spacing: clamp(-0.05em, -1vw, 0em);
+        line-height: 1.2;
         text-align: center;
         margin: 0;
-        padding: 2px 0;
-        overflow: hidden;
+        padding: 0;
         white-space: nowrap;
-        text-overflow: ellipsis;
-        max-width: 100%;
+        overflow: visible;
       }
       
       .letter {
-        margin: 0 clamp(-1px, -0.5vw, 0px);
-        font-size: inherit;
+        margin: 0 clamp(-1px, -0.3vw, 0px);
         display: inline-block;
       }
 
-      /* Minimal animations for iOS */
       .letter-fun {
         animation: 
-          letterEntrance 0.4s ease-out forwards,
-          letterFloat 1.5s ease-in-out infinite 0.4s;
+          letterEntrance 0.6s ease-out forwards,
+          letterFloat 2s ease-in-out infinite 0.6s;
       }
 
       @keyframes letterFloat {
@@ -958,153 +965,128 @@
           transform: translateY(0px); 
         }
         50% { 
-          transform: translateY(-1px); 
+          transform: translateY(-2px); 
         }
       }
       
       .navigation {
-        gap: 2px;
+        gap: 8px;
         flex-wrap: wrap;
         justify-content: center;
         width: 100%;
+        max-width: 350px;
         padding: 0;
-        margin: 2px 0;
+        margin: 0;
       }
       
       .nav-link {
-        font-size: 0.35rem;
-        padding: 4px 6px;
-        min-height: 28px;
-        min-width: 50px;
+        font-size: 0.5rem;
+        padding: 8px 12px;
+        min-height: 36px;
+        min-width: 80px;
         flex: 1;
-        max-width: calc(50% - 1px);
-        -webkit-tap-highlight-color: rgba(241, 196, 15, 0.2);
-        border-radius: 4px;
-        line-height: 1;
+        max-width: calc(50% - 4px);
+        -webkit-tap-highlight-color: rgba(241, 196, 15, 0.3);
+        border-radius: 8px;
+        line-height: 1.2;
         text-align: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        font-weight: 500;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .nav-link:active {
-        transform: scale(0.98);
+        transform: scale(0.95);
         background: var(--accent-primary);
         color: var(--bg-primary);
       }
       
       .platform-circle {
-        width: 50px;
-        height: 50px;
-        font-size: 0.28rem;
-        letter-spacing: 0.1px;
-        backdrop-filter: blur(6px);
-        -webkit-backdrop-filter: blur(6px);
+        width: 70px;
+        height: 70px;
+        font-size: 0.4rem;
+        letter-spacing: 0.3px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         -webkit-tap-highlight-color: transparent;
-        border-radius: 10px;
-        font-weight: 500;
-        line-height: 1;
-        padding: 1px;
+        border-radius: 16px;
+        font-weight: 600;
+        line-height: 1.1;
+        padding: 4px;
         text-align: center;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        word-break: keep-all;
-        -webkit-hyphens: none;
-        hyphens: none;
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 
+          0 4px 16px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.4);
       }
 
       .platform-circle:active {
-        transform: translateY(-1px) scale(1.02);
+        transform: translateY(-2px) scale(1.05);
+        background: rgba(255, 255, 255, 0.25);
       }
       
       .platform-dock {
-        padding: 15px 10px 25px;
-        gap: var(--spacing-md);
+        position: fixed;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        left: 0;
+        right: 0;
+        padding: 20px 15px 30px;
+        gap: 12px;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         border: none;
         border-radius: 0;
         width: 100%;
-        position: fixed;
-        left: 0;
-        right: 0;
-      }
-
-      /* iOS-specific glass effects */
-      .platform-circle {
-        background: rgba(255, 255, 255, 0.12);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        box-shadow: 
-          0 2px 8px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.3);
-      }
-
-      .platform-circle:active {
-        background: rgba(255, 255, 255, 0.25);
-        border: 1px solid rgba(255, 255, 255, 0.4);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1001;
       }
       
       footer {
         display: none;
       }
 
-      /* iOS performance optimizations */
       .star-field {
-        opacity: 0.3;
-        will-change: auto;
+        opacity: 0.4;
       }
 
-      /* Mobile celestial body optimizations */
       .celestial-body {
-        top: 15%;
-        right: 10%;
-        width: 100px;
-        height: 100px;
-        overflow: visible;
+        top: 10%;
+        right: 5%;
+        width: 80px;
+        height: 80px;
       }
 
       .celestial-glow {
-        top: -40px;
-        left: -40px;
-        width: calc(100% + 80px);
-        height: calc(100% + 80px);
+        top: -30px;
+        left: -30px;
+        width: calc(100% + 60px);
+        height: calc(100% + 60px);
         filter: blur(1px);
       }
 
       .celestial-rays {
-        width: 180px;
-        height: 180px;
-        margin: -90px 0 0 -90px;
-        opacity: 0.4;
-        filter: blur(0.5px);
+        width: 140px;
+        height: 140px;
+        margin: -70px 0 0 -70px;
+        opacity: 0.5;
       }
 
-      /* iOS-specific theme toggle */
       .theme-toggle {
-        top: 2px;
-        right: 2px;
-        padding: 4px;
-        font-size: 0.35rem;
-        min-height: 24px;
-        min-width: 24px;
-        animation: none;
-        border-radius: 4px;
-      }
-
-      @keyframes titleGlow {
-        0%, 100% {
-          filter: brightness(1);
-        }
-        50% {
-          filter: brightness(1.05);
-        }
+        top: 10px;
+        right: 10px;
+        padding: 6px;
+        font-size: 0.4rem;
+        min-height: 28px;
+        min-width: 28px;
+        border-radius: 6px;
       }
     }
 
