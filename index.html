@@ -1520,6 +1520,278 @@
       }
     }
 
+    // Device Detection and Dynamic Layout Manager
+    class DeviceLayoutManager {
+      constructor() {
+        this.deviceInfo = this.detectDevice();
+        this.applyDeviceSpecificCSS();
+        this.logDeviceInfo();
+      }
+
+      detectDevice() {
+        const userAgent = navigator.userAgent;
+        const platform = navigator.platform;
+        const screenWidth = window.screen.width;
+        const screenHeight = window.screen.height;
+        const pixelRatio = window.devicePixelRatio || 1;
+        const viewport = {
+          width: window.innerWidth,
+          height: window.innerHeight
+        };
+
+        // iPhone model detection
+        const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+        const isIPhone = /iPhone/.test(userAgent);
+        
+        let device = {
+          type: 'unknown',
+          model: 'unknown',
+          isIOS,
+          isIPhone,
+          screenWidth,
+          screenHeight,
+          pixelRatio,
+          viewport,
+          safeAreaSupport: CSS.supports('padding: env(safe-area-inset-top)')
+        };
+
+        if (isIPhone) {
+          // iPhone model detection based on screen dimensions and pixel ratio
+          const actualWidth = screenWidth * pixelRatio;
+          const actualHeight = screenHeight * pixelRatio;
+
+          if (actualWidth === 1170 && actualHeight === 2532) {
+            device.model = 'iPhone 12/13/14 Pro';
+            device.type = 'standard';
+          } else if (actualWidth === 1179 && actualHeight === 2556) {
+            device.model = 'iPhone 14 Pro';
+            device.type = 'standard';
+          } else if (actualWidth === 1206 && actualHeight === 2622) {
+            device.model = 'iPhone 15 Pro';
+            device.type = 'standard';
+          } else if (actualWidth === 1125 && actualHeight === 2436) {
+            device.model = 'iPhone X/XS/11 Pro';
+            device.type = 'notch';
+          } else if (actualWidth === 1242 && actualHeight === 2688) {
+            device.model = 'iPhone XS Max/11 Pro Max';
+            device.type = 'large';
+          } else if (actualWidth === 1290 && actualHeight === 2796) {
+            device.model = 'iPhone 14 Pro Max';
+            device.type = 'large';
+          } else if (actualWidth === 1320 && actualHeight === 2868) {
+            device.model = 'iPhone 15 Pro Max';
+            device.type = 'large';
+          } else if (actualWidth === 828 && actualHeight === 1792) {
+            device.model = 'iPhone XR/11/12/13/14';
+            device.type = 'standard-large';
+          } else if (actualWidth === 750 && actualHeight === 1334) {
+            device.model = 'iPhone 6/7/8/SE 2nd/3rd gen';
+            device.type = 'standard';
+          } else if (actualWidth === 640 && actualHeight === 1136) {
+            device.model = 'iPhone 5/5S/SE 1st gen';
+            device.type = 'compact';
+          } else if (actualWidth === 1284 && actualHeight === 2778) {
+            device.model = 'iPhone 12/13 Pro Max';
+            device.type = 'large';
+          } else if (actualWidth === 1080 && actualHeight === 2340) {
+            device.model = 'iPhone 12/13 mini';
+            device.type = 'mini';
+          } else if (viewport.width <= 375 && viewport.height <= 667) {
+            device.model = 'iPhone SE/Small';
+            device.type = 'compact';
+          } else if (viewport.width <= 414 && viewport.height <= 896) {
+            device.model = 'iPhone Standard';
+            device.type = 'standard';
+          } else {
+            device.model = 'iPhone Large';
+            device.type = 'large';
+          }
+        }
+
+        return device;
+      }
+
+      applyDeviceSpecificCSS() {
+        const { model, type, viewport, safeAreaSupport } = this.deviceInfo;
+        
+        // Remove any existing device classes
+        document.body.classList.remove('device-compact', 'device-mini', 'device-standard', 'device-large', 'device-notch');
+        
+        // Add device-specific class
+        document.body.classList.add(`device-${type}`);
+        
+        // Create and inject device-specific CSS
+        const style = document.createElement('style');
+        style.id = 'device-specific-styles';
+        
+        let css = '';
+
+        switch (type) {
+          case 'compact': // iPhone SE, 5S
+            css = `
+              .device-compact body {
+                padding: 1px 1px 55px !important;
+                font-size: 14px !important;
+              }
+              .device-compact main {
+                gap: 2px !important;
+              }
+              .device-compact .header-container {
+                padding: 2px !important;
+              }
+              .device-compact h1 {
+                font-size: clamp(0.5rem, 4vw, 0.85rem) !important;
+                padding: 1px 0 !important;
+              }
+              .device-compact .letter {
+                margin: 0 clamp(-0.2px, -0.1vw, 0px) !important;
+              }
+              .device-compact .navigation {
+                gap: 1px !important;
+                margin: 1px 0 !important;
+              }
+              .device-compact .nav-link {
+                font-size: 0.28rem !important;
+                padding: 2px 3px !important;
+                min-height: 22px !important;
+                min-width: 40px !important;
+              }
+              .device-compact .platform-circle {
+                width: 38px !important;
+                height: 38px !important;
+                font-size: 0.2rem !important;
+                padding: 0.5px !important;
+              }
+              .device-compact .platform-dock {
+                padding: 4px 1px !important;
+                gap: 2px !important;
+              }
+              .device-compact .theme-toggle {
+                top: 1px !important;
+                right: 1px !important;
+                min-height: 18px !important;
+                min-width: 18px !important;
+                font-size: 0.25rem !important;
+                padding: 2px !important;
+              }
+              .device-compact footer {
+                bottom: 1px !important;
+                font-size: 0.16rem !important;
+                padding: 0.5px 1px !important;
+              }
+            `;
+            break;
+
+          case 'mini': // iPhone 12 mini
+            css = `
+              .device-mini body {
+                padding: 1px 1px 60px !important;
+              }
+              .device-mini .header-container {
+                padding: 3px !important;
+              }
+              .device-mini h1 {
+                font-size: clamp(0.55rem, 4.5vw, 0.9rem) !important;
+              }
+              .device-mini .platform-circle {
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 0.24rem !important;
+              }
+              .device-mini .platform-dock {
+                padding: 5px 1px !important;
+              }
+            `;
+            break;
+
+          case 'standard': // iPhone 6/7/8, 12
+            css = `
+              .device-standard body {
+                padding: 2px 2px 65px !important;
+              }
+              .device-standard .platform-dock {
+                padding: 6px 2px !important;
+              }
+            `;
+            break;
+
+          case 'standard-large': // iPhone XR/11
+            css = `
+              .device-standard-large body {
+                padding: 2px 2px 70px !important;
+              }
+              .device-standard-large .platform-dock {
+                padding: 7px 2px !important;
+              }
+            `;
+            break;
+
+          case 'notch': // iPhone X/XS/11 Pro
+            css = `
+              .device-notch body {
+                padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 2px)' : '2px'} 2px calc(70px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+              }
+              .device-notch .platform-dock {
+                padding: 8px 2px calc(8px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+              }
+              .device-notch .theme-toggle {
+                top: calc(2px + ${safeAreaSupport ? 'env(safe-area-inset-top, 0px)' : '0px'}) !important;
+              }
+            `;
+            break;
+
+          case 'large': // iPhone XS Max/11 Pro Max/12 Pro Max
+            css = `
+              .device-large body {
+                padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 3px)' : '3px'} 3px calc(75px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+              }
+              .device-large .header-container {
+                padding: 5px !important;
+              }
+              .device-large h1 {
+                font-size: clamp(0.7rem, 5.5vw, 1.2rem) !important;
+              }
+              .device-large .platform-circle {
+                width: 55px !important;
+                height: 55px !important;
+                font-size: 0.32rem !important;
+              }
+                             .device-large .platform-dock {
+                 padding: 10px 3px calc(10px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+                 gap: 6px !important;
+               }
+            `;
+            break;
+        }
+
+        style.textContent = css;
+        document.head.appendChild(style);
+      }
+
+      logDeviceInfo() {
+        console.log('📱 Device Detection Results:', {
+          model: this.deviceInfo.model,
+          type: this.deviceInfo.type,
+          viewport: this.deviceInfo.viewport,
+          screen: `${this.deviceInfo.screenWidth}x${this.deviceInfo.screenHeight}`,
+          pixelRatio: this.deviceInfo.pixelRatio,
+          safeArea: this.deviceInfo.safeAreaSupport
+        });
+      }
+
+      // Method to update layout on orientation change
+      handleOrientationChange() {
+        setTimeout(() => {
+          this.deviceInfo.viewport = {
+            width: window.innerWidth,
+            height: window.innerHeight
+          };
+          // Re-apply CSS if needed based on new dimensions
+          this.applyDeviceSpecificCSS();
+        }, 500);
+      }
+    }
+
     // Time-based Celestial Body Manager
     class CelestialBody {
       constructor() {
@@ -1753,11 +2025,24 @@
 
       scheduleNonCriticalInit() {
         const initComponents = () => {
+          this.components.deviceLayout = new DeviceLayoutManager();
           this.components.starField = new StarField();
           this.components.themeManager = new ThemeManager();
           this.components.ffCursor = new FFCursor();
           this.components.interactiveLetters = new InteractiveLetters();
           this.components.celestialBody = new CelestialBody();
+          
+          // Handle orientation changes
+          window.addEventListener('orientationchange', () => {
+            this.components.deviceLayout.handleOrientationChange();
+          });
+          
+          window.addEventListener('resize', () => {
+            clearTimeout(this.resizeTimeout);
+            this.resizeTimeout = setTimeout(() => {
+              this.components.deviceLayout.handleOrientationChange();
+            }, 300);
+          });
         };
 
         if (window.requestIdleCallback) {
