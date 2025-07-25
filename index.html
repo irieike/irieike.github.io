@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="description" content="RUDEBOY - Official website featuring vintage band merch, goth fashion, and Y2K styles. Shop curated collections and explore creative projects." />
   <meta name="keywords" content="vintage band merch, goth fashion, Y2K style, alternative clothing, grunge, streetwear" />
   <meta name="author" content="irie.ike" />
@@ -897,8 +897,8 @@
         /* iOS-optimized mobile layout that prevents text overflow */
     @media (max-width: 480px) {
       body {
-        padding: 2px 2px 80px;
-        justify-content: flex-start;
+        padding: 10px 10px 90px;
+        justify-content: center;
         min-height: 100vh;
         min-height: -webkit-fill-available;
         -webkit-overflow-scrolling: touch;
@@ -908,12 +908,11 @@
       }
       
       main {
-        max-width: calc(100vw - 4px);
-        width: calc(100vw - 4px);
-        gap: 4px;
+        max-width: 100%;
+        width: 100%;
+        gap: var(--spacing-md);
         padding: 0;
         margin: 0;
-        overflow: hidden;
       }
       
       .header-container {
@@ -1024,12 +1023,12 @@
       }
       
       .platform-dock {
-        padding: 8px 2px 20px;
-        gap: 4px;
+        padding: 15px 10px 25px;
+        gap: var(--spacing-md);
         bottom: 0;
         background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border: none;
         border-radius: 0;
         width: 100%;
@@ -1064,10 +1063,10 @@
 
       /* Mobile celestial body optimizations */
       .celestial-body {
-        top: 8%;
-        right: 8%;
-        width: 80px;
-        height: 80px;
+        top: 15%;
+        right: 10%;
+        width: 100px;
+        height: 100px;
         overflow: visible;
       }
 
