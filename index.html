@@ -690,95 +690,79 @@
       }
     }
 
-        /* Comprehensive mobile optimizations for iOS */
+        /* Simple mobile optimizations that actually fit */
     @media (max-width: 480px) {
       body {
-        padding: env(safe-area-inset-top, 20px) env(safe-area-inset-right, 16px) calc(120px + env(safe-area-inset-bottom, 0px)) env(safe-area-inset-left, 16px);
-        justify-content: flex-start;
+        padding: 10px 10px 100px;
+        justify-content: center;
         min-height: 100vh;
-        min-height: -webkit-fill-available;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: none;
         -webkit-text-size-adjust: none;
       }
       
       main {
-        max-width: 100vw;
+        max-width: 100%;
         width: 100%;
-        gap: var(--spacing-lg);
+        gap: var(--spacing-md);
         padding: 0;
-        margin-top: var(--spacing-xl);
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        margin: 0;
       }
       
       .header-container {
-        padding: var(--spacing-lg) var(--spacing-md);
-        margin: 0 var(--spacing-sm);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        background: rgba(26, 26, 26, 0.8);
+        padding: var(--spacing-md);
+        margin: 0;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        background: rgba(26, 26, 26, 0.7);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        width: calc(100% - var(--spacing-md));
-        max-width: 350px;
+        width: 100%;
       }
       
       h1 {
-        font-size: clamp(1.2rem, 8vw, 2rem);
-        letter-spacing: clamp(-0.15em, 0vw, -0.05em);
-        line-height: 1.1;
+        font-size: clamp(1rem, 8vw, 1.8rem);
+        letter-spacing: clamp(-0.1em, 0vw, -0.05em);
+        line-height: 1.2;
         text-align: center;
       }
       
       .letter {
-        margin: 0 clamp(-3px, 0vw, -1px);
-        display: inline-block;
+        margin: 0 clamp(-2px, 0vw, -1px);
       }
 
-      /* Optimized animations for mobile */
+      /* Simple animations for mobile */
       .letter-fun {
         animation: 
-          letterEntrance 0.8s ease-out forwards,
-          letterFloat 3s ease-in-out infinite 0.8s;
+          letterEntrance 0.6s ease-out forwards,
+          letterFloat 2s ease-in-out infinite 0.6s;
       }
 
       @keyframes letterFloat {
         0%, 100% { 
-          transform: translateY(0px) translateZ(0); 
+          transform: translateY(0px); 
         }
         50% { 
-          transform: translateY(-2px) translateZ(0); 
+          transform: translateY(-2px); 
         }
       }
       
       .navigation {
-        gap: var(--spacing-md);
+        gap: var(--spacing-sm);
         flex-wrap: wrap;
         justify-content: center;
         width: 100%;
-        max-width: 350px;
-        padding: 0 var(--spacing-sm);
+        padding: 0;
       }
       
       .nav-link {
-        font-size: 0.55rem;
-        padding: var(--spacing-md) var(--spacing-lg);
-        min-height: 48px;
-        min-width: 120px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        -webkit-tap-highlight-color: rgba(241, 196, 15, 0.2);
-        border-radius: 12px;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        font-size: 0.5rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+        min-height: 40px;
+        min-width: 80px;
         flex: 1;
-        max-width: 140px;
+        max-width: 120px;
+        -webkit-tap-highlight-color: rgba(241, 196, 15, 0.2);
+        border-radius: 8px;
       }
 
       .nav-link:active {
@@ -788,84 +772,81 @@
       }
       
       .platform-circle {
-        width: 75px;
-        height: 75px;
-        font-size: 0.45rem;
-        letter-spacing: 0.8px;
-        min-height: 60px;
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        width: 65px;
+        height: 65px;
+        font-size: 0.4rem;
+        letter-spacing: 0.5px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
         -webkit-tap-highlight-color: transparent;
-        border-radius: 18px;
-        font-weight: 700;
-        line-height: 1;
-        padding: var(--spacing-xs);
+        border-radius: 15px;
+        font-weight: 600;
+        line-height: 1.1;
+        padding: 4px;
         text-align: center;
-        word-break: break-word;
-        hyphens: auto;
       }
 
       .platform-circle:active {
-        transform: translateY(-4px) scale(1.05) translateZ(0);
+        transform: translateY(-2px) scale(1.05);
       }
       
       .platform-dock {
-        padding: var(--spacing-xl) var(--spacing-md) calc(var(--spacing-xl) + env(safe-area-inset-bottom, 0px));
-        gap: var(--spacing-md);
-        background: rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        padding: var(--spacing-lg) var(--spacing-sm);
+        gap: var(--spacing-sm);
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 20px 20px 0 0;
-        min-height: calc(100px + env(safe-area-inset-bottom, 0px));
+        border-radius: 15px 15px 0 0;
       }
 
-      /* Enhanced glass effects for mobile */
+      /* Simplified glass effects for mobile */
       .platform-circle {
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         box-shadow: 
-          0 6px 20px rgba(0, 0, 0, 0.25),
-          0 3px 10px rgba(0, 0, 0, 0.15),
-          inset 0 1px 0 rgba(255, 255, 255, 0.25);
+          0 4px 12px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.2);
       }
 
-      .platform-circle:hover,
       .platform-circle:active {
-        background: rgba(255, 255, 255, 0.15);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.25);
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
       }
       
       footer {
-        bottom: calc(6px + env(safe-area-inset-bottom, 0px));
+        bottom: 5px;
         font-size: 0.3rem;
-        max-width: 90vw;
-        padding: 4px 10px;
-        background: rgba(0, 0, 0, 0.6);
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        max-width: 95%;
+        padding: 2px 8px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
       }
 
       /* Performance optimizations for mobile */
       .star-field {
-        opacity: 0.5;
-        will-change: auto;
+        opacity: 0.4;
       }
 
-      /* Disable problematic animations on small screens */
+      /* Simplified theme toggle */
       .theme-toggle {
+        top: 10px;
+        right: 10px;
+        padding: 8px;
+        font-size: 0.5rem;
+        min-height: 36px;
+        min-width: 36px;
         animation: none;
       }
 
       @keyframes titleGlow {
         0%, 100% {
-          filter: brightness(1) saturate(1);
+          filter: brightness(1);
         }
         50% {
-          filter: brightness(1.1) saturate(1.05);
+          filter: brightness(1.1);
         }
       }
     }
@@ -873,38 +854,34 @@
     /* Extra small screens (iPhone SE, etc.) */
     @media (max-width: 375px) {
       .header-container {
-        margin: 0 var(--spacing-xs);
-        padding: var(--spacing-md);
-        width: calc(100% - var(--spacing-sm));
+        padding: var(--spacing-sm);
       }
 
       h1 {
-        font-size: clamp(1rem, 9vw, 1.8rem);
+        font-size: clamp(0.9rem, 9vw, 1.6rem);
       }
 
       .navigation {
-        gap: var(--spacing-sm);
-        max-width: 100%;
+        gap: 6px;
       }
 
       .nav-link {
-        font-size: 0.5rem;
-        padding: var(--spacing-sm) var(--spacing-md);
-        min-width: 100px;
-        flex: 1;
-        max-width: 120px;
+        font-size: 0.45rem;
+        padding: 8px 12px;
+        min-width: 70px;
+        min-height: 36px;
       }
 
       .platform-circle {
-        width: 68px;
-        height: 68px;
-        font-size: 0.4rem;
-        letter-spacing: 0.6px;
+        width: 58px;
+        height: 58px;
+        font-size: 0.35rem;
+        letter-spacing: 0.4px;
       }
 
       .platform-dock {
-        gap: var(--spacing-sm);
-        padding: var(--spacing-lg) var(--spacing-sm) calc(var(--spacing-lg) + env(safe-area-inset-bottom, 0px));
+        gap: 8px;
+        padding: var(--spacing-md) 8px;
       }
     }
 
