@@ -64,6 +64,71 @@
       --transition-slow: 0.4s ease-out;
     }
 
+    /* iOS and mobile specific adjustments */
+    @supports (-webkit-touch-callout: none) {
+      :root {
+        --border-radius: 12px;
+        --spacing-xs: 6px;
+        --spacing-sm: 12px;
+        --spacing-md: 20px;
+        --spacing-lg: 28px;
+        --spacing-xl: 40px;
+      }
+
+      /* Hide cursor completely on iOS */
+      body,
+      .ff-cursor,
+      .nav-link,
+      .platform-circle,
+      .theme-toggle,
+      .letter {
+        cursor: auto !important;
+      }
+
+      .ff-cursor {
+        display: none !important;
+      }
+
+      /* iOS performance optimizations */
+      * {
+        -webkit-transform: translateZ(0);
+        -webkit-backface-visibility: hidden;
+        -webkit-perspective: 1000;
+      }
+
+      /* Better touch targets for iOS */
+      .platform-circle {
+        min-height: 60px;
+        min-width: 60px;
+        padding: var(--spacing-md);
+      }
+
+      .nav-link {
+        min-height: 44px;
+        padding: var(--spacing-md) var(--spacing-lg);
+      }
+    }
+
+    /* Mobile device detection and optimizations */
+    @media (hover: none) and (pointer: coarse) {
+      .ff-cursor {
+        display: none !important;
+      }
+      
+      body * {
+        cursor: auto !important;
+      }
+
+      /* Optimize animations for mobile */
+      .platform-circle {
+        animation-duration: 2s;
+      }
+
+      .letter-fun {
+        animation-duration: 0.6s, 2s;
+      }
+    }
+
     /* Performance-optimized base styles */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -96,6 +161,11 @@
       position: relative;
       contain: layout style paint;
       cursor: none;
+      -webkit-overflow-scrolling: touch;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
     }
 
     /* Optimized star field background */
@@ -604,11 +674,13 @@
       }
     }
 
-    /* Mobile optimizations */
+        /* Mobile optimizations */
     @media (max-width: 480px) {
       body {
         padding: var(--spacing-md) var(--spacing-sm) 110px;
         justify-content: center;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: none;
       }
       
       main {
@@ -618,6 +690,7 @@
       
       .header-container {
         padding: var(--spacing-sm) var(--spacing-md);
+        backdrop-filter: blur(10px);
       }
       
       h1 {
@@ -628,6 +701,13 @@
       .letter {
         margin: 0 clamp(-5px, 0vw, -2px);
       }
+
+      /* Reduce animation complexity on mobile */
+      .letter-fun {
+        animation: 
+          letterEntrance 0.6s ease-out forwards,
+          letterFloat 2s ease-in-out infinite 0.6s;
+      }
       
       .navigation {
         gap: var(--spacing-xs);
@@ -635,27 +715,51 @@
       
       .nav-link {
         font-size: 0.5rem;
-        padding: var(--spacing-xs) var(--spacing-sm);
+        padding: var(--spacing-sm) var(--spacing-md);
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        -webkit-tap-highlight-color: rgba(241, 196, 15, 0.3);
       }
       
       .platform-circle {
-        width: 65px;
-        height: 65px;
-        font-size: 0.4rem;
+        width: 70px;
+        height: 70px;
+        font-size: 0.42rem;
         letter-spacing: 0.6px;
+        min-height: 60px;
+        backdrop-filter: blur(15px);
+        -webkit-tap-highlight-color: transparent;
       }
       
-             .platform-dock {
-         padding: var(--spacing-md) var(--spacing-sm);
-         gap: var(--spacing-sm);
-       }
-       
-       footer {
-         bottom: 8px;
-         font-size: 0.32rem;
-         max-width: 90vw;
-         padding: 3px 8px;
-       }
+      .platform-dock {
+        padding: var(--spacing-lg) var(--spacing-sm);
+        gap: var(--spacing-md);
+      }
+
+      /* Optimize glass effects for mobile */
+      .platform-circle {
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+      }
+
+      .platform-circle:hover {
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+      
+      footer {
+        bottom: 8px;
+        font-size: 0.32rem;
+        max-width: 90vw;
+        padding: 3px 8px;
+      }
+
+      /* Reduce star field blur for mobile performance */
+      .star-field {
+        opacity: 0.6;
+      }
     }
 
     /* Tablet optimizations */
@@ -916,18 +1020,22 @@
         this.ctx.scale(dpr, dpr);
       }
 
-      createStars() {
-        this.stars = [];
-        for (let i = 0; i < this.maxStars; i++) {
-          this.stars.push({
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
-            size: Math.random() * 1.5 + 0.5,
-            opacity: Math.random() * 0.8 + 0.2,
-            twinkleSpeed: Math.random() * 0.02 + 0.01
-          });
-        }
-      }
+             createStars() {
+         this.stars = [];
+         // Reduce stars on mobile for better performance
+         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+         const starCount = isMobile ? Math.floor(this.maxStars * 0.6) : this.maxStars;
+         
+         for (let i = 0; i < starCount; i++) {
+           this.stars.push({
+             x: Math.random() * window.innerWidth,
+             y: Math.random() * window.innerHeight,
+             size: Math.random() * 1.5 + 0.5,
+             opacity: Math.random() * 0.8 + 0.2,
+             twinkleSpeed: Math.random() * 0.02 + 0.01
+           });
+         }
+       }
 
              animate() {
          // Use fillRect for better performance than clearRect
@@ -996,7 +1104,7 @@
       }
     }
 
-                   // White hand cursor with smooth tracking
+                   // White hand cursor with mobile/iOS detection
       class FFCursor {
         constructor() {
           this.cursor = document.getElementById('ffCursor');
@@ -1005,11 +1113,29 @@
           this.currentY = 0;
           this.targetX = 0;
           this.targetY = 0;
+          this.isMobile = this.detectMobile();
           this.init();
         }
 
+        detectMobile() {
+          // Detect iOS and mobile devices
+          const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+          const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+          const touchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+          
+          return iOS || mobile || touchDevice;
+        }
+
         init() {
-          // Smooth mouse tracking
+          // Skip cursor initialization on mobile/iOS
+          if (this.isMobile) {
+            this.cursor.style.display = 'none';
+            document.body.style.cursor = 'auto';
+            perfMonitor.mark('cursor_init_skipped_mobile');
+            return;
+          }
+
+          // Smooth mouse tracking for desktop only
           document.addEventListener('mousemove', (e) => {
             this.targetX = e.clientX - 16; // Center the cursor
             this.targetY = e.clientY - 16;
@@ -1032,6 +1158,8 @@
         }
 
         animate() {
+          if (this.isMobile) return;
+
           // Smooth interpolation for cursor movement
           const ease = 0.2;
           this.currentX += (this.targetX - this.currentX) * ease;
