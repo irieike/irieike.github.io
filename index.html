@@ -1626,13 +1626,13 @@
         
         let css = '';
 
-        switch (type) {
-          case 'compact': // iPhone SE, 5S
-            css = `
-              .device-compact body {
-                padding: 1px 1px 55px !important;
-                font-size: 14px !important;
-              }
+                 switch (type) {
+           case 'compact': // iPhone SE, 5S
+             css = `
+               .device-compact body {
+                 padding: 1px 1px 80px !important;
+                 font-size: 14px !important;
+               }
               .device-compact main {
                 gap: 2px !important;
               }
@@ -1682,11 +1682,11 @@
             `;
             break;
 
-          case 'mini': // iPhone 12 mini
-            css = `
-              .device-mini body {
-                padding: 1px 1px 60px !important;
-              }
+                     case 'mini': // iPhone 12 mini
+             css = `
+               .device-mini body {
+                 padding: 1px 1px 85px !important;
+               }
               .device-mini .header-container {
                 padding: 3px !important;
               }
@@ -1704,33 +1704,33 @@
             `;
             break;
 
-          case 'standard': // iPhone 6/7/8, 12
-            css = `
-              .device-standard body {
-                padding: 2px 2px 65px !important;
-              }
+                     case 'standard': // iPhone 6/7/8, 12
+             css = `
+               .device-standard body {
+                 padding: 2px 2px 90px !important;
+               }
               .device-standard .platform-dock {
                 padding: 6px 2px !important;
               }
             `;
             break;
 
-          case 'standard-large': // iPhone XR/11
-            css = `
-              .device-standard-large body {
-                padding: 2px 2px 70px !important;
-              }
+                     case 'standard-large': // iPhone XR/11
+             css = `
+               .device-standard-large body {
+                 padding: 2px 2px 95px !important;
+               }
               .device-standard-large .platform-dock {
                 padding: 7px 2px !important;
               }
             `;
             break;
 
-          case 'notch': // iPhone X/XS/11 Pro
-            css = `
-              .device-notch body {
-                padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 2px)' : '2px'} 2px calc(70px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
-              }
+                     case 'notch': // iPhone X/XS/11 Pro
+             css = `
+               .device-notch body {
+                 padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 2px)' : '2px'} 2px calc(100px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+               }
               .device-notch .platform-dock {
                 padding: 8px 2px calc(8px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
               }
@@ -1740,11 +1740,11 @@
             `;
             break;
 
-          case 'large': // iPhone XS Max/11 Pro Max/12 Pro Max
-            css = `
-              .device-large body {
-                padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 3px)' : '3px'} 3px calc(75px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
-              }
+                     case 'large': // iPhone XS Max/11 Pro Max/12 Pro Max
+             css = `
+               .device-large body {
+                 padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 3px)' : '3px'} 3px calc(110px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+               }
               .device-large .header-container {
                 padding: 5px !important;
               }
@@ -1764,8 +1764,35 @@
             break;
         }
 
-        style.textContent = css;
-        document.head.appendChild(style);
+                 // Add fallback CSS for any undetected mobile devices
+         css += `
+           /* Fallback for any mobile device */
+           @media (max-width: 480px) {
+             body {
+               padding-bottom: 100px !important;
+             }
+             .platform-dock {
+               padding-bottom: 15px !important;
+             }
+           }
+           
+           /* Extra aggressive for very small screens */
+           @media (max-width: 375px) {
+             body {
+               padding-bottom: 110px !important;
+             }
+           }
+           
+           /* iOS specific override */
+           @supports (-webkit-touch-callout: none) {
+             body {
+               padding-bottom: 120px !important;
+             }
+           }
+         `;
+
+         style.textContent = css;
+         document.head.appendChild(style);
       }
 
       logDeviceInfo() {
@@ -1777,6 +1804,56 @@
           pixelRatio: this.deviceInfo.pixelRatio,
           safeArea: this.deviceInfo.safeAreaSupport
         });
+        
+        // Create debug overlay for troubleshooting
+        this.createDebugOverlay();
+      }
+
+      createDebugOverlay() {
+        const debugDiv = document.createElement('div');
+        debugDiv.id = 'device-debug';
+        debugDiv.style.cssText = `
+          position: fixed;
+          top: 10px;
+          left: 10px;
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 8px;
+          font-size: 10px;
+          border-radius: 4px;
+          z-index: 10000;
+          font-family: monospace;
+          line-height: 1.2;
+          max-width: 200px;
+        `;
+        
+        debugDiv.innerHTML = `
+          <div>Model: ${this.deviceInfo.model}</div>
+          <div>Type: ${this.deviceInfo.type}</div>
+          <div>Screen: ${this.deviceInfo.screenWidth}x${this.deviceInfo.screenHeight}</div>
+          <div>Viewport: ${this.deviceInfo.viewport.width}x${this.deviceInfo.viewport.height}</div>
+          <div>Ratio: ${this.deviceInfo.pixelRatio}</div>
+          <div>Safe Area: ${this.deviceInfo.safeAreaSupport}</div>
+          <div>Class: device-${this.deviceInfo.type}</div>
+          <div style="margin-top: 4px; font-size: 8px; color: #ffff00;">
+            Still cut off? Console: fixBottomPadding(150)
+          </div>
+          <div style="font-size: 8px;">Tap to remove</div>
+        `;
+        
+        // Add global function for manual adjustment
+        window.fixBottomPadding = (pixels) => {
+          document.body.style.paddingBottom = pixels + 'px';
+          console.log(\`✅ Bottom padding set to \${pixels}px\`);
+        };
+        
+        debugDiv.addEventListener('click', () => debugDiv.remove());
+        document.body.appendChild(debugDiv);
+        
+        // Auto-remove after 10 seconds
+        setTimeout(() => {
+          if (debugDiv.parentNode) debugDiv.remove();
+        }, 10000);
       }
 
       // Method to update layout on orientation change
