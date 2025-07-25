@@ -2,7 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no" />
   <meta name="description" content="RUDEBOY - Official website featuring vintage band merch, goth fashion, and Y2K styles. Shop curated collections and explore creative projects." />
   <meta name="keywords" content="vintage band merch, goth fashion, Y2K style, alternative clothing, grunge, streetwear" />
   <meta name="author" content="irie.ike" />
@@ -67,12 +67,12 @@
     /* iOS and mobile specific adjustments */
     @supports (-webkit-touch-callout: none) {
       :root {
-        --border-radius: 12px;
-        --spacing-xs: 6px;
-        --spacing-sm: 12px;
-        --spacing-md: 20px;
-        --spacing-lg: 28px;
-        --spacing-xl: 40px;
+        --border-radius: 8px;
+        --spacing-xs: 4px;
+        --spacing-sm: 8px;
+        --spacing-md: 12px;
+        --spacing-lg: 16px;
+        --spacing-xl: 24px;
       }
 
       /* Hide cursor completely on iOS */
@@ -89,23 +89,54 @@
         display: none !important;
       }
 
-      /* iOS performance optimizations */
+      /* iOS performance and text rendering optimizations */
       * {
         -webkit-transform: translateZ(0);
         -webkit-backface-visibility: hidden;
         -webkit-perspective: 1000;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
 
-      /* Better touch targets for iOS */
+      /* iOS text overflow prevention */
+      h1, .letter, .nav-link, .platform-circle {
+        text-rendering: optimizeLegibility;
+        -webkit-text-size-adjust: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-wrap: break-word;
+        -webkit-hyphens: none;
+        hyphens: none;
+      }
+
+      /* Smaller touch targets for iOS to prevent text overflow */
       .platform-circle {
-        min-height: 60px;
-        min-width: 60px;
-        padding: var(--spacing-md);
+        min-height: 48px;
+        min-width: 48px;
+        padding: 2px;
+        font-size: 0.28rem !important;
+        line-height: 1 !important;
       }
 
       .nav-link {
-        min-height: 44px;
-        padding: var(--spacing-md) var(--spacing-lg);
+        min-height: 32px;
+        padding: 4px 6px;
+        font-size: 0.35rem !important;
+        line-height: 1 !important;
+      }
+
+      /* Force container sizes for iOS */
+      .header-container {
+        box-sizing: border-box;
+        max-width: 100vw;
+        overflow: hidden;
+      }
+
+      main {
+        box-sizing: border-box;
+        max-width: 100vw;
+        overflow: hidden;
       }
     }
 
@@ -690,51 +721,64 @@
       }
     }
 
-        /* Simple mobile optimizations that actually fit */
+        /* iOS-optimized mobile layout that prevents text overflow */
     @media (max-width: 480px) {
       body {
-        padding: 10px 10px 100px;
-        justify-content: center;
+        padding: 5px 5px 90px;
+        justify-content: flex-start;
         min-height: 100vh;
+        min-height: -webkit-fill-available;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior: none;
-        -webkit-text-size-adjust: none;
+        -webkit-text-size-adjust: 100%;
+        font-size: 16px; /* Prevent iOS zoom */
       }
       
       main {
-        max-width: 100%;
-        width: 100%;
-        gap: var(--spacing-md);
+        max-width: calc(100vw - 10px);
+        width: calc(100vw - 10px);
+        gap: 8px;
         padding: 0;
         margin: 0;
+        overflow: hidden;
       }
       
       .header-container {
-        padding: var(--spacing-md);
+        padding: 8px;
         margin: 0;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
-        background: rgba(26, 26, 26, 0.7);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        background: rgba(26, 26, 26, 0.8);
         border: 1px solid rgba(255, 255, 255, 0.1);
-        width: 100%;
+        width: calc(100% - 2px);
+        border-radius: 8px;
+        overflow: hidden;
       }
       
       h1 {
-        font-size: clamp(1rem, 8vw, 1.8rem);
-        letter-spacing: clamp(-0.1em, 0vw, -0.05em);
-        line-height: 1.2;
+        font-size: clamp(0.7rem, 5.5vw, 1.2rem);
+        letter-spacing: clamp(-0.05em, -1vw, 0em);
+        line-height: 1;
         text-align: center;
+        margin: 0;
+        padding: 4px 0;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 100%;
       }
       
       .letter {
-        margin: 0 clamp(-2px, 0vw, -1px);
+        margin: 0 clamp(-1px, -0.5vw, 0px);
+        font-size: inherit;
+        display: inline-block;
       }
 
-      /* Simple animations for mobile */
+      /* Minimal animations for iOS */
       .letter-fun {
         animation: 
-          letterEntrance 0.6s ease-out forwards,
-          letterFloat 2s ease-in-out infinite 0.6s;
+          letterEntrance 0.4s ease-out forwards,
+          letterFloat 1.5s ease-in-out infinite 0.4s;
       }
 
       @keyframes letterFloat {
@@ -742,103 +786,127 @@
           transform: translateY(0px); 
         }
         50% { 
-          transform: translateY(-2px); 
+          transform: translateY(-1px); 
         }
       }
       
       .navigation {
-        gap: var(--spacing-sm);
+        gap: 4px;
         flex-wrap: wrap;
         justify-content: center;
         width: 100%;
         padding: 0;
+        margin: 4px 0;
       }
       
       .nav-link {
-        font-size: 0.5rem;
-        padding: var(--spacing-sm) var(--spacing-md);
-        min-height: 40px;
-        min-width: 80px;
+        font-size: 0.4rem;
+        padding: 6px 8px;
+        min-height: 32px;
+        min-width: 60px;
         flex: 1;
-        max-width: 120px;
+        max-width: calc(50% - 2px);
         -webkit-tap-highlight-color: rgba(241, 196, 15, 0.2);
-        border-radius: 8px;
+        border-radius: 6px;
+        line-height: 1;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: 500;
       }
 
       .nav-link:active {
-        transform: scale(0.95);
+        transform: scale(0.98);
         background: var(--accent-primary);
         color: var(--bg-primary);
       }
       
       .platform-circle {
-        width: 65px;
-        height: 65px;
-        font-size: 0.4rem;
-        letter-spacing: 0.5px;
-        backdrop-filter: blur(10px);
-        -webkit-backdrop-filter: blur(10px);
+        width: 55px;
+        height: 55px;
+        font-size: 0.3rem;
+        letter-spacing: 0.2px;
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         -webkit-tap-highlight-color: transparent;
-        border-radius: 15px;
-        font-weight: 600;
-        line-height: 1.1;
-        padding: 4px;
+        border-radius: 12px;
+        font-weight: 500;
+        line-height: 1;
+        padding: 2px;
         text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-break: keep-all;
+        -webkit-hyphens: none;
+        hyphens: none;
       }
 
       .platform-circle:active {
-        transform: translateY(-2px) scale(1.05);
+        transform: translateY(-1px) scale(1.02);
       }
       
       .platform-dock {
-        padding: var(--spacing-lg) var(--spacing-sm);
-        gap: var(--spacing-sm);
+        padding: 12px 4px;
+        gap: 6px;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.2);
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
+        background: rgba(0, 0, 0, 0.3);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
         border-top: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 15px 15px 0 0;
+        border-radius: 12px 12px 0 0;
+        width: 100%;
+        overflow: hidden;
       }
 
-      /* Simplified glass effects for mobile */
+      /* iOS-specific glass effects */
       .platform-circle {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
         box-shadow: 
-          0 4px 12px rgba(0, 0, 0, 0.2),
-          inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          0 2px 8px rgba(0, 0, 0, 0.2),
+          inset 0 1px 0 rgba(255, 255, 255, 0.3);
       }
 
       .platform-circle:active {
-        background: rgba(255, 255, 255, 0.2);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+        background: rgba(255, 255, 255, 0.25);
+        border: 1px solid rgba(255, 255, 255, 0.4);
       }
       
       footer {
-        bottom: 5px;
-        font-size: 0.3rem;
-        max-width: 95%;
-        padding: 2px 8px;
-        background: rgba(0, 0, 0, 0.5);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
+        bottom: 2px;
+        font-size: 0.25rem;
+        max-width: 98%;
+        padding: 1px 4px;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        line-height: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
 
-      /* Performance optimizations for mobile */
+      /* iOS performance optimizations */
       .star-field {
-        opacity: 0.4;
+        opacity: 0.3;
+        will-change: auto;
       }
 
-      /* Simplified theme toggle */
+      /* iOS-specific theme toggle */
       .theme-toggle {
-        top: 10px;
-        right: 10px;
-        padding: 8px;
-        font-size: 0.5rem;
-        min-height: 36px;
-        min-width: 36px;
+        top: 5px;
+        right: 5px;
+        padding: 6px;
+        font-size: 0.4rem;
+        min-height: 28px;
+        min-width: 28px;
         animation: none;
+        border-radius: 6px;
       }
 
       @keyframes titleGlow {
@@ -846,42 +914,64 @@
           filter: brightness(1);
         }
         50% {
-          filter: brightness(1.1);
+          filter: brightness(1.05);
         }
       }
     }
 
-    /* Extra small screens (iPhone SE, etc.) */
+    /* Extra small screens (iPhone SE, etc.) - iOS optimized */
     @media (max-width: 375px) {
       .header-container {
-        padding: var(--spacing-sm);
+        padding: 6px;
       }
 
       h1 {
-        font-size: clamp(0.9rem, 9vw, 1.6rem);
+        font-size: clamp(0.6rem, 4.5vw, 1rem);
+        letter-spacing: clamp(-0.03em, -0.8vw, 0em);
+      }
+
+      .letter {
+        margin: 0 clamp(-0.5px, -0.3vw, 0px);
       }
 
       .navigation {
-        gap: 6px;
+        gap: 3px;
       }
 
       .nav-link {
-        font-size: 0.45rem;
-        padding: 8px 12px;
-        min-width: 70px;
-        min-height: 36px;
+        font-size: 0.35rem;
+        padding: 4px 6px;
+        min-width: 50px;
+        min-height: 28px;
+        max-width: calc(50% - 1.5px);
       }
 
       .platform-circle {
-        width: 58px;
-        height: 58px;
-        font-size: 0.35rem;
-        letter-spacing: 0.4px;
+        width: 48px;
+        height: 48px;
+        font-size: 0.25rem;
+        letter-spacing: 0.1px;
+        border-radius: 10px;
+        padding: 1px;
       }
 
       .platform-dock {
-        gap: 8px;
-        padding: var(--spacing-md) 8px;
+        gap: 4px;
+        padding: 8px 2px;
+      }
+
+      .theme-toggle {
+        top: 3px;
+        right: 3px;
+        padding: 4px;
+        font-size: 0.3rem;
+        min-height: 24px;
+        min-width: 24px;
+      }
+
+      footer {
+        font-size: 0.2rem;
+        padding: 1px 2px;
       }
     }
 
