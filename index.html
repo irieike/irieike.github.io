@@ -2008,24 +2008,13 @@
 
       scheduleNonCriticalInit() {
         const initComponents = () => {
-          this.components.deviceLayout = new DeviceLayoutManager();
+
           this.components.starField = new StarField();
           this.components.themeManager = new ThemeManager();
           this.components.ffCursor = new FFCursor();
           this.components.interactiveLetters = new InteractiveLetters();
           this.components.celestialBody = new CelestialBody();
-          
-          // Handle orientation changes
-          window.addEventListener('orientationchange', () => {
-            this.components.deviceLayout.handleOrientationChange();
-          });
-          
-          window.addEventListener('resize', () => {
-            clearTimeout(this.resizeTimeout);
-            this.resizeTimeout = setTimeout(() => {
-              this.components.deviceLayout.handleOrientationChange();
-            }, 300);
-          });
+
         };
 
         if (window.requestIdleCallback) {
