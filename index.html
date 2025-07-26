@@ -168,7 +168,7 @@
       
       .platform-dock {
         gap: 8px !important;
-        padding: 12px 6px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+        padding: 12px 6px !important;
       }
       
       .platform-circle {
@@ -218,7 +218,7 @@
       
       .platform-dock {
         gap: 6px !important;
-        padding: 10px 4px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+        padding: 10px 4px !important;
       }
       
       .nav-link {
@@ -242,12 +242,12 @@
 
     /* Critical above-the-fold styles */
     html {
-      font-size: 16px;
-      background-color: #0f0f0f;
-      height: -webkit-fill-available;
       height: 100%;
       margin: 0;
       padding: 0;
+      background-color: #0f0f0f;
+      overscroll-behavior: none;
+      font-size: 16px;
       overflow-x: hidden;
       -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
@@ -258,19 +258,25 @@
     }
 
     body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background-color: #0f0f0f;
+      overscroll-behavior: none;
+      min-height: 100vh;
+      padding-bottom: env(safe-area-inset-bottom);
+      box-sizing: border-box;
+      overflow-x: hidden;
       font-family: 'Press Start 2P', monospace;
       background: var(--bg-primary);
-      background-color: #0f0f0f;
       color: var(--text-primary);
-      min-height: 100vh;
-      min-height: -webkit-fill-available;
-      margin: 0;
-      overflow-x: hidden;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: var(--spacing-lg) var(--spacing-md) 0;
+      padding-top: var(--spacing-lg);
+      padding-left: var(--spacing-md);
+      padding-right: var(--spacing-md);
       position: relative;
       contain: layout style paint;
       cursor: none;
@@ -763,14 +769,14 @@
     /* Clean Platform Dock - No Background */
     .platform-dock {
       position: fixed;
-      bottom: 0;
+      bottom: env(safe-area-inset-bottom, 0px);
       left: 0;
       right: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       gap: var(--spacing-md);
-      padding: var(--spacing-md) var(--spacing-sm) calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px));
+      padding: var(--spacing-md) var(--spacing-sm);
       z-index: 1001;
       min-width: 100%;
       will-change: transform;
@@ -1744,7 +1750,7 @@
                 min-width: 50px !important;
               }
               .device-compact .platform-dock {
-                padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
+                padding: 8px 4px !important;
                 gap: 6px !important;
               }
               .device-compact .theme-toggle {
@@ -1782,7 +1788,7 @@
                 min-width: 55px !important;
               }
               .device-mini .platform-dock {
-                padding: 10px 6px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+                padding: 10px 6px !important;
                 gap: 8px !important;
               }
             `;
@@ -1794,7 +1800,7 @@
                 padding: 2px 2px 0 !important;
               }
               .device-standard .platform-dock {
-                padding: 6px 2px calc(6px + env(safe-area-inset-bottom, 0px)) !important;
+                padding: 6px 2px !important;
               }
             `;
             break;
@@ -1805,7 +1811,7 @@
                 padding: 2px 2px 0 !important;
               }
               .device-standard-large .platform-dock {
-                padding: 7px 2px calc(7px + env(safe-area-inset-bottom, 0px)) !important;
+                padding: 7px 2px !important;
               }
             `;
             break;
@@ -1816,7 +1822,7 @@
                 padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 2px)' : '2px'} 2px 0 !important;
               }
               .device-notch .platform-dock {
-                padding: 8px 2px calc(8px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+                padding: 8px 2px !important;
               }
               .device-notch .theme-toggle {
                 top: calc(2px + ${safeAreaSupport ? 'env(safe-area-inset-top, 0px)' : '0px'}) !important;
@@ -1841,7 +1847,7 @@
                 font-size: 0.32rem !important;
               }
                              .device-large .platform-dock {
-                 padding: 10px 3px calc(10px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+                 padding: 10px 3px !important;
                  gap: 6px !important;
                }
             `;
