@@ -1214,6 +1214,17 @@
 </head>
 
 <body>
+  <script>
+  // Absolute fix for iOS Safari height bugs
+  function fixViewportHeight() {
+    document.documentElement.style.height = window.innerHeight + 'px';
+    document.body.style.height = window.innerHeight + 'px';
+  }
+
+  window.addEventListener('load', fixViewportHeight);
+  window.addEventListener('resize', fixViewportHeight);
+</script>
+  
   <!-- Performance optimized loading screen -->
   <div class="loading-screen" id="loadingScreen">
     <div class="loading-letters">
