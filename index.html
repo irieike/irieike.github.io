@@ -233,6 +233,21 @@
       }
     }
 
+    /* iOS Safe Area Fix - Override previous body/platform-dock styles */
+    body {
+      background-color: var(--bg-primary);
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      padding-bottom: calc(140px + env(safe-area-inset-bottom, 0px));
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+
+    .platform-dock {
+      padding-bottom: calc(30px + env(safe-area-inset-bottom, 0px));
+      background-color: rgba(0, 0, 0, 0.5); /* Optional to blend it in if bar still flashes */
+    }
+
     /* Performance-optimized base styles */
     *, *::before, *::after {
       box-sizing: border-box;
