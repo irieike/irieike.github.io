@@ -160,6 +160,71 @@
       }
     }
 
+    /* General mobile improvements for small screens */
+    @media screen and (max-width: 480px) {
+      .platform-dock {
+        gap: 8px !important;
+        padding: 12px 6px !important;
+      }
+      
+      .platform-circle {
+        width: 60px !important;
+        height: 60px !important;
+        font-size: 0.35rem !important;
+        min-width: 60px !important;
+        border-radius: 14px !important;
+      }
+      
+      .navigation {
+        gap: 8px !important;
+        margin-bottom: 20px !important;
+        padding: 0 8px !important;
+      }
+      
+      .nav-link {
+        font-size: 0.4rem !important;
+        padding: 6px 8px !important;
+        min-height: 36px !important;
+        min-width: 60px !important;
+        max-width: 80px !important;
+      }
+      
+      h1 {
+        font-size: clamp(0.7rem, 6vw, 1.1rem) !important;
+        margin-bottom: 16px !important;
+      }
+      
+      .letter {
+        margin: 0 1px !important;
+      }
+    }
+
+    /* Extra small screens - ensure minimum usable sizes */
+    @media screen and (max-width: 375px) {
+      .platform-circle {
+        width: 55px !important;
+        height: 55px !important;
+        font-size: 0.3rem !important;
+        min-width: 55px !important;
+      }
+      
+      .platform-dock {
+        gap: 6px !important;
+        padding: 10px 4px !important;
+      }
+      
+      .nav-link {
+        font-size: 0.35rem !important;
+        padding: 5px 6px !important;
+        min-width: 55px !important;
+        max-width: 75px !important;
+      }
+      
+      .navigation {
+        gap: 6px !important;
+      }
+    }
+
     /* Performance-optimized base styles */
     *, *::before, *::after {
       box-sizing: border-box;
@@ -646,11 +711,13 @@
     /* Navigation optimizations */
     .navigation {
       display: flex;
-      gap: var(--spacing-lg);
+      gap: var(--spacing-md);
       justify-content: center;
       flex-wrap: wrap;
       margin-bottom: var(--spacing-xl);
       contain: layout style;
+      max-width: 100%;
+      padding: 0 var(--spacing-sm);
     }
 
     .nav-link {
@@ -663,12 +730,19 @@
       border: 2px solid var(--border-color);
       transition: var(--transition-medium);
       font-family: inherit;
-      font-size: 0.6rem;
+      font-size: 0.55rem;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.8px;
       cursor: none;
       will-change: transform;
       transform: translateZ(0);
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      min-width: 70px;
+      max-width: 90px;
     }
 
     .nav-link:hover {
@@ -687,24 +761,32 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: var(--spacing-lg);
-      padding: var(--spacing-xl) var(--spacing-md);
+      gap: var(--spacing-md);
+      padding: var(--spacing-lg) var(--spacing-sm);
       z-index: 1001;
       min-width: 100%;
       will-change: transform;
       contain: layout style paint;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .platform-dock::-webkit-scrollbar {
+      display: none;
     }
 
 
 
     /* Glass platform buttons with frosted effect */
     .platform-circle {
-      width: 80px;
-      height: 80px;
-      border-radius: 20px;
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
       color: #ffffff;
       text-decoration: none;
-      font-size: 0.5rem;
+      font-size: 0.45rem;
       font-family: inherit;
       font-weight: 800;
       display: flex;
@@ -713,7 +795,7 @@
       transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       line-height: 1.1;
       animation: platformFloat 4s ease-in-out infinite;
       animation-delay: calc(var(--index) * -0.7s);
@@ -730,6 +812,8 @@
         0 4px 16px rgba(0, 0, 0, 0.2),
         inset 0 1px 0 rgba(255, 255, 255, 0.4),
         inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+      flex-shrink: 0;
+      min-width: 70px;
     }
 
     @keyframes platformFloat {
@@ -1630,24 +1714,29 @@
                 margin: 0 clamp(-0.2px, -0.1vw, 0px) !important;
               }
               .device-compact .navigation {
-                gap: 1px !important;
-                margin: 1px 0 !important;
+                gap: 6px !important;
+                margin: 8px 0 !important;
+                padding: 0 4px !important;
               }
               .device-compact .nav-link {
-                font-size: 0.28rem !important;
-                padding: 2px 3px !important;
-                min-height: 22px !important;
-                min-width: 40px !important;
+                font-size: 0.32rem !important;
+                padding: 4px 6px !important;
+                min-height: 32px !important;
+                min-width: 55px !important;
+                max-width: 70px !important;
               }
               .device-compact .platform-circle {
-                width: 38px !important;
-                height: 38px !important;
-                font-size: 0.2rem !important;
-                padding: 0.5px !important;
+                width: 50px !important;
+                height: 50px !important;
+                font-size: 0.28rem !important;
+                padding: 2px !important;
+                border-radius: 12px !important;
+                letter-spacing: 0.3px !important;
+                min-width: 50px !important;
               }
               .device-compact .platform-dock {
-                padding: 4px 1px !important;
-                gap: 2px !important;
+                padding: 8px 4px !important;
+                gap: 6px !important;
               }
               .device-compact .theme-toggle {
                 top: 1px !important;
@@ -1677,12 +1766,15 @@
                 font-size: clamp(0.55rem, 4.5vw, 0.9rem) !important;
               }
               .device-mini .platform-circle {
-                width: 40px !important;
-                height: 40px !important;
-                font-size: 0.24rem !important;
+                width: 55px !important;
+                height: 55px !important;
+                font-size: 0.32rem !important;
+                border-radius: 14px !important;
+                min-width: 55px !important;
               }
               .device-mini .platform-dock {
-                padding: 5px 1px !important;
+                padding: 10px 6px !important;
+                gap: 8px !important;
               }
             `;
             break;
