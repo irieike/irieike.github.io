@@ -162,9 +162,13 @@
 
     /* General mobile improvements for small screens */
     @media screen and (max-width: 480px) {
+      body {
+        padding-bottom: 0 !important;
+      }
+      
       .platform-dock {
         gap: 8px !important;
-        padding: 12px 6px !important;
+        padding: 12px 6px calc(12px + env(safe-area-inset-bottom, 0px)) !important;
       }
       
       .platform-circle {
@@ -201,6 +205,10 @@
 
     /* Extra small screens - ensure minimum usable sizes */
     @media screen and (max-width: 375px) {
+      body {
+        padding-bottom: 0 !important;
+      }
+      
       .platform-circle {
         width: 55px !important;
         height: 55px !important;
@@ -210,7 +218,7 @@
       
       .platform-dock {
         gap: 6px !important;
-        padding: 10px 4px !important;
+        padding: 10px 4px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
       }
       
       .nav-link {
@@ -262,7 +270,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: var(--spacing-lg) var(--spacing-md) calc(140px + env(safe-area-inset-bottom, 0px));
+      padding: var(--spacing-lg) var(--spacing-md) 0;
       position: relative;
       contain: layout style paint;
       cursor: none;
@@ -762,7 +770,7 @@
       justify-content: center;
       align-items: center;
       gap: var(--spacing-md);
-      padding: var(--spacing-lg) var(--spacing-sm);
+      padding: var(--spacing-md) var(--spacing-sm) calc(var(--spacing-md) + env(safe-area-inset-bottom, 0px));
       z-index: 1001;
       min-width: 100%;
       will-change: transform;
@@ -771,6 +779,7 @@
       overflow-x: auto;
       scrollbar-width: none;
       -ms-overflow-style: none;
+      background: transparent;
     }
 
     .platform-dock::-webkit-scrollbar {
@@ -1697,7 +1706,7 @@
           case 'compact': // iPhone SE, 5S
             css = `
               .device-compact body {
-                padding: 1px 1px 55px !important;
+                padding: 1px 1px 0 !important;
                 font-size: 14px !important;
               }
               .device-compact main {
@@ -1735,7 +1744,7 @@
                 min-width: 50px !important;
               }
               .device-compact .platform-dock {
-                padding: 8px 4px !important;
+                padding: 8px 4px calc(8px + env(safe-area-inset-bottom, 0px)) !important;
                 gap: 6px !important;
               }
               .device-compact .theme-toggle {
@@ -1757,7 +1766,7 @@
           case 'mini': // iPhone 12 mini
             css = `
               .device-mini body {
-                padding: 1px 1px 60px !important;
+                padding: 1px 1px 0 !important;
               }
               .device-mini .header-container {
                 padding: 3px !important;
@@ -1773,7 +1782,7 @@
                 min-width: 55px !important;
               }
               .device-mini .platform-dock {
-                padding: 10px 6px !important;
+                padding: 10px 6px calc(10px + env(safe-area-inset-bottom, 0px)) !important;
                 gap: 8px !important;
               }
             `;
@@ -1782,10 +1791,10 @@
           case 'standard': // iPhone 6/7/8, 12
             css = `
               .device-standard body {
-                padding: 2px 2px 65px !important;
+                padding: 2px 2px 0 !important;
               }
               .device-standard .platform-dock {
-                padding: 6px 2px !important;
+                padding: 6px 2px calc(6px + env(safe-area-inset-bottom, 0px)) !important;
               }
             `;
             break;
@@ -1793,10 +1802,10 @@
           case 'standard-large': // iPhone XR/11
             css = `
               .device-standard-large body {
-                padding: 2px 2px 70px !important;
+                padding: 2px 2px 0 !important;
               }
               .device-standard-large .platform-dock {
-                padding: 7px 2px !important;
+                padding: 7px 2px calc(7px + env(safe-area-inset-bottom, 0px)) !important;
               }
             `;
             break;
@@ -1804,7 +1813,7 @@
           case 'notch': // iPhone X/XS/11 Pro
             css = `
               .device-notch body {
-                padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 2px)' : '2px'} 2px calc(70px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+                padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 2px)' : '2px'} 2px 0 !important;
               }
               .device-notch .platform-dock {
                 padding: 8px 2px calc(8px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
@@ -1818,7 +1827,7 @@
           case 'large': // iPhone XS Max/11 Pro Max/12 Pro Max
             css = `
               .device-large body {
-                padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 3px)' : '3px'} 3px calc(75px + ${safeAreaSupport ? 'env(safe-area-inset-bottom, 0px)' : '0px'}) !important;
+                padding: ${safeAreaSupport ? 'env(safe-area-inset-top, 3px)' : '3px'} 3px 0 !important;
               }
               .device-large .header-container {
                 padding: 5px !important;
