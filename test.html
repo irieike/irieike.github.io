@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RUDEBOY — Title + Spherical Nav</title>
+<style>
+  html,body{margin:0;height:100%;background:#000;overflow:hidden}
+  .ui{position:fixed;left:12px;bottom:12px;color:#bbb;font:12px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;opacity:.9}
+  .ui b{color:#fff}
+  .badge{position:fixed;right:12px;top:12px;color:#ddd;background:#111a;border:1px solid #333;padding:6px 10px;border-radius:10px;font:12px/1.2 system-ui;backdrop-filter: blur(4px);display:flex;gap:8px;align-items:center;z-index:10}
+  .badge button{all:unset;cursor:pointer;font-weight:600;color:#fff}
+  .help{position:fixed;left:12px;top:12px;background:#111e;border:1px solid #333;padding:10px 12px;border-radius:10px;color:#ddd;font:12px/1.4 system-ui;display:none;max-width:64ch;backdrop-filter: blur(4px);z-index:10}
+  .help kbd{background:#222;border:1px solid #444;border-bottom-color:#333;border-radius:4px;padding:1px 4px;font:11px/1.2 monospace;color:#fff}
+  .dot{width:6px;height:6px;border-radius:50%;background:#f6a;display:inline-block;box-shadow:0 0 10px #f6a}
+</style>
+
+<!-- Import map for CDN modules -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+    "three/examples/jsm/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+  <div class="badge" id="badge">
+    <span id="skyLabel">Sky: —</span>
+    <span id="loadDot" class="dot"></span>
+    <button id="btnFull">Full</button>
+    <button id="btnBloom">Bloom</button>
+    <button id="btnAuto">Auto</button>
+    <button id="btnQual">Q</button>
+    <button id="btnHelp">?</button>
+  </div>
+  <div class="help" id="helpBox">
+    <div><b>Controls</b></div>
+    <div>• Drag to orbit • Scroll to zoom</div>
+    <div>• <kbd>F</kbd> Fullscreen • <kbd>O</kbd> Autorotate • <kbd>B</kbd> Bloom • <kbd>Q</kbd> Quality • <kbd>H</kbd> Help</div>
+  </div>
+  <div class="ui">Time-based sky • <b>Sun/Moon</b> rises by your local time</div>
+
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+
+/* ----------------- Renderer (fast first pixel) ----------------- */
+const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:"high-performance" });
+renderer.setPixelRatio(1);
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.1;
+document.body.appendChild(renderer.domElement);
+
+/* ----------------- Scene / Camera / Controls ----------------- */
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(55, innerWidth/innerHeight, 0.1, 3000);
+camera.position.set(0, 0.6, 10);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.enablePan = false;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.5;
+controls.minDistance = 4;
+controls.maxDistance = 100;
+
+/* ----------------- Env / Lights ----------------- */
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture;
+
+const key = new THREE.DirectionalLight(0xffffff, 1.0); key.position.set(5,6,4); scene.add(key);
+const rim = new THREE.DirectionalLight(0xff6a00, 0.6); rim.position.set(-6,2,-4); scene.add(rim);
+scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+
+/* ----------------- PostFX (bloom off by default) ----------------- */
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 0.0, 0.6, 0.1);
+composer.addPass(bloom);
+
+/* ----------------- Stars (progressive) ----------------- */
+const starGroup = new THREE.Group(); scene.add(starGroup);
+function addStars(count, radius){
+  const pos = new Float32Array(count*3);
+  for (let i=0;i<count;i++){
+    const u=Math.random(), v=Math.random();
+    const th=2*Math.PI*u, ph=Math.acos(2*v-1);
+    pos[3*i+0]=radius*Math.sin(ph)*Math.cos(th);
+    pos[3*i+1]=radius*Math.sin(ph)*Math.sin(th);
+    pos[3*i+2]=radius*Math.cos(ph);
+  }
+  const g=new THREE.BufferGeometry(); g.setAttribute("position", new THREE.BufferAttribute(pos,3));
+  const m=new THREE.PointsMaterial({ size:0.7, sizeAttenuation:true, color:0x9aa3ff, transparent:true, opacity:0.7 });
+  starGroup.add(new THREE.Points(g,m));
+}
+addStars(300, 180);
+setTimeout(()=>addStars(700, 220), 150);
+setTimeout(()=>addStars(1000, 260), 350);
+
+/* ----------------- Sun/Moon time-based ----------------- */
+const skyLabel = document.getElementById("skyLabel");
+const skyGroup = new THREE.Group(); scene.add(skyGroup);
+
+const sun = new THREE.Mesh(
+  new THREE.SphereGeometry(26, 64, 48),
+  new THREE.MeshPhysicalMaterial({
+    color: 0xffffff, emissive: 0xffb347, emissiveIntensity: 3.2,
+    metalness: 0.0, roughness: 0.55, clearcoat: 0.4, clearcoatRoughness: 0.4
+  })
+);
+sun.position.set(0,0,-150); skyGroup.add(sun);
+
+const corona = new THREE.Mesh(
+  new THREE.SphereGeometry(28.5, 48, 36),
+  new THREE.MeshBasicMaterial({ color: 0xffb347, transparent:true, opacity:0.25, depthWrite:false, blending:THREE.AdditiveBlending })
+);
+corona.position.copy(sun.position); skyGroup.add(corona);
+
+const moon = new THREE.Mesh(
+  new THREE.SphereGeometry(16, 64, 48),
+  new THREE.MeshStandardMaterial({ color: 0xbdbdc6, metalness: 0.0, roughness: 0.95 })
+);
+moon.position.set(0,0,-150); skyGroup.add(moon);
+
+new THREE.TextureLoader().load(
+  "https://threejs.org/examples/textures/terrain/grasslight-big-nm.jpg",
+  (nm)=>{ nm.wrapS = nm.wrapT = THREE.RepeatWrapping; nm.repeat.set(2,2); moon.material.normalMap = nm; moon.material.needsUpdate = true; }
+);
+
+function updateSkyByTime(){
+  const now = new Date();
+  const hrs = now.getHours() + now.getMinutes()/60;
+  const daytime = (hrs >= 6 && hrs < 18);
+  const alt = Math.sin((hrs/24)*Math.PI*2 - Math.PI/2);
+  const y = THREE.MathUtils.lerp(-40, 40, (alt+1)/2);
+  const x = Math.cos((hrs/24)*Math.PI*2) * 20;
+  sun.visible = corona.visible = daytime;
+  moon.visible = !daytime;
+  if (daytime){ sun.position.set(x,y,-150); corona.position.set(x,y,-150); skyLabel.textContent = "Sky: Sun"; }
+  else { moon.position.set(x,y,-150); skyLabel.textContent = "Sky: Moon"; }
+  sun.rotation.y += 0.004; moon.rotation.y += 0.0018;
+}
+
+/* ----------------- RUDEBOY Title ----------------- */
+const placeholder = new THREE.Mesh(
+  new THREE.TorusKnotGeometry(0.9, 0.28, 100, 16),
+  new THREE.MeshPhysicalMaterial({
+    color: 0xff4300, metalness: 0.7, roughness: 0.35, clearcoat: 1.0, clearcoatRoughness: 0.2, envMapIntensity: 1.2,
+    emissive: 0x5a1c00, emissiveIntensity: 0.2
+  })
+);
+placeholder.position.y = 0.1;
+scene.add(placeholder);
+
+let textMesh=null, glowMesh=null;
+const fontLoader = new FontLoader();
+const fontUrl = "https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json";
+
+fontLoader.load(fontUrl, font=>{
+  const midGeo = new TextGeometry("RUDEBOY", {
+    font, size: 1.6, height: 0.34,
+    curveSegments: 8, bevelEnabled: true,
+    bevelThickness: 0.05, bevelSize: 0.045, bevelSegments: 3
+  });
+  midGeo.computeBoundingBox(); midGeo.center();
+
+  const mat = new THREE.MeshPhysicalMaterial({
+    color: 0xff4300, metalness: 0.9, roughness: 0.25, clearcoat: 1.0, clearcoatRoughness: 0.15,
+    emissive: 0x9b2d00, emissiveIntensity: 0.25, envMapIntensity: 1.2
+  });
+
+  textMesh = new THREE.Mesh(midGeo, mat);
+  textMesh.rotation.x = THREE.MathUtils.degToRad(-8);
+  scene.add(textMesh);
+
+  glowMesh = new THREE.Mesh(midGeo.clone(), new THREE.MeshBasicMaterial({
+    color: 0xff7a00, transparent:true, opacity:0.06, depthWrite:false
+  }));
+  glowMesh.scale.multiplyScalar(1.03);
+  scene.add(glowMesh);
+
+  // remove placeholder once text rendered
+  setTimeout(()=>{ scene.remove(placeholder); placeholder.geometry.dispose(); }, 100);
+
+  // upgrade geometry when idle
+  requestIdleCallback?.(()=>{
+    const hiGeo = new TextGeometry("RUDEBOY", {
+      font, size: 1.6, height: 0.38,
+      curveSegments: 10, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.05, bevelSegments: 4
+    });
+    hiGeo.computeBoundingBox(); hiGeo.center();
+    textMesh.geometry.dispose(); glowMesh.geometry.dispose();
+    textMesh.geometry = hiGeo; glowMesh.geometry = hiGeo.clone();
+  });
+
+  postFirstFrameUpgrades();
+});
+
+/* ----------------- NAV: Spinning Sphere Buttons (always readable text) ----------------- */
+const navGroup = new THREE.Group();
+scene.add(navGroup);
+
+// label sprites: high-contrast, billboarded, depthTest off
+function makeLabelSprite(text){
+  const scale = 2, pad = 28*scale, fontPx = 64*scale;
+  const cvs = document.createElement('canvas');
+  const ctx = cvs.getContext('2d');
+  ctx.font = `800 ${fontPx}px system-ui,-apple-system,Segoe UI,Roboto,Arial`;
+  const w = Math.ceil(ctx.measureText(text).width + pad*2);
+  const h = Math.ceil(fontPx + pad*2);
+  cvs.width = w; cvs.height = h;
+
+  // dark plate
+  if (ctx.roundRect){
+    ctx.fillStyle = 'rgba(0,0,0,0.78)';
+    ctx.beginPath(); ctx.roundRect(8*scale,8*scale, w-16*scale, h-16*scale, 18*scale); ctx.fill();
+  } else {
+    ctx.fillStyle = 'rgba(0,0,0,0.78)'; ctx.fillRect(8*scale,8*scale, w-16*scale, h-16*scale);
+  }
+  // outlined white text
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.font = `800 ${fontPx}px system-ui,-apple-system,Segoe UI,Roboto,Arial`;
+  ctx.lineWidth = 10*scale; ctx.strokeStyle='rgba(0,0,0,0.92)';
+  ctx.strokeText(text, w/2, h/2 + 2*scale);
+  ctx.fillStyle='#fff'; ctx.fillText(text, w/2, h/2 + 2*scale);
+
+  const tex = new THREE.CanvasTexture(cvs);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy?.() || 1;
+
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent:true, depthTest:false, depthWrite:false });
+  const sprite = new THREE.Sprite(mat);
+  sprite.scale.set(w/(480*scale), h/(480*scale), 1); // readable size
+  sprite.renderOrder = 999;
+  return sprite;
+}
+
+// build one spherical nav button
+function makeNavSphere({label, url, color, position}){
+  const group = new THREE.Group();
+  group.position.copy(position);
+
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.75, 48, 32),
+    new THREE.MeshPhysicalMaterial({
+      color, metalness: 0.9, roughness: 0.25,
+      clearcoat: 1.0, clearcoatRoughness: 0.15,
+      envMapIntensity: 1.1,
+      emissive: new THREE.Color(color).multiplyScalar(0.25)
+    })
+  );
+  group.add(sphere);
+
+  // subtle halo
+  const halo = new THREE.Mesh(
+    new THREE.SphereGeometry(0.92, 24, 16),
+    new THREE.MeshBasicMaterial({ color, transparent:true, opacity:0.08, depthWrite:false, blending:THREE.AdditiveBlending })
+  );
+  group.add(halo);
+
+  // label that always faces the camera (sprite)
+  const labelSprite = makeLabelSprite(label.toUpperCase());
+  labelSprite.position.set(0, 1.05, 0);
+  group.add(labelSprite);
+
+  // interaction data
+  group.userData = { url, hover:false, t: Math.random()*Math.PI*2, sphere, label: labelSprite };
+  navGroup.add(group);
+  return group;
+}
+
+// layout: arc near the bottom
+const yNav = -1.8, R = 3.2;
+const navItems = [
+  { label:'Shop',    url:'shop.html',    color:0xff6a6a, pos:new THREE.Vector3(-R, yNav,  1.2) },
+  { label:'Projects',url:'project.html', color:0x66d1ff, pos:new THREE.Vector3(-1.0, yNav,  1.6) },
+  { label:'Doodle',  url:'doodle.html',  color:0xc38bff, pos:new THREE.Vector3( 1.0, yNav,  1.6) },
+  { label:'Contact', url:'contact.html', color:0xffc04d, pos:new THREE.Vector3( R,  yNav,  1.2) },
+];
+const navSpheres = navItems.map(i => makeNavSphere({label:i.label, url:i.url, color:i.color, position:i.pos}));
+
+// raycast interactivity
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+function onPointerMove(e){
+  mouse.x = (e.clientX / innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+}
+function onClick(){
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(navGroup.children, true);
+  if (!hits.length) return;
+  // find the top-level nav group hit
+  let g = hits[0].object;
+  while (g && g.parent !== navGroup) g = g.parent;
+  if (g && g.userData?.url){
+    g.scale.set(1.15,1.15,1.15);
+    setTimeout(()=>{ window.location.href = g.userData.url; }, 120);
+  }
+}
+addEventListener('pointermove', onPointerMove, { passive:true });
+addEventListener('click', onClick);
+
+/* ----------------- Quality/Bloom + UI ----------------- */
+let highQuality = false;
+function setQuality(hq){
+  highQuality = hq;
+  renderer.setPixelRatio(hq ? Math.min(devicePixelRatio,2) : 1);
+  renderer.toneMappingExposure = hq ? 1.25 : 1.1;
+}
+function postFirstFrameUpgrades(){
+  setTimeout(()=>{ bloom.strength = highQuality ? 1.05 : 0.5; }, 300);
+  setTimeout(()=>{ setQuality(true); }, 600);
+  const dot = document.getElementById("loadDot"); if (dot) dot.style.display = "none";
+}
+
+const helpBox = document.getElementById("helpBox");
+document.getElementById("btnFull").onclick = toggleFullscreen;
+document.getElementById("btnBloom").onclick = ()=> bloom.strength = bloom.strength > 0 ? 0 : (highQuality?1.05:0.5);
+document.getElementById("btnAuto").onclick = ()=> controls.autoRotate = !controls.autoRotate;
+document.getElementById("btnQual").onclick = ()=> setQuality(!highQuality);
+document.getElementById("btnHelp").onclick = ()=> helpBox.style.display = helpBox.style.display ? "" : "block";
+
+addEventListener("keydown",(e)=>{
+  const k = e.key.toLowerCase();
+  if (k === "f") toggleFullscreen();
+  if (k === "b") bloom.strength = bloom.strength > 0 ? 0 : (highQuality?1.05:0.5);
+  if (k === "o") controls.autoRotate = !controls.autoRotate;
+  if (k === "q") setQuality(!highQuality);
+  if (k === "h") helpBox.style.display = helpBox.style.display ? "" : "block";
+});
+
+function toggleFullscreen(){
+  const el = document.documentElement;
+  if (!document.fullscreenElement) el.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
+
+/* ----------------- Resize ----------------- */
+addEventListener("resize", ()=>{
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+});
+
+/* ----------------- Animate ----------------- */
+const clock = new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  const dt = clock.getDelta();
+  const t = clock.getElapsedTime();
+
+  controls.update();
+  updateSkyByTime();
+
+  // RUDEBOY title idle motion
+  if (textMesh && glowMesh){
+    textMesh.rotation.y = Math.sin(t*0.6)*0.12;
+    glowMesh.rotation.copy(textMesh.rotation);
+  } else {
+    placeholder.rotation.x += 0.01;
+    placeholder.rotation.y += 0.02;
+  }
+
+  // nav spheres: spin + hover puff; labels face camera automatically (sprites)
+  raycaster.setFromCamera(mouse, camera);
+  const hits = new Set(raycaster.intersectObjects(navGroup.children, true).map(h=>{
+    let g=h.object; while (g && g.parent !== navGroup) g = g.parent; return g;
+  }));
+
+  for (const g of navGroup.children){
+    const hovered = hits.has(g);
+    g.userData.hover = hovered;
+    g.userData.t += dt;
+
+    // sphere spin
+    g.userData.sphere.rotation.y += (hovered ? 0.9 : 0.4) * dt;
+
+    // scale puff on hover
+    const target = hovered ? 1.12 : 1.0;
+    g.scale.lerp(new THREE.Vector3(target,target,target), 0.15);
+
+    // halo visibility tweak
+    if (g.children[1]) g.children[1].material.opacity = hovered ? 0.16 : 0.08;
+
+    // keep label upright (sprites already billboard, but prevent roll “wiggle”)
+    g.userData.label.quaternion.copy(camera.quaternion);
+  }
+
+  composer.render();
+});
+</script>
+</body>
+</html>
