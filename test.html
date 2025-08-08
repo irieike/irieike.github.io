@@ -210,9 +210,11 @@ fontLoader.load(fontUrl, font=>{
 const navGroup = new THREE.Group();
 scene.add(navGroup);
 
-// label sprites: high-contrast, billboarded, depthTest off
+// BIGGER label sprites
 function makeLabelSprite(text){
-  const scale = 2, pad = 28*scale, fontPx = 64*scale;
+  const scale = 2, pad = 28*scale;
+  const fontPx = 96 * scale; // ← was 64 * scale
+
   const cvs = document.createElement('canvas');
   const ctx = cvs.getContext('2d');
   ctx.font = `800 ${fontPx}px system-ui,-apple-system,Segoe UI,Roboto,Arial`;
@@ -240,7 +242,9 @@ function makeLabelSprite(text){
 
   const mat = new THREE.SpriteMaterial({ map: tex, transparent:true, depthTest:false, depthWrite:false });
   const sprite = new THREE.Sprite(mat);
-  sprite.scale.set(w/(480*scale), h/(480*scale), 1); // readable size
+
+  // show larger in scene (was /480)
+  sprite.scale.set(w/(360*scale), h/(360*scale), 1);
   sprite.renderOrder = 999;
   return sprite;
 }
@@ -270,7 +274,7 @@ function makeNavSphere({label, url, color, position}){
 
   // label that always faces the camera (sprite)
   const labelSprite = makeLabelSprite(label.toUpperCase());
-  labelSprite.position.set(0, 1.05, 0);
+  labelSprite.position.set(0, 1.15, 0); // ← lifted slightly (was 1.05)
   group.add(labelSprite);
 
   // interaction data
