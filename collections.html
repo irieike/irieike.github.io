@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://sdks.shopifycdn.com; img-src 'self' data: https:; connect-src 'self' https://*.myshopify.com https://shopify.dev https://cdn.shopify.com https://sdks.shopifycdn.com;" />
   <title>irie.ike | Collection</title>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
   <script src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"></script>
@@ -55,6 +56,13 @@
   </style>
 </head>
 <body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
   <div class="fixed-buttons">
     <button onclick="window.location.href='shop.html'">Back to Genres</button>
   </div>
@@ -72,14 +80,21 @@
       'YOUR_FOURTH_COLLECTION_ID': 'Alt'
     };
 
-    document.getElementById('genreTitle').textContent = genreMap[collectionId] || 'Collection';
+    const title = genreMap[collectionId] || 'Collection';
+document.getElementById('genreTitle').textContent = title;
+if (!window.SHOPIFY_DOMAIN || !window.SHOPIFY_ACCESS_TOKEN) {
+  const warn = document.createElement('p');
+  warn.textContent = 'Note: Shopify credentials not set. Demo mode only.';
+  warn.style.cssText = 'font-size: 0.8em; color: #f1c40f; margin-top: 8px;';
+  document.getElementById('genreTitle').after(warn);
+}
 
     if (collectionId) {
       // TODO: Move credentials to environment variables or server-side proxy
       // For now, using placeholder values - replace with actual secure implementation
       const client = ShopifyBuy.buildClient({
-        domain: process.env.SHOPIFY_DOMAIN || 'your-shop.myshopify.com',
-        storefrontAccessToken: process.env.SHOPIFY_ACCESS_TOKEN || 'your-access-token',
+        domain: window.SHOPIFY_DOMAIN || 'your-shop.myshopify.com',
+        storefrontAccessToken: window.SHOPIFY_ACCESS_TOKEN || 'your-access-token',
       });
 
       ShopifyBuy.UI.onReady(client).then(function (ui) {

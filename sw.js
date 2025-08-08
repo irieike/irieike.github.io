@@ -1,8 +1,8 @@
 // RUDEBOY PWA Service Worker
 // Version 1.0.0 - Advanced Caching & Performance
 
-const CACHE_NAME = 'rudeboy-v1.0.0';
-const RUNTIME_CACHE = 'rudeboy-runtime-v1.0.0';
+const CACHE_NAME = 'rudeboy-v1.0.1';
+const RUNTIME_CACHE = 'rudeboy-runtime-v1.0.1';
 
 // Critical resources to cache immediately
 const CORE_ASSETS = [
@@ -10,6 +10,9 @@ const CORE_ASSETS = [
   '/index.html',
   '/shop.html',
   '/contact.html',
+  '/checkout.html',
+  '/collections.html',
+  '/offline.html',
   '/manifest.json',
   'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap',
   'https://fonts.gstatic.com/s/pressstart2p/v15/e3t4euO8T-267oIAQAu6jDQyK3nVivM.woff2'
@@ -204,7 +207,7 @@ async function handleOfflineRequest(request) {
   
   // Fallback for HTML pages
   if (isHTMLPage(request.url)) {
-    const fallback = await caches.match('/');
+    const fallback = await caches.match('/offline.html');
     if (fallback) {
       return fallback;
     }
