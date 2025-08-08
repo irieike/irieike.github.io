@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Offline | RUDEBOY</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #121212;
+      --bg-secondary: #1a1a1a;
+      --text-primary: #f1f1f1;
+      --text-secondary: #f1c40f;
+      --border-color: #333;
+      --border-radius: 8px;
+    }
+    html, body {
+      height: 100%;
+    }
+    body {
+      margin: 0;
+      font-family: 'Press Start 2P', monospace, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+    }
+    .card {
+      background: linear-gradient(145deg, var(--bg-secondary), #0f0f0f);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius);
+      padding: 24px;
+      max-width: 560px;
+      width: 100%;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+    h1 {
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      color: var(--text-secondary);
+      margin: 0 0 16px;
+    }
+    p {
+      font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+      line-height: 1.6;
+      margin: 0 0 16px;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .btn {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: var(--border-radius);
+      border: 2px solid var(--border-color);
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: transform 0.2s ease;
+      background: #1c1c1c;
+    }
+    .btn:hover { transform: translateY(-2px); }
+  </style>
+</head>
+<body>
+  <main class="card" role="main" aria-labelledby="offline-title">
+    <h1 id="offline-title">You are offline</h1>
+    <p>It looks like your device lost connection. You can still access cached pages or try again when you're back online.</p>
+    <div class="actions">
+      <a class="btn" href="/">Home</a>
+      <a class="btn" href="/shop.html">Shop</a>
+      <a class="btn" href="/contact.html">Contact</a>
+    </div>
+  </main>
+</body>
+</html>

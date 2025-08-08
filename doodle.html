@@ -362,6 +362,13 @@
 </head>
 
 <body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
   <!-- Background stars -->
   <div class="stars" role="presentation" aria-hidden="true"></div>
   

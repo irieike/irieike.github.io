@@ -543,9 +543,17 @@
   </style>
 </head>
 <body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch(() => {});
+      });
+    }
+  </script>
   <div class="stars" role="presentation" aria-hidden="true"></div>
   
   <nav class="navigation" role="navigation" aria-label="Main navigation">
+    <span class="visually-hidden" aria-live="polite" id="a11y-status"></span>
     <a href="index.html" class="nav-link">Home</a>
     <a href="shop.html" class="nav-link">Shop</a>
     <a href="contact.html" class="nav-link" aria-current="page">Contact</a>
@@ -865,6 +873,8 @@
         this.form.reset();
         this.updateCharacterCounters();
         this.showFormMessage('✅ Message sent successfully! We\'ll get back to you soon.', 'success');
+        const live = document.getElementById('a11y-status');
+        if (live) live.textContent = 'Message sent successfully';
         
         // Reset button after delay
         setTimeout(() => {
@@ -874,6 +884,8 @@
 
       handleError(message) {
         this.showFormMessage(`❌ ${message || 'Something went wrong. Please try again.'}`, 'error');
+        const live = document.getElementById('a11y-status');
+        if (live) live.textContent = 'Form submission failed';
       }
 
       showFormMessage(message, type) {
