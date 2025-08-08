@@ -227,8 +227,8 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      width: clamp(64px, 12vw, 256px);
-      height: clamp(64px, 12vw, 256px);
+      width: clamp(96px, 14vw, 384px);
+      height: clamp(96px, 14vw, 384px);
       z-index: 2;
       pointer-events: none;
       perspective: 600px;
@@ -1967,6 +1967,8 @@
       function createRenderer(){
         renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
         renderer.setPixelRatio(dpr);
+        renderer.outputColorSpace = THREE.SRGBColorSpace;
+        renderer.toneMapping = THREE.ACESFilmicToneMapping;
         const { w, h } = targetSize();
         renderer.setSize(w, h, false);
       }
@@ -1981,11 +1983,11 @@
       }
 
       function createSun(texture){
-        const geometry = new THREE.SphereGeometry(1, 64, 64);
+        const geometry = new THREE.SphereGeometry(1, 96, 96);
         const material = new THREE.MeshStandardMaterial({
           map: texture,
           emissive: new THREE.Color(0xFFB020),
-          emissiveIntensity: 0.35,
+          emissiveIntensity: 0.28,
           roughness: 1.0,
           metalness: 0.0
         });
@@ -1996,23 +1998,23 @@
         window.__SUN_SCENE__ = scene;
         window.__SUN_RENDERER__ = renderer;
 
-        // Outer faint glow via sprite
+        // Outer faint glow via sprite (reduce blur/opacity for crisp rim)
         const glowTex = buildRadialGradientTexture();
-        const glowMat = new THREE.SpriteMaterial({ map: glowTex, color: 0xFFC040, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.55 });
+        const glowMat = new THREE.SpriteMaterial({ map: glowTex, color: 0xFFC040, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0.38 });
         glowSprite = new THREE.Sprite(glowMat);
-        glowSprite.scale.set(3.2, 3.2, 1);
+        glowSprite.scale.set(2.6, 2.6, 1);
         scene.add(glowSprite);
       }
 
       function buildRadialGradientTexture(){
-        const size = 256;
+        const size = 512;
         const cvs = document.createElement('canvas');
         cvs.width = cvs.height = size;
         const ctx = cvs.getContext('2d');
-        const g = ctx.createRadialGradient(size/2, size/2, size*0.1, size/2, size/2, size*0.5);
-        g.addColorStop(0, 'rgba(255, 200, 80, 0.35)');
-        g.addColorStop(0.55, 'rgba(255, 180, 60, 0.15)');
-        g.addColorStop(0.8, 'rgba(255, 160, 40, 0.05)');
+        const g = ctx.createRadialGradient(size/2, size/2, size*0.08, size/2, size/2, size*0.55);
+        g.addColorStop(0, 'rgba(255, 210, 90, 0.30)');
+        g.addColorStop(0.5, 'rgba(255, 180, 60, 0.12)');
+        g.addColorStop(0.8, 'rgba(255, 160, 40, 0.04)');
         g.addColorStop(1, 'rgba(255, 160, 40, 0.00)');
         ctx.fillStyle = g;
         ctx.fillRect(0,0,size,size);
@@ -2042,7 +2044,7 @@
       // Lazy-load high-res sun texture (transparent background not required)
       // You can replace this with a local optimized asset later
       const loader = new THREE.TextureLoader();
-      const SUN_URL = 'https://unpkg.com/@pmndrs/assets@1.0.0/textures/sun.jpg';
+      const SUN_URL = 'https://unpkg.com/@pmndrs/assets@1.0.0/textures/2k_sun.jpg';
 
       createRenderer();
       createScene();
@@ -2051,7 +2053,8 @@
         SUN_URL,
         (tex) => {
           tex.colorSpace = THREE.SRGBColorSpace;
-          tex.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy?.() || 1, 8);
+          tex.generateMipmaps = true;
+          tex.anisotropy = Math.min(renderer.capabilities.getMaxAnisotropy?.() || 1, 16);
           createSun(tex);
           animate();
         },
@@ -2117,7 +2120,7 @@
         const container = document.getElementById('celestialBody');
         if (!canvas || !container || !window.THREE) return;
         const texLoader = new THREE.TextureLoader();
-        const SUN_URL = 'https://unpkg.com/@pmndrs/assets@1.0.0/textures/sun.jpg';
+        const SUN_URL = 'https://unpkg.com/@pmndrs/assets@1.0.0/textures/2k_sun.jpg';
         const MOON_URL = 'https://unpkg.com/@pmndrs/assets@1.0.0/textures/moon.jpg';
 
         // Poll for the material created earlier
@@ -2129,14 +2132,15 @@
               const url = mode === 'moon' ? MOON_URL : SUN_URL;
               texLoader.load(url, (tex) => {
                 tex.colorSpace = THREE.SRGBColorSpace;
-                tex.anisotropy = Math.min(window.__SUN_RENDERER__.capabilities.getMaxAnisotropy?.() || 1, 8);
+                tex.generateMipmaps = true;
+                tex.anisotropy = Math.min(window.__SUN_RENDERER__.capabilities.getMaxAnisotropy?.() || 1, 16);
                 window.__SUN_MAT__.map = tex;
                 if (mode === 'moon'){
                   window.__SUN_MAT__.emissive.setHex(0x808080);
-                  window.__SUN_MAT__.emissiveIntensity = 0.08;
+                  window.__SUN_MAT__.emissiveIntensity = 0.06;
                 } else {
                   window.__SUN_MAT__.emissive.setHex(0xFFB020);
-                  window.__SUN_MAT__.emissiveIntensity = 0.35;
+                  window.__SUN_MAT__.emissiveIntensity = 0.28;
                 }
                 window.__SUN_MAT__.needsUpdate = true;
               });
