@@ -171,6 +171,7 @@ const fontLoader = new FontLoader();
 const ttfLoader = new TTFLoader();
 const fontPath = encodeURI("./New York Hardcore.ttf");
 ttfLoader.load(fontPath, (ttfJson)=>{
+  console.log("Loaded local TTF font:", fontPath);
   const font = fontLoader.parse(ttfJson);
 
   const midGeo = new TextGeometry("RUDEBOY", {
@@ -212,8 +213,8 @@ ttfLoader.load(fontPath, (ttfJson)=>{
   postFirstFrameUpgrades();
 }, undefined, (err)=>{
   console.error("Failed to load TTF font:", err);
-  // Fallback to Helvetiker JSON on network error
-  fontLoader.load("https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json", (jsonFont)=>{
+  // Fallback to a visibly different JSON font so the change is obvious
+  fontLoader.load("https://unpkg.com/three@0.160.0/examples/fonts/gentilis_bold.typeface.json", (jsonFont)=>{
     const midGeo = new TextGeometry("RUDEBOY", {
       font: jsonFont, size: 1.6, height: 0.34,
       curveSegments: 8, bevelEnabled: true,
