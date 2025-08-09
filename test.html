@@ -112,6 +112,7 @@ setTimeout(()=>addStars(1000, 260), 350);
 const skyLabel = document.getElementById("skyLabel");
 const skyGroup = new THREE.Group(); scene.add(skyGroup);
 
+// Sun and subtle corona remain
 const sun = new THREE.Mesh(
   new THREE.SphereGeometry(26, 64, 48),
   new THREE.MeshPhysicalMaterial({
@@ -127,16 +128,48 @@ const corona = new THREE.Mesh(
 );
 corona.position.copy(sun.position); skyGroup.add(corona);
 
-const moon = new THREE.Mesh(
-  new THREE.SphereGeometry(16, 64, 48),
-  new THREE.MeshStandardMaterial({ color: 0xbdbdc6, metalness: 0.0, roughness: 0.95 })
-);
-moon.position.set(0,0,-150); skyGroup.add(moon);
+// Replace moon with detailed Phong-based version and starfield world backdrop
+let moon, world;
+{
+  const textureURL = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/17271/lroc_color_poles_1k.jpg";
+  const displacementURL = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/17271/ldem_3_8bit.jpg";
+  const worldURL = "https://s3-us-west-2.amazonaws.com/s.cdpn.io/17271/hipp8_s.jpg";
+  const textureLoader = new THREE.TextureLoader();
+  const texture = textureLoader.load(textureURL);
+  const displacementMap = textureLoader.load(displacementURL);
+  const worldTexture = textureLoader.load(worldURL);
 
-new THREE.TextureLoader().load(
-  "https://threejs.org/examples/textures/terrain/grasslight-big-nm.jpg",
-  (nm)=>{ nm.wrapS = nm.wrapT = THREE.RepeatWrapping; nm.repeat.set(2,2); moon.material.normalMap = nm; moon.material.needsUpdate = true; }
-);
+  const moonGeo = new THREE.SphereGeometry(16, 60, 60);
+  const moonMat = new THREE.MeshPhongMaterial({
+    color: 0xffffff,
+    map: texture,
+    displacementMap: displacementMap,
+    displacementScale: 0.9,
+    bumpMap: displacementMap,
+    bumpScale: 0.6,
+    reflectivity: 0,
+    shininess: 0
+  });
+  moon = new THREE.Mesh(moonGeo, moonMat);
+  moon.position.set(0,0,-150);
+  skyGroup.add(moon);
+
+  const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+  dirLight.position.set(-100, 10, 50);
+  skyGroup.add(dirLight);
+
+  const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 0.12);
+  hemiLight.color.setHSL(0.6, 1, 0.6);
+  hemiLight.groundColor.setHSL(0.095, 1, 0.75);
+  hemiLight.position.set(0, 0, 0);
+  skyGroup.add(hemiLight);
+
+  const worldGeo = new THREE.SphereGeometry(1000, 60, 60);
+  const worldMat = new THREE.MeshBasicMaterial({ color: 0xffffff, map: worldTexture, side: THREE.BackSide });
+  world = new THREE.Mesh(worldGeo, worldMat);
+  world.position.set(0,0,-150);
+  skyGroup.add(world);
+}
 
 function updateSkyByTime(){
   const now = new Date();
@@ -149,7 +182,7 @@ function updateSkyByTime(){
   moon.visible = !daytime;
   if (daytime){ sun.position.set(x,y,-150); corona.position.set(x,y,-150); skyLabel.textContent = "Sky: Sun"; }
   else { moon.position.set(x,y,-150); skyLabel.textContent = "Sky: Moon"; }
-  sun.rotation.y += 0.004; moon.rotation.y += 0.0018;
+  sun.rotation.y += 0.004; if (moon) { moon.rotation.y += 0.002; moon.rotation.x += 0.0001; } if (world) { world.rotation.y += 0.0001; world.rotation.x += 0.0005; }
 }
 
 /* ----------------- RUDEBOY Title ----------------- */
@@ -160,7 +193,7 @@ const placeholder = new THREE.Mesh(
     emissive: 0x5a1c00, emissiveIntensity: 0.2
   })
 );
-placeholder.position.y = 0.1;
+placeholder.position.y = 0.9;
 scene.add(placeholder);
 
 let textMesh=null, glowMesh=null;
@@ -186,15 +219,64 @@ ttfLoader.load(fontPath, (ttfJson)=>{
     emissive: 0x9b2d00, emissiveIntensity: 0.25, envMapIntensity: 1.2
   });
 
-  textMesh = new THREE.Mesh(midGeo, mat);
-  textMesh.rotation.x = THREE.MathUtils.degToRad(-8);
-  scene.add(textMesh);
+  // Replace single-mesh title with per-letter colored meshes (R,G,Y pattern with Y ending red)
+  const title = "RUDEBOY";
+  const colors = [0xff0000, 0xffd700, 0x00a000]; // red, gold, green
+  const letters = [];
+  const tempMat = new THREE.MeshPhysicalMaterial({
+    color: 0xffffff, metalness: 0.9, roughness: 0.25, clearcoat: 1.0, clearcoatRoughness: 0.15,
+    emissive: 0x111111, emissiveIntensity: 0.25, envMapIntensity: 1.2
+  });
 
+  // Compute per-letter geometries and layout
+  const shapes = font.generateShapes(title, 1.6, 8);
+  const fullGeo = new THREE.ShapeGeometry(shapes);
+  fullGeo.computeBoundingBox();
+  const fullWidth = (fullGeo.boundingBox.max.x - fullGeo.boundingBox.min.x);
+  const letterSpacing = 0.15;
+
+  let cursorX = -fullWidth/2;
+  for (let i=0;i<title.length;i++){
+    const ch = title[i];
+    const chShapes = font.generateShapes(ch, 1.6, 8);
+    const chGeo2D = new THREE.ShapeGeometry(chShapes);
+    chGeo2D.computeBoundingBox();
+    const chWidth = (chGeo2D.boundingBox.max.x - chGeo2D.boundingBox.min.x);
+
+    const chGeo3D = new TextGeometry(ch, {
+      font, size: 1.6, height: 0.34,
+      curveSegments: 8, bevelEnabled: true,
+      bevelThickness: 0.05, bevelSize: 0.045, bevelSegments: 3
+    });
+    chGeo3D.computeBoundingBox();
+
+    const colorIndex = (i < title.length-1) ? (i % 3) : 0; // last 'Y' forced red (index 0)
+    const matLetter = tempMat.clone();
+    matLetter.color = new THREE.Color(colors[colorIndex]);
+    matLetter.emissive = new THREE.Color(colors[colorIndex]).multiplyScalar(0.18);
+
+    const mesh = new THREE.Mesh(chGeo3D, matLetter);
+    const offsetX = cursorX - chGeo2D.boundingBox.min.x;
+    mesh.position.x = offsetX;
+    mesh.rotation.x = THREE.MathUtils.degToRad(-8);
+    scene.add(mesh);
+    letters.push(mesh);
+
+    cursorX += chWidth + letterSpacing;
+  }
+
+  // Keep a simplified glow using the original midGeo as a subtle plate behind letters
   glowMesh = new THREE.Mesh(midGeo.clone(), new THREE.MeshBasicMaterial({
-    color: 0xff7a00, transparent:true, opacity:0.06, depthWrite:false
+    color: 0xff7a00, transparent:true, opacity:0.05, depthWrite:false
   }));
-  glowMesh.scale.multiplyScalar(1.03);
+  glowMesh.scale.multiplyScalar(1.04);
+  glowMesh.rotation.x = THREE.MathUtils.degToRad(-8);
   scene.add(glowMesh);
+
+  // Provide a proxy for textMesh so downstream code still animates
+  textMesh = new THREE.Group();
+  for (const m of letters) textMesh.add(m);
+  scene.add(textMesh);
 
   // remove placeholder once text rendered
   setTimeout(()=>{ scene.remove(placeholder); placeholder.geometry.dispose(); }, 100);
