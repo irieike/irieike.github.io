@@ -19,7 +19,7 @@
 <style>
 @font-face{
   font-family: 'RudeboyTTF';
-  src: url('New York Hardcore.ttf') format('truetype');
+  src: url('New York Hardcore.ttf?v=2') format('truetype');
   font-display: swap;
 }
 </style>
@@ -431,8 +431,26 @@ function makeLabelSprite(text){
   // show larger in scene (was /480)
   sprite.scale.set(w/(360*scale), h/(360*scale), 1);
   sprite.renderOrder = 999;
+  sprite.userData.labelText = text; // track for rebuild
   return sprite;
 }
+
+// After font load, rebuild labels to actually use it
+try {
+  document.fonts?.load("800 96px RudeboyTTF").then(()=>{
+    for (const g of navGroup.children){
+      const labelText = g?.userData?.label?.userData?.labelText;
+      if (!labelText) continue;
+      const oldLabel = g.userData.label;
+      const pos = oldLabel.position.clone();
+      g.remove(oldLabel);
+      const newLabel = makeLabelSprite(labelText);
+      newLabel.position.copy(pos);
+      g.add(newLabel);
+      g.userData.label = newLabel;
+    }
+  });
+} catch(e) { /* ignore */ }
 
 // build one spherical nav button
 function makeNavSphere({label, url, color, position}){
