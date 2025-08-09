@@ -51,6 +51,7 @@ import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader.js";
 
 /* ----------------- Renderer (fast first pixel) ----------------- */
 const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:"high-performance" });
@@ -164,9 +165,13 @@ scene.add(placeholder);
 
 let textMesh=null, glowMesh=null;
 const fontLoader = new FontLoader();
-const fontUrl = "https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json";
+// const fontUrl = "https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json";
 
-fontLoader.load(fontUrl, font=>{
+// Load local TTF and parse to a three.js Font
+const ttfLoader = new TTFLoader();
+ttfLoader.load("New York Hardcore.ttf", (ttfJson)=>{
+  const font = fontLoader.parse(ttfJson);
+
   const midGeo = new TextGeometry("RUDEBOY", {
     font, size: 1.6, height: 0.34,
     curveSegments: 8, bevelEnabled: true,
