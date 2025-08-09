@@ -16,6 +16,13 @@
   .help kbd{background:#222;border:1px solid #444;border-bottom-color:#333;border-radius:4px;padding:1px 4px;font:11px/1.2 monospace;color:#fff}
   .dot{width:6px;height:6px;border-radius:50%;background:#f6a;display:inline-block;box-shadow:0 0 10px #f6a}
 </style>
+<style>
+@font-face{
+  font-family: 'RudeboyTTF';
+  src: url('New York Hardcore.ttf') format('truetype');
+  font-display: swap;
+}
+</style>
 
 <!-- Import map for CDN modules -->
 <script type="importmap">
@@ -395,7 +402,7 @@ function makeLabelSprite(text){
 
   const cvs = document.createElement('canvas');
   const ctx = cvs.getContext('2d');
-  ctx.font = `800 ${fontPx}px system-ui,-apple-system,Segoe UI,Roboto,Arial`;
+  ctx.font = `800 ${fontPx}px RudeboyTTF, system-ui,-apple-system,Segoe UI,Roboto,Arial`;
   const w = Math.ceil(ctx.measureText(text).width + pad*2);
   const h = Math.ceil(fontPx + pad*2);
   cvs.width = w; cvs.height = h;
@@ -409,7 +416,7 @@ function makeLabelSprite(text){
   }
   // outlined white text
   ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.font = `800 ${fontPx}px system-ui,-apple-system,Segoe UI,Roboto,Arial`;
+  ctx.font = `800 ${fontPx}px RudeboyTTF, system-ui,-apple-system,Segoe UI,Roboto,Arial`;
   ctx.lineWidth = 10*scale; ctx.strokeStyle='rgba(0,0,0,0.92)';
   ctx.strokeText(text, w/2, h/2 + 2*scale);
   ctx.fillStyle='#fff'; ctx.fillText(text, w/2, h/2 + 2*scale);
