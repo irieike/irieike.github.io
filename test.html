@@ -46,11 +46,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment.js";
-import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
 import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
 
 /* ----------------- Renderer (fast first pixel) ----------------- */
 const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:"high-performance" });
@@ -81,6 +80,9 @@ scene.environment = pmrem.fromScene(new RoomEnvironment(renderer), 0.04).texture
 const key = new THREE.DirectionalLight(0xffffff, 1.0); key.position.set(5,6,4); scene.add(key);
 const rim = new THREE.DirectionalLight(0xff6a00, 0.6); rim.position.set(-6,2,-4); scene.add(rim);
 scene.add(new THREE.AmbientLight(0xffffff, 0.15));
+
+// subtle colored back light to give bubble highlights
+const back = new THREE.DirectionalLight(0x88aaff, 0.5); back.position.set(0, -2, -4); scene.add(back);
 
 /* ----------------- PostFX (bloom off by default) ----------------- */
 const composer = new EffectComposer(renderer);
@@ -151,59 +153,70 @@ function updateSkyByTime(){
   sun.rotation.y += 0.004; moon.rotation.y += 0.0018;
 }
 
-/* ----------------- RUDEBOY Title ----------------- */
+/* ----------------- Frog inside a refractive bubble ----------------- */
+const frogGroup = new THREE.Group();
+frogGroup.position.y = 0.1;
+scene.add(frogGroup);
+
+// subtle pedestal placeholder while loading
 const placeholder = new THREE.Mesh(
-  new THREE.TorusKnotGeometry(0.9, 0.28, 100, 16),
+  new THREE.TorusKnotGeometry(0.7, 0.22, 100, 16),
+  new THREE.MeshStandardMaterial({ color: 0x333333, metalness:0.3, roughness:0.7 })
+);
+placeholder.position.y = -0.4;
+frogGroup.add(placeholder);
+
+// Bubble (physical glass)
+const bubbleRadius = 1.25;
+const bubble = new THREE.Mesh(
+  new THREE.SphereGeometry(bubbleRadius, 96, 64),
   new THREE.MeshPhysicalMaterial({
-    color: 0xff4300, metalness: 0.7, roughness: 0.35, clearcoat: 1.0, clearcoatRoughness: 0.2, envMapIntensity: 1.2,
-    emissive: 0x5a1c00, emissiveIntensity: 0.2
+    color: 0xffffff,
+    metalness: 0.0,
+    roughness: 0.02,
+    transmission: 1.0,
+    thickness: 0.18,
+    ior: 1.33,
+    clearcoat: 1.0,
+    clearcoatRoughness: 0.02,
+    envMapIntensity: 1.0,
+    transparent: true,
+    opacity: 1.0,
+    side: THREE.DoubleSide,
+    iridescence: 1.0,
+    iridescenceIOR: 1.3,
+    iridescenceThicknessRange: [80, 450]
   })
 );
-placeholder.position.y = 0.1;
-scene.add(placeholder);
+frogGroup.add(bubble);
 
-let textMesh=null, glowMesh=null;
-const fontLoader = new FontLoader();
-const fontUrl = "https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json";
+// Load frog model (you can replace this URL with a local frog model path)
+const gltfLoader = new GLTFLoader();
+const frogUrl = "https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Fox/glTF-Binary/Fox.glb"; // placeholder: swap with frog GLB when available
 
-fontLoader.load(fontUrl, font=>{
-  const midGeo = new TextGeometry("RUDEBOY", {
-    font, size: 1.6, height: 0.34,
-    curveSegments: 8, bevelEnabled: true,
-    bevelThickness: 0.05, bevelSize: 0.045, bevelSegments: 3
-  });
-  midGeo.computeBoundingBox(); midGeo.center();
+gltfLoader.load(frogUrl, (gltf)=>{
+  const model = gltf.scene;
+  model.traverse((o)=>{ if (o.isMesh) { o.castShadow = o.receiveShadow = true; }});
+  // scale/pose to fit bubble
+  // Fit into bubble roughly; adjust when using a real frog model
+  const modelBox = new THREE.Box3().setFromObject(model);
+  const size = new THREE.Vector3(); modelBox.getSize(size);
+  const maxDim = Math.max(size.x, size.y, size.z) || 1;
+  const target = bubbleRadius * 1.2; // leave margin to shell
+  const scale = target / maxDim;
+  model.scale.setScalar(scale);
+  model.rotation.y = Math.PI * 0.15;
+  model.position.set(0, -0.25, 0);
+  frogGroup.add(model);
 
-  const mat = new THREE.MeshPhysicalMaterial({
-    color: 0xff4300, metalness: 0.9, roughness: 0.25, clearcoat: 1.0, clearcoatRoughness: 0.15,
-    emissive: 0x9b2d00, emissiveIntensity: 0.25, envMapIntensity: 1.2
-  });
-
-  textMesh = new THREE.Mesh(midGeo, mat);
-  textMesh.rotation.x = THREE.MathUtils.degToRad(-8);
-  scene.add(textMesh);
-
-  glowMesh = new THREE.Mesh(midGeo.clone(), new THREE.MeshBasicMaterial({
-    color: 0xff7a00, transparent:true, opacity:0.06, depthWrite:false
-  }));
-  glowMesh.scale.multiplyScalar(1.03);
-  scene.add(glowMesh);
-
-  // remove placeholder once text rendered
-  setTimeout(()=>{ scene.remove(placeholder); placeholder.geometry.dispose(); }, 100);
-
-  // upgrade geometry when idle
-  requestIdleCallback?.(()=>{
-    const hiGeo = new TextGeometry("RUDEBOY", {
-      font, size: 1.6, height: 0.38,
-      curveSegments: 10, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.05, bevelSegments: 4
-    });
-    hiGeo.computeBoundingBox(); hiGeo.center();
-    textMesh.geometry.dispose(); glowMesh.geometry.dispose();
-    textMesh.geometry = hiGeo; glowMesh.geometry = hiGeo.clone();
-  });
+  // remove placeholder
+  frogGroup.remove(placeholder); placeholder.geometry.dispose();
 
   postFirstFrameUpgrades();
+}, (xhr)=>{
+  // progress dot already shows; no-op
+}, (err)=>{
+  console.error("Failed to load model:", err);
 });
 
 /* ----------------- NAV: Spinning Sphere Buttons (always readable text) ----------------- */
@@ -367,14 +380,9 @@ renderer.setAnimationLoop(()=>{
   controls.update();
   updateSkyByTime();
 
-  // RUDEBOY title idle motion
-  if (textMesh && glowMesh){
-    textMesh.rotation.y = Math.sin(t*0.6)*0.12;
-    glowMesh.rotation.copy(textMesh.rotation);
-  } else {
-    placeholder.rotation.x += 0.01;
-    placeholder.rotation.y += 0.02;
-  }
+  // Frog bubble idle motion
+  frogGroup.rotation.y = Math.sin(t*0.35) * 0.12;
+  frogGroup.position.y = 0.1 + Math.sin(t * 1.2) * 0.06;
 
   // nav spheres: spin + hover puff; labels face camera automatically (sprites)
   raycaster.setFromCamera(mouse, camera);
