@@ -57,7 +57,7 @@ import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader.js";
 
 /* ----------------- Renderer (fast first pixel) ----------------- */
 const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:"high-performance" });
-renderer.setPixelRatio(isMobile ? 1 : 1);
+renderer.setPixelRatio(1);
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
