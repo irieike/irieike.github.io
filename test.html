@@ -196,7 +196,7 @@ const placeholder = new THREE.Mesh(
 placeholder.position.y = 0.9;
 scene.add(placeholder);
 
-let textMesh=null, glowMesh=null;
+let textMesh = null;
 const fontLoader = new FontLoader();
 // const fontUrl = "https://unpkg.com/three@0.160.0/examples/fonts/helvetiker_bold.typeface.json";
 
@@ -265,15 +265,7 @@ ttfLoader.load(fontPath, (ttfJson)=>{
     cursorX += chWidth + letterSpacing;
   }
 
-  // Keep a simplified glow using the original midGeo as a subtle plate behind letters
-  glowMesh = new THREE.Mesh(midGeo.clone(), new THREE.MeshBasicMaterial({
-    color: 0xff7a00, transparent:true, opacity:0.05, depthWrite:false
-  }));
-  glowMesh.scale.multiplyScalar(1.04);
-  glowMesh.rotation.x = THREE.MathUtils.degToRad(-8);
-  scene.add(glowMesh);
-
-  // Provide a proxy for textMesh so downstream code still animates
+  // Provide a group so downstream code still animates the title
   textMesh = new THREE.Group();
   for (const m of letters) textMesh.add(m);
   scene.add(textMesh);
@@ -281,15 +273,32 @@ ttfLoader.load(fontPath, (ttfJson)=>{
   // remove placeholder once text rendered
   setTimeout(()=>{ scene.remove(placeholder); placeholder.geometry.dispose(); }, 100);
 
-  // upgrade geometry when idle
+  // upgrade geometry when idle (rebuild per-letter with higher segments)
   requestIdleCallback?.(()=>{
-    const hiGeo = new TextGeometry("RUDEBOY", {
-      font, size: 1.6, height: 0.38,
-      curveSegments: 10, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.05, bevelSegments: 4
-    });
-    hiGeo.computeBoundingBox(); hiGeo.center();
-    textMesh.geometry.dispose(); glowMesh.geometry.dispose();
-    textMesh.geometry = hiGeo; glowMesh.geometry = hiGeo.clone();
+    const title = "RUDEBOY";
+    const newLetters = [];
+    let cursorX = 0;
+    // recompute centered layout
+    const shapes = font.generateShapes(title, 1.6, 10);
+    const fullGeo = new THREE.ShapeGeometry(shapes); fullGeo.computeBoundingBox();
+    const fullWidth = (fullGeo.boundingBox.max.x - fullGeo.boundingBox.min.x);
+    const letterSpacing = 0.15;
+    cursorX = -fullWidth/2;
+    // remove old children
+    while (textMesh.children.length) textMesh.remove(textMesh.children[0]);
+    for (let i=0;i<title.length;i++){
+      const ch = title[i];
+      const chShapes = font.generateShapes(ch, 1.6, 10);
+      const chGeo2D = new THREE.ShapeGeometry(chShapes); chGeo2D.computeBoundingBox();
+      const chWidth = (chGeo2D.boundingBox.max.x - chGeo2D.boundingBox.min.x);
+      const chGeo3D = new TextGeometry(ch, { font, size:1.6, height:0.38, curveSegments:10, bevelEnabled:true, bevelThickness:0.06, bevelSize:0.05, bevelSegments:4 });
+      const colorIndex = (i < title.length-1) ? (i % 3) : 0;
+      const matLetter = new THREE.MeshPhysicalMaterial({ color: new THREE.Color([0xff0000,0xffd700,0x00a000][colorIndex]), metalness:0.9, roughness:0.25, clearcoat:1.0, clearcoatRoughness:0.15, emissive: new THREE.Color([0xff0000,0xffd700,0x00a000][colorIndex]).multiplyScalar(0.18), envMapIntensity:1.2 });
+      const mesh = new THREE.Mesh(chGeo3D, matLetter);
+      const offsetX = cursorX - chGeo2D.boundingBox.min.x; mesh.position.x = offsetX; mesh.rotation.x = THREE.MathUtils.degToRad(-8);
+      textMesh.add(mesh);
+      cursorX += chWidth + letterSpacing;
+    }
   });
 
   postFirstFrameUpgrades();
@@ -309,15 +318,10 @@ ttfLoader.load(fontPath, (ttfJson)=>{
       emissive: 0x9b2d00, emissiveIntensity: 0.25, envMapIntensity: 1.2
     });
 
+    // Fallback path: single-mesh title without glow to avoid iOS double render
     textMesh = new THREE.Mesh(midGeo, mat);
     textMesh.rotation.x = THREE.MathUtils.degToRad(-8);
     scene.add(textMesh);
-
-    glowMesh = new THREE.Mesh(midGeo.clone(), new THREE.MeshBasicMaterial({
-      color: 0xff7a00, transparent:true, opacity:0.06, depthWrite:false
-    }));
-    glowMesh.scale.multiplyScalar(1.03);
-    scene.add(glowMesh);
 
     setTimeout(()=>{ scene.remove(placeholder); placeholder.geometry.dispose(); }, 100);
 
@@ -327,8 +331,8 @@ ttfLoader.load(fontPath, (ttfJson)=>{
         curveSegments: 10, bevelEnabled: true, bevelThickness: 0.06, bevelSize: 0.05, bevelSegments: 4
       });
       hiGeo.computeBoundingBox(); hiGeo.center();
-      textMesh.geometry.dispose(); glowMesh.geometry.dispose();
-      textMesh.geometry = hiGeo; glowMesh.geometry = hiGeo.clone();
+      textMesh.geometry.dispose();
+      textMesh.geometry = hiGeo;
     });
 
     postFirstFrameUpgrades();
@@ -497,9 +501,8 @@ renderer.setAnimationLoop(()=>{
   updateSkyByTime();
 
   // RUDEBOY title idle motion
-  if (textMesh && glowMesh){
+  if (textMesh){
     textMesh.rotation.y = Math.sin(t*0.6)*0.12;
-    glowMesh.rotation.copy(textMesh.rotation);
   } else {
     placeholder.rotation.x += 0.01;
     placeholder.rotation.y += 0.02;
