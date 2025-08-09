@@ -64,7 +64,7 @@ import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader.js";
 
 /* ----------------- Renderer (fast first pixel) ----------------- */
 const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:"high-performance" });
-renderer.setPixelRatio(1);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -397,39 +397,52 @@ scene.add(navGroup);
 
 // BIGGER label sprites
 function makeLabelSprite(text){
-  const scale = 2, pad = 28*scale;
-  const fontPx = 96 * scale; // ← was 64 * scale
+  const scale = 2;
+  const pad = 28 * scale;
+  const fontPx = 96 * scale;
 
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+  // Measure at CSS pixel size
+  const measureCtx = document.createElement('canvas').getContext('2d');
+  measureCtx.font = `800 ${fontPx}px RudeboyTTF, system-ui,-apple-system,Segoe UI,Roboto,Arial`;
+  const wCss = Math.ceil(measureCtx.measureText(text).width + pad * 2);
+  const hCss = Math.ceil(fontPx + pad * 2);
+
+  // Create a high-DPI canvas
   const cvs = document.createElement('canvas');
+  cvs.width = Math.ceil(wCss * dpr);
+  cvs.height = Math.ceil(hCss * dpr);
   const ctx = cvs.getContext('2d');
-  ctx.font = `800 ${fontPx}px RudeboyTTF, system-ui,-apple-system,Segoe UI,Roboto,Arial`;
-  const w = Math.ceil(ctx.measureText(text).width + pad*2);
-  const h = Math.ceil(fontPx + pad*2);
-  cvs.width = w; cvs.height = h;
+  ctx.scale(dpr, dpr);
 
   // dark plate
   if (ctx.roundRect){
     ctx.fillStyle = 'rgba(0,0,0,0.78)';
-    ctx.beginPath(); ctx.roundRect(8*scale,8*scale, w-16*scale, h-16*scale, 18*scale); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(8 * scale, 8 * scale, wCss - 16 * scale, hCss - 16 * scale, 18 * scale); ctx.fill();
   } else {
-    ctx.fillStyle = 'rgba(0,0,0,0.78)'; ctx.fillRect(8*scale,8*scale, w-16*scale, h-16*scale);
+    ctx.fillStyle = 'rgba(0,0,0,0.78)'; ctx.fillRect(8 * scale, 8 * scale, wCss - 16 * scale, hCss - 16 * scale);
   }
+
   // outlined white text
-  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
   ctx.font = `800 ${fontPx}px RudeboyTTF, system-ui,-apple-system,Segoe UI,Roboto,Arial`;
-  ctx.lineWidth = 10*scale; ctx.strokeStyle='rgba(0,0,0,0.92)';
-  ctx.strokeText(text, w/2, h/2 + 2*scale);
-  ctx.fillStyle='#fff'; ctx.fillText(text, w/2, h/2 + 2*scale);
+  ctx.lineWidth = 10 * scale; ctx.strokeStyle = 'rgba(0,0,0,0.92)';
+  ctx.strokeText(text, wCss / 2, hCss / 2 + 2 * scale);
+  ctx.fillStyle = '#fff'; ctx.fillText(text, wCss / 2, hCss / 2 + 2 * scale);
 
   const tex = new THREE.CanvasTexture(cvs);
   tex.colorSpace = THREE.SRGBColorSpace;
   tex.anisotropy = renderer.capabilities.getMaxAnisotropy?.() || 1;
+  tex.minFilter = THREE.LinearMipMapLinearFilter; // stable when minified
+  tex.magFilter = THREE.LinearFilter;
 
   const mat = new THREE.SpriteMaterial({ map: tex, transparent:true, depthTest:false, depthWrite:false });
   const sprite = new THREE.Sprite(mat);
 
-  // show larger in scene (was /480)
-  sprite.scale.set(w/(360*scale), h/(360*scale), 1);
+  // scale in world units using CSS pixel size, not device pixels
+  sprite.scale.set(wCss / (360 * scale), hCss / (360 * scale), 1);
   sprite.renderOrder = 999;
   sprite.userData.labelText = text; // track for rebuild
   return sprite;
@@ -533,9 +546,15 @@ addEventListener('dblclick', ()=>{
 /* ----------------- Cute floating frog bubble ----------------- */
 const frogGroup = new THREE.Group(); scene.add(frogGroup);
 function makeFrogBubbleTexture(){
-  const s = 256; const c = document.createElement('canvas'); c.width = c.height = s; const ctx = c.getContext('2d');
+  const base = 256;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const c = document.createElement('canvas');
+  c.width = base * dpr; c.height = base * dpr;
+  const ctx = c.getContext('2d');
+  ctx.scale(dpr, dpr);
+  const s = base;
   // bubble background
-  const bg = ctx.createRadialGradient(s*0.5, s*0.45, s*0.2, s*0.5, s*0.5, s*0.48);
+  const bg = ctx.createRadialGradient(s * 0.5, s * 0.45, s * 0.2, s * 0.5, s * 0.5, s * 0.48);
   bg.addColorStop(0, 'rgba(180,220,255,0.5)');
   bg.addColorStop(1, 'rgba(120,160,220,0.2)');
   ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(s/2, s/2, s*0.48, 0, Math.PI*2); ctx.fill();
@@ -554,7 +573,13 @@ function makeFrogBubbleTexture(){
   // smile
   ctx.lineWidth = 3; ctx.strokeStyle = '#1f4d2b';
   ctx.beginPath(); ctx.arc(s*0.5, s*0.62, s*0.06, 0, Math.PI); ctx.stroke();
-  return new THREE.CanvasTexture(c);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = renderer.capabilities.getMaxAnisotropy?.() || 1;
+  tex.minFilter = THREE.LinearMipMapLinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  return tex;
 }
 function spawnFrogBubble(){
   // safe spawn near title/nav without overlapping: pick from a few offsets
@@ -612,6 +637,7 @@ function toggleFullscreen(){
 addEventListener("resize", ()=>{
   camera.aspect = innerWidth/innerHeight;
   camera.updateProjectionMatrix();
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.setSize(innerWidth, innerHeight);
   composer.setSize(innerWidth, innerHeight);
 });
