@@ -4,6 +4,8 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>RUDEBOY — Title + Spherical Nav</title>
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://s3-us-west-2.amazonaws.com" crossorigin>
 <style>
   html,body{margin:0;height:100%;background:#000;overflow:hidden}
   .ui{position:fixed;left:12px;bottom:12px;color:#bbb;font:12px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;opacity:.9}
@@ -55,7 +57,7 @@ import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader.js";
 
 /* ----------------- Renderer (fast first pixel) ----------------- */
 const renderer = new THREE.WebGLRenderer({ antialias:true, powerPreference:"high-performance" });
-renderer.setPixelRatio(1);
+renderer.setPixelRatio(isMobile ? 1 : 1);
 renderer.setSize(innerWidth, innerHeight);
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -71,6 +73,9 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.enablePan = false;
 controls.autoRotate = true;
+
+// Mobile detection for spacing/perf tweaks
+const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
 controls.autoRotateSpeed = 0.5;
 controls.minDistance = 4;
 controls.maxDistance = 100;
@@ -104,9 +109,49 @@ function addStars(count, radius){
   const m=new THREE.PointsMaterial({ size:0.7, sizeAttenuation:true, color:0x9aa3ff, transparent:true, opacity:0.7 });
   starGroup.add(new THREE.Points(g,m));
 }
-addStars(300, 180);
-setTimeout(()=>addStars(700, 220), 150);
-setTimeout(()=>addStars(1000, 260), 350);
+addStars(500, 180);
+setTimeout(()=>addStars(1200, 220), 120);
+setTimeout(()=>addStars(1800, 260), 240);
+
+// Add occasional shooting stars
+const shootingGroup = new THREE.Group(); scene.add(shootingGroup);
+function spawnShootingStar(){
+  const g = new THREE.BufferGeometry();
+  const positions = new Float32Array(2*3);
+  const x = (Math.random()-0.5)*140;
+  const y = Math.random()*60 + 10;
+  const z = -120 - Math.random()*60;
+  positions.set([x,y,z, x-3-Math.random()*3, y-1.5-Math.random()*2, z]);
+  g.setAttribute('position', new THREE.BufferAttribute(positions,3));
+  const m = new THREE.LineBasicMaterial({ color: 0x9aa3ff, transparent:true, opacity:0.5 });
+  const line = new THREE.Line(g, m);
+  shootingGroup.add(line);
+  setTimeout(()=>{ shootingGroup.remove(line); g.dispose(); }, 1200);
+}
+setInterval(()=>{ if (!document.hidden) spawnShootingStar(); }, 900);
+
+// Faint nebulae and planet billboards
+const deepSpaceGroup = new THREE.Group(); scene.add(deepSpaceGroup);
+function makeCircleTexture(innerColor, outerColor){
+  const s = 256; const c = document.createElement('canvas'); c.width=c.height=s;
+  const ctx = c.getContext('2d');
+  const g = ctx.createRadialGradient(s/2,s/2,10, s/2,s/2,s/2);
+  g.addColorStop(0, innerColor);
+  g.addColorStop(1, outerColor);
+  ctx.fillStyle = g; ctx.fillRect(0,0,s,s);
+  return new THREE.CanvasTexture(c);
+}
+function addNebulaBillboard(colorInner, colorOuter, position, scale, opacity){
+  const tex = makeCircleTexture(colorInner, colorOuter);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent:true, opacity, depthWrite:false });
+  const spr = new THREE.Sprite(mat); spr.position.copy(position); spr.scale.setScalar(scale); spr.renderOrder = -1000;
+  deepSpaceGroup.add(spr);
+}
+// add a few faint auras
+addNebulaBillboard('#4444ff', 'rgba(0,0,64,0)', new THREE.Vector3(-60, 20, -220), 60, 0.18);
+addNebulaBillboard('#ff44aa', 'rgba(64,0,32,0)', new THREE.Vector3(70, -10, -260), 80, 0.14);
+addNebulaBillboard('#44ffaa', 'rgba(0,64,32,0)', new THREE.Vector3(10, 40, -300), 90, 0.12);
 
 /* ----------------- Sun/Moon time-based ----------------- */
 const skyLabel = document.getElementById("skyLabel");
@@ -232,9 +277,9 @@ ttfLoader.load(fontPath, (ttfJson)=>{
   const shapes = font.generateShapes(title, 1.6, 8);
   const fullGeo = new THREE.ShapeGeometry(shapes);
   fullGeo.computeBoundingBox();
-  const fullWidth = (fullGeo.boundingBox.max.x - fullGeo.boundingBox.min.x);
-  const letterSpacing = 0.15;
-
+    const fullWidth = (fullGeo.boundingBox.max.x - fullGeo.boundingBox.min.x);
+  const letterSpacing = isMobile ? 0.22 : 0.15;
+ 
   let cursorX = -fullWidth/2;
   for (let i=0;i<title.length;i++){
     const ch = title[i];
@@ -282,7 +327,7 @@ ttfLoader.load(fontPath, (ttfJson)=>{
     const shapes = font.generateShapes(title, 1.6, 10);
     const fullGeo = new THREE.ShapeGeometry(shapes); fullGeo.computeBoundingBox();
     const fullWidth = (fullGeo.boundingBox.max.x - fullGeo.boundingBox.min.x);
-    const letterSpacing = 0.15;
+    const letterSpacing = isMobile ? 0.22 : 0.15;
     cursorX = -fullWidth/2;
     // remove old children
     while (textMesh.children.length) textMesh.remove(textMesh.children[0]);
@@ -447,6 +492,61 @@ function onClick(){
 }
 addEventListener('pointermove', onPointerMove, { passive:true });
 addEventListener('click', onClick);
+addEventListener('dblclick', ()=>{
+  // double left-click: trigger nearest nav group
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(navGroup.children, true);
+  if (hits.length){
+    let g = hits[0].object; while (g && g.parent !== navGroup) g = g.parent;
+    if (g && g.userData?.url){
+      g.scale.set(1.15,1.15,1.15);
+      setTimeout(()=>{ window.location.href = g.userData.url; }, 120);
+    }
+  }
+});
+
+/* ----------------- Cute floating frog bubble ----------------- */
+const frogGroup = new THREE.Group(); scene.add(frogGroup);
+function makeFrogBubbleTexture(){
+  const s = 256; const c = document.createElement('canvas'); c.width = c.height = s; const ctx = c.getContext('2d');
+  // bubble background
+  const bg = ctx.createRadialGradient(s*0.5, s*0.45, s*0.2, s*0.5, s*0.5, s*0.48);
+  bg.addColorStop(0, 'rgba(180,220,255,0.5)');
+  bg.addColorStop(1, 'rgba(120,160,220,0.2)');
+  ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(s/2, s/2, s*0.48, 0, Math.PI*2); ctx.fill();
+  ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.stroke();
+  // simple Keroppi-like face
+  function circle(x,y,r,fill){ ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fillStyle=fill; ctx.fill(); }
+  function ellipse(x,y,rx,ry,fill){ ctx.beginPath(); ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2); ctx.fillStyle=fill; ctx.fill(); }
+  // head
+  circle(s*0.5, s*0.6, s*0.22, '#53d36b');
+  // eyes
+  circle(s*0.44, s*0.47, s*0.08, '#ffffff'); circle(s*0.56, s*0.47, s*0.08, '#ffffff');
+  circle(s*0.44, s*0.47, s*0.03, '#333333'); circle(s*0.56, s*0.47, s*0.03, '#333333');
+  // rosy cheeks
+  ellipse(s*0.40, s*0.59, s*0.045, s*0.025, 'rgba(255,100,120,0.6)');
+  ellipse(s*0.60, s*0.59, s*0.045, s*0.025, 'rgba(255,100,120,0.6)');
+  // smile
+  ctx.lineWidth = 3; ctx.strokeStyle = '#1f4d2b';
+  ctx.beginPath(); ctx.arc(s*0.5, s*0.62, s*0.06, 0, Math.PI); ctx.stroke();
+  return new THREE.CanvasTexture(c);
+}
+function spawnFrogBubble(){
+  // safe spawn near title/nav without overlapping: pick from a few offsets
+  const candidatePositions = [ new THREE.Vector3(-2.2, 1.2, 0), new THREE.Vector3(0, 1.3, 0.2), new THREE.Vector3(2.2, 1.2, 0) ];
+  const pos = candidatePositions[Math.floor(Math.random()*candidatePositions.length)].clone();
+  const tex = makeFrogBubbleTexture(); tex.colorSpace = THREE.SRGBColorSpace;
+  const mat = new THREE.SpriteMaterial({ map: tex, transparent:true, depthWrite:false });
+  const spr = new THREE.Sprite(mat);
+  spr.position.copy(pos); spr.scale.set(0.9,0.9,0.9);
+  spr.userData = { t: 0, drift: new THREE.Vector3((Math.random()-0.5)*0.4, 0.5 + Math.random()*0.4, (Math.random()-0.5)*0.4) };
+  frogGroup.add(spr);
+  setTimeout(()=>{ frogGroup.remove(spr); tex.dispose(); }, 15000);
+}
+// spawn one initially
+spawnFrogBubble();
+// then occasionally
+setInterval(()=>{ if (!document.hidden && frogGroup.children.length < 3) spawnFrogBubble(); }, 6000);
 
 /* ----------------- Quality/Bloom + UI ----------------- */
 let highQuality = false;
@@ -531,6 +631,14 @@ renderer.setAnimationLoop(()=>{
 
     // keep label upright (sprites already billboard, but prevent roll “wiggle”)
     g.userData.label.quaternion.copy(camera.quaternion);
+  }
+
+  // frog bubbles: drift and remove
+  for (const spr of frogGroup.children){
+    spr.userData.t += dt;
+    spr.position.add(spr.userData.drift.clone().multiplyScalar(dt));
+    spr.rotation.y += 0.1 * dt; // gentle spin
+    if (spr.position.y < -10) spr.position.y = 10; // wrap around
   }
 
   composer.render();
